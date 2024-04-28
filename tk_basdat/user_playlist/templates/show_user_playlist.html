@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Playlist</title>
+    <style>
+        /* CSS di dalam tag <style> */
+        /* Header Style */
+        h1 {
+            color: #333; /* Warna teks */
+            font-size: 24px; /* Ukuran teks */
+            margin-bottom: 20px; /* Jarak bawah */
+        }
+
+        /* Button Style */
+        button {
+            background-color: #007bff; /* Warna latar belakang */
+            color: #fff; /* Warna teks */
+            border: none; /* Hapus border */
+            padding: 8px 16px; /* Padding */
+            border-radius: 4px; /* Rounded border */
+            cursor: pointer; /* Pointer ketika dihover */
+            transition: background-color 0.3s; /* Efek transisi */
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Warna latar belakang saat dihover */
+        }
+
+        /* Table Style */
+        table {
+            width: 100%; /* Lebar tabel */
+            border-collapse: collapse; /* Gabung border */
+            margin-bottom: 20px; /* Jarak bawah */
+        }
+
+        th, td {
+            border: 1px solid #ddd; /* Border */
+            padding: 8px; /* Padding */
+            text-align: left; /* Rata kiri */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Warna latar belakang header */
+        }
+
+        /* Link Style */
+        a {
+            color: #007bff; /* Warna teks link */
+            text-decoration: none; /* Hapus garis bawah */
+        }
+
+        a:hover {
+            text-decoration: underline; /* Garis bawah saat dihover */
+        }
+    </style>
+</head>
+<body>
+    <h1>User Playlist</h1>
+    <p>{{ curhat }}</p>
+
+    <table>
+        <tr>
+            <th>Judul</th>
+            <!-- <th>Deskripsi</th> -->
+            <th>Jumlah Lagu</th>
+            <!-- <th>Tanggal Dibuat</th> -->
+            <th>Total Durasi</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for playlist in playlists %}
+            <tr>
+                <td>{{playlist.judul}}</td>
+                <!-- <td>{{userplaylist.deskripsi}}</td> -->
+                <td>{{playlist.jumlah_lagu}}</td>
+                <!-- <td>{{userplaylist.tanggal_dibuat}}</td> -->
+                <td>{{playlist.total_durasi}}</td>
+                <td>
+                    <a href="{% url 'main:playlist_detail' playlist_id=playlist.id_User_playlist %}"><button>Detail</button></a>
+                    <a href="{% url 'main:edit_playlist' playlist_id=playlist.id_User_playlist %}"><button>Edit</button></a>
+                    <a href="{% url 'main:delete_playlist' playlist_id=playlist.id_User_playlist %}"><button>Delete</button></a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <br />
+    <a href="{% url 'main:add_playlist' %}">
+        <button>
+            Add New Playlist
+        </button>
+    </a>
+</body>
+
+{% endblock content %}

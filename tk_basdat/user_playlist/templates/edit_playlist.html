@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<h1>Edit Product</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Edit Product" style="background-color: #A07300; color: #fff; padding: 5px 15px; border: none; border-radius: 5px;"/>
+            </td>
+        </tr>
+    </table>
+</form>
+<!-- <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Playlist</title>
+</head>
+<body>
+    <h1>Edit Playlist</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title" value="{{ playlist.judul }}"><br>
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description">{{ playlist.deskripsi }}</textarea><br>
+        <input type="submit" value="Save">
+    </form>
+    
+</body> -->
+
+{% endblock %}

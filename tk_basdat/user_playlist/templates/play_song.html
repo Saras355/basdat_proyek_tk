@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+    <title>User Playlist Details</title>
+{% endblock meta %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Playlist Detail</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SONGDETAIL</h1>
+    <p>Judul: this is me trying</p>
+    <p>Genre(s):</p>
+    <ul>
+        <!-- {% for genre in playlist.id_Konten.genre.all %} -->
+        <li>pop</li>
+        <!-- {% endfor %} -->
+    </ul>
+    <p>Artist: Taylor Swift</p>
+    <p>Songwriter(s):</p>
+    <ul>
+        <!-- {% for songwriter in playlist.id_Konten.songwriter_set.all %} -->
+        <li>Taylor Swift</li>
+        <!-- {% endfor %} -->
+    </ul>
+    <p>Durasi: 3.15 menit</p>
+    <p>Tanggal Rilis: 28/04/24</p>
+    <p>Tahun: 2024</p>
+    <p>TotalPlay: 0</p>
+    <p>TotalDownloads: 0</p>
+    <p>Album: folklore</p>
+    </div>
+</body>
+{% endblock content %}
