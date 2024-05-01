@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Podcast</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+    .center-text {
+        text-align: center;
+    }
+    .button {
+        display: inline-block;
+        padding: 5px 15px;
+        text-align: center;
+        text-decoration: none;
+        color: #ffffff;
+        background-color: #007bff;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+    .center-btn {
+        display: flex;
+        justify-content: center;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+    }
+</style>
+</head>
+
+<body>
+    <h1 class="center-text"><b>CREATE EPISODE</b></h1>
+
+    <form action="/submit" method="post"> <!-- Anda harus menyesuaikan action dengan URL pengolahan formulir Anda -->
+        <p>Podcast: Podcast1</p>
+        <div class="form-group">
+            <label for="title">Judul:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="deskripsi">Deskripsi:</label>
+            <input type="text" id="deskripsi" name="deskripsi" required>
+        </div>
+        <div class="form-group">
+            <label for="durasi">Durasi:</label>
+            <input type="text" id="durasi" name="durasi" required>
+        </div>
+
+        <div class="center-btn">
+            <button type="submit" class="button">SUBMIT</button>
+        </div>
+    </form>
+</body>
+</html>
