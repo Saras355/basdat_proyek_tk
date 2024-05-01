@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Podcast</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+    .center-text {
+        text-align: center;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 10px;
+        transition: background-color 0.3s;
+    }
+    .btn:hover {
+        background-color: #0056b3;
+    }
+    .center-btn {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        text-align: left;
+        padding: 8px;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+</head>
+<body>
+
+<div class="podcast-detail">
+    <h1 class="center-text">User Playlist Detail</h1>
+
+    <div class="podcast-info">
+        <p><b>Judul</b>: Playlist1</p>
+        <p><b>Pembuat</b>: Pembuat1</p>
+        <p><b>Jumlah Lagu</b>: 12</p>
+        <p><b>Total Durasi</b>: 8 jam 20 menit</p>
+        <p><b>Tanggal Dibuat</b>: 18/03/24</p>
+        <p><b>Deskripsi</b>: Lorem Ipsum ....</p>
+        <div class="center-btn">
+            <a href="#Shuffle Play" class="btn">Shuffle Play</a>
+        </div>
+        <div class="center-btn">
+            <a href="#kembali" class="btn">Kembali</a>
+        </div>
+    </div>
+
+    <div class="episode-list">
+        <h2 class="center-text">Daftar Lagu</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul Lagu</th>
+                    <th>Oleh</th>
+                    <th>Durasi</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Song1</td>
+                    <td>Artist1</td>
+                    <td>2 menit</td>
+                    <td>
+                        <div class="center-btn">
+                            <a href="#Lihat" class="btn">Lihat</a>
+                        </div>
+                        <div class="center-btn">
+                            <a href="#Play" class="btn">Play</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Song2</td>
+                    <td>Artist2</td>
+                    <td>3 menit</td>
+                    <td>
+                        <div class="center-btn">
+                            <a href="#Lihat" class="btn">Lihat</a>
+                        </div>
+                        <div class="center-btn">
+                            <a href="#Play" class="btn">Play</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>
