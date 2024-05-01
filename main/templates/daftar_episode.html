@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar Episode</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+    .center-text {
+        text-align: center;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 10px;
+        transition: background-color 0.3s;
+    }
+    .btn:hover {
+        background-color: #0056b3;
+    }
+    .center-btn {
+        display: flex;
+        justify-content: center;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        text-align: center;
+        padding: 8px;
+    }
+    th {
+        background-color: #007bff;
+        color: #fff;
+    }
+</style>
+</head>
+
+<body>
+<div class="podcast-detail">
+    <h1 class="center-text">DAFTAR EPISODE PADA PODCAST1</h1>
+
+    <div class="episode-list">
+        <table>
+            <thead>
+              <tr>
+                <th>Judul Episode</th>
+                <th>Deskripsi</th>
+                <th>Durasi</th>
+                <th>Tanggal</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SubJudul1</td>
+                <td>Lorem Ipsum ...</td>
+                <td>59 menit</td>
+                <td>18/03/2024</td>
+                <td>
+                    <div class="center-btn">
+                        <a href="#Hapus" class="btn">Hapus</a>
+                    </div>
+                </td>
+              </tr>
+              <tr>
+                <td>SubJudul2</td>
+                <td>Lorem Ipsum ...</td>
+                <td>1 jam 2 menit</td>
+                <td>25/03/2024</td>
+                <td>
+                    <div class="center-btn">
+                        <a href="#Hapus" class="btn">Hapus</a>
+                    </div>
+                </td>
+              </tr>
+              <tr>
+                <td>...</td>
+                <td>....</td>
+                <td>.....</td>
+                <td>....</td>
+                <td>....</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+
+</div>
+</body>
+</html>
