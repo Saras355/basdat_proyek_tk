@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Podcast</title>
+<style>
+    .center-text {
+        text-align: center;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 10px;
+    }
+    .center-btn {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+</head>
+<body>
+
+<div class="podcast-detail">
+    <h1 class="center-text">Podcast Detail</h1>
+
+    <div class="podcast-info">
+        <p><b>Judul</b>: Podcast1</p>
+        <p><b>Genre(s)</b>:
+            <ul>
+                <li>Genre1</li>
+                <li>Genre2</li>
+            </ul>
+        </p>
+        <p><b>Podcaster</b>: Artist1</p>
+        <p><b>Total Durasi</b>: 8 jam 20 menit</p>
+        <p><b>Tanggal Rilis</b>: 18/03/24</p>
+        <p><b>Tahun</b>: 2024</p>
+        <div class="center-btn">
+            <a href="#kembali" class="btn">Kembali</a>
+        </div>
+    </div>
+
+    <div class="episode-list">
+        <h2 class="center-text">Daftar Episode</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Judul Episode</th>
+                    <th>Deskripsi</th>
+                    <th>Durasi</th>
+                    <th>Tanggal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Subjudul1</td>
+                    <td>Lorem Ipsum ....</td>
+                    <td>59 menit</td>
+                    <td>18/03/2024</td>
+                </tr>
+                <tr>
+                    <td>Subjudul2</td>
+                    <td>Lorem Ipsum ....</td>
+                    <td>1 jam 2 menit</td>
+                    <td>25/03/2024</td>
+                </tr>
+                <!-- Tambahkan baris lain di sini sesuai kebutuhan -->
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>
