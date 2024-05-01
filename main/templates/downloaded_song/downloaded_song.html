@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Success!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Success message will appear here -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<table class="table table-bordered" style="width: 50%; margin: 50px auto;"">
+    <thead class="table-dark">
+        <tr>
+            <th colspan="4" style="text-align: center;"> DAFTAR LAGU </th>
+        </tr>
+    </thead>
+
+    <thead>
+      <tr style="text-align: center;">
+        <th scope="col"> Judul Lagu</th>
+        <th scope="col"> Oleh </th>
+        <th scope="col"> Actions </th>
+      </tr>
+    </thead>
+
+    <tbody>
+        {% for artis, lagu in daftar_lagu.items %}
+
+            <tr style="text-align: center;">
+            <td>{{ artis }}</td>
+            <td>{{ lagu }}</td>
+            <td>
+                <a href="" style="text-decoration: none;">Lihat</a>
+                <a href="/downloaded-song/delete/{{ lagu }}/" style="text-decoration: none;">Hapus</a>
+            </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+
+    <thead>
+        <tr>
+            <th colspan="4" style="text-align: center;"> <a href="">Kembali</a> </th>
+        </tr>
+    </thead>
+
+  </table>
+{% endblock content %}

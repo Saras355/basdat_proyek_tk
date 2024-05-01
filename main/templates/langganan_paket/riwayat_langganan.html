@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table class="table table-bordered" style="width: 50%; margin: auto auto;"">
+    <thead>
+        <tr>
+            <th colspan="5" style="text-align: center;"> RIWAYAT TRANSAKSI PAKET </th>
+        </tr>
+    </thead>
+
+    <thead>
+      <tr style="text-align: center;">
+        <th scope="col">Jenis</th>
+        <th scope="col">Tanggal Dimulai</th>
+        <th scope="col"> Tanggal Berakhir </th>
+        <th scope="col"> Metode Pembayaran </th>
+        <th scope="col"> Nominal </th>
+      </tr>
+    </thead>
+
+    <tbody>
+        {% for transaksi in riwayat_transaksi %}
+            <tr style="text-align: center;">
+            {%for detail in transaksi%}
+                <td>{{ detail }}</td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+
+    <thead>
+        <tr>
+            <th colspan="5" style="text-align: center;"> <a href="/langganan/"> Kembali </a> </th>
+        </tr>
+    </thead>
+
+  </table>
+{% endblock content %}

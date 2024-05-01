@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table class="table table-bordered" style="width: 50%; margin: auto auto;"">
+    <thead>
+        <tr>
+            <th colspan="4" style="text-align: center;"> Hasil Pencarian "{{ query }}" </th>
+        </tr>
+    </thead>
+
+    <thead>
+      <tr style="text-align: center;">
+        <th scope="col"> Tipe </th>
+        <th scope="col"> Judul </th>
+        <th scope="col"> Oleh </th>
+        <th scope="col"> Actions </th>
+      </tr>
+    </thead>
+
+    <tbody>
+        {% for lagu in daftar_lagu %}
+            <tr style="text-align: center;">
+            {%for detail in lagu%}
+                <td>{{ detail }}</td>
+            {% endfor %}
+            <td>
+                <a href="" style="text-decoration: none;"> [Lihat] </a>
+            </td>
+
+            </tr>
+        {% endfor %}
+    </tbody>
+
+  </table>
+{% endblock content %}
