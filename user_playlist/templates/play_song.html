@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+    <title>User Playlist Details</title>
+{% endblock meta %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SONG DETAILS</title>
+    <style>
+                .navbar {
+    background-color: #007bff; /* Warna latar belakang navbar */
+    overflow: hidden;
+        }
+
+        .navbar ul {
+            list-style-type: none; /* Menghilangkan bullet list */
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar li {
+            float: left;
+        }
+
+        .navbar li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar li a:hover {
+            background-color: #0056b3; /* Warna latar belakang saat mouse hover */
+        }
+
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        form label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        form input[type="text"],
+        form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form input[type="submit"] {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            margin-right: 10px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        p {
+            margin: 10px 0;
+            line-height: 1.6; /* Tinggi baris */
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        button {
+            background-color: #A07300; /* Warna latar belakang */
+            color: #fff; /* Warna teks */
+            border: none; /* Hapus border */
+            padding: 8px 16px; /* Padding */
+            border-radius: 4px; /* Rounded border */
+            cursor: pointer; /* Pointer ketika dihover */
+            transition: background-color 0.3s; /* Efek transisi */
+        }
+
+        button:hover {
+            background-color: #875f00; /* Warna latar belakang saat dihover */
+        }
+
+        /* Popup styling */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+        }
+
+        .popup.show {
+            display: block;
+        }
+
+        .popup button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+     <!-- Navbar -->
+     <div class="navbar">
+        <ul>
+            <li><a href="#">Login</a></li>
+            <li><a href="#">Registrasi</a></li>
+        </ul>
+    </div>
+    <div class="container">
+        <h1>Song Details</h1>
+        <p>Judul: this is me trying</p>
+        <p>Genre(s):</p>
+        <ul>
+            <!-- {% for genre in playlist.id_Konten.genre.all %} -->
+            <li>- pop</li>
+            <!-- {% endfor %} -->
+        </ul><br/>
+        <p>Artist: Taylor Swift</p>
+        <p>Songwriter(s):</p>
+        <ul>
+            <!-- {% for songwriter in playlist.id_Konten.songwriter_set.all %} -->
+            <li>- Taylor Swift</li>
+            <!-- {% endfor %} -->
+        </ul><br/>
+        <p>Durasi: 3.15 menit</p>
+        <p>Tanggal Rilis: 28/04/24</p>
+        <p>Tahun: 2024</p>
+        <p>TotalPlay: 0</p>
+        <p>TotalDownloads: 0</p>
+        <p>Album: folklore</p>
+        <div class="divider"></div>
+        <div class="actions">
+            <a href="#"><button class="button">Play</button></a>
+            <a href="#"><button class="button">Add to Playlist</button></a>
+            <button class="button" onclick="showDownloadPopup()">Download</button>
+            <a href="#"><button class="button">Kembali</button></a>
+        </div>
+    </div>
+
+    <!-- Popup -->
+    <div class="popup" id="downloadPopup">
+        <p>Berhasil mengunduh Lagu dengan judul ‘Song1’!</p>
+        <button class="button" onclick="goToDownloadList()">Ke Daftar Download</button>
+        <a href="#"><button class="button">Kembali</button></a>
+    </div>
+
+    <script>
+        function showDownloadPopup() {
+            var popup = document.getElementById("downloadPopup");
+            popup.classList.add("show");
+        }
+
+        function goToDownloadList() {
+            // Redirect ke halaman daftar download
+            window.location.href = "download_list.html";
+        }
+    </script>
+</body>
+{% endblock content %}

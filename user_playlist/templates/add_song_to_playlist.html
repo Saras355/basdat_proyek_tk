@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADDSONGTOUSERPLAYLIST</title>
+    <style>
+                .navbar {
+    background-color: #007bff; /* Warna latar belakang navbar */
+    overflow: hidden;
+        }
+
+        .navbar ul {
+            list-style-type: none; /* Menghilangkan bullet list */
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar li {
+            float: left;
+        }
+
+        .navbar li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar li a:hover {
+            background-color: #0056b3; /* Warna latar belakang saat mouse hover */
+        }
+
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        form label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        form input[type="text"],
+        form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form input[type="submit"] {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            margin-right: 10px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button.add {
+            background-color: #A07300;
+            color: #fff;
+        }
+
+        .button.add:hover {
+            background-color: #875f00;
+        }
+
+        .button.back {
+            background-color: #A07300;
+            color: #fff;
+        }
+
+        .button.back:hover {
+            background-color: #875f00;
+        }
+
+        /* Popup styling */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+        }
+
+        .popup.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+     <!-- Navbar -->
+     <div class="navbar">
+        <ul>
+            <li><a href="#">Login</a></li>
+            <li><a href="#">Registrasi</a></li>
+        </ul>
+    </div>
+    <div class="container">
+        <h1>Add Song to User Playlist</h1>
+        <p>Judul: Song1</p>
+        <p>Artist: Artist1</p>
+        <select name="playlist" id="playlist">
+            <option value="">Pilih Playlist</option>
+            <option value="playlist1">Playlist1</option>
+            <option value="playlist2">Playlist2</option>
+            <option value="playlist3">Playlist3</option>
+            <!-- Tambahkan daftar playlist milik pengguna di sini -->
+        </select>
+        <div class="actions">
+            <button class="button add" onclick="addToPlaylist()">Tambah</button>
+            <button class="button back" onclick="goBack()">Kembali</button>
+        </div>
+    </div>
+    <!-- Popup -->
+    <div class="popup" id="popup">
+        <p>Berhasil menambahkan Lagu dengan judul ‘Song1’ ke ‘Playlist1’!</p>
+        <button class="button" onclick="goToPlaylist()">KE PLAYLIST</button>
+        <button class="button" onclick="hidePopup()">KEMBALI</button>
+    </div>
+    <script>
+         function showPopup() {
+            var popup = document.getElementById("popup");
+            popup.classList.add("show");
+        }
+
+        function hidePopup() {
+            var popup = document.getElementById("popup");
+            popup.classList.remove("show");
+        }
+
+        function goToPlaylist() {
+            // Redirect ke halaman playlist
+            window.location.href = "playlist.html";
+        }
+
+        function addToPlaylist() {
+            var playlist = document.getElementById("playlist").value;
+            if (playlist) {
+                // Jika pengguna memilih playlist
+                alert("Berhasil menambahkan lagu dengan judul 'Song1' ke playlist '" + playlist + "'!");
+            } else {
+                // Jika pengguna belum memilih playlist
+                alert("Silakan pilih playlist terlebih dahulu!");
+            }
+        }
+
+        function goBack() {
+            // Kembali ke halaman sebelumnya
+            history.back();
+        }
+    </script>
+</body>
+{% endblock content %}
