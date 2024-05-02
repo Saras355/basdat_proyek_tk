@@ -54,8 +54,56 @@
     .select2-container .select2-selection--multiple {
         min-height: 38px;
     }
+    .navbar {
+        background-color: #007bff;
+        overflow: hidden;
+    }
+
+    .navbar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar li {
+        float: left;
+    }
+
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .navbar li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    .navbar li a:hover {
+        background-color: #0056b3;
+    }
 </style>
 </head>
+
+<nav class="navbar">
+    <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Chart</a></li>
+        <li><a href="#">Search Bar</a></li>
+        <li><a href="#">Kelola Playlist</a></li>
+        <li><a href="#">Langganan Paket</a></li>
+        <li><a href="#">Kelola Podcast</a></li>
+        <li><a href="#">Kelola Album & Songs</a></li>
+        <li><a href="#">Cek Royalti</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+</nav>
 
 <body>
     <h1 class="center-text"><b>CREATE PODCAST</b></h1>

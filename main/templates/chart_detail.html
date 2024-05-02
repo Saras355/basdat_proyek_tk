@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CHART DETAIL</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHART DETAIL</title>
 </head>
+
+<nav class="navbar">
+    <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Chart</a></li>
+        <li><a href="#">Search Bar</a></li>
+        <li><a href="#">Kelola Playlist</a></li>
+        <li><a href="#">Langganan Paket</a></li>
+        <li><a href="#">Kelola Podcast</a></li>
+        <li><a href="#">Kelola Album & Songs</a></li>
+        <li><a href="#">Cek Royalti</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+</nav>
 
 <body>
     <h1>CHART DETAIL</h1>
@@ -50,6 +65,7 @@
         </tbody>
     </table>
 </body>
+
 </html>
 
 <style>
@@ -71,17 +87,19 @@
         border-collapse: collapse;
         margin-top: 20px;
         background-color: white;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    th, td {
+    th,
+    td {
         border: 1px solid #dddddd;
         padding: 12px 15px;
         text-align: left;
     }
 
     th {
-        background-color: #11235A; /* Bright blue background */
+        background-color: #11235A;
+        /* Bright blue background */
         color: #ffffff;
         font-weight: normal;
     }
@@ -92,7 +110,8 @@
 
     a.button {
         padding: 8px 15px;
-        background-color: #007bff; /* Bright blue background */
+        background-color: #007bff;
+        /* Bright blue background */
         color: #ffffff;
         text-decoration: none;
         border-radius: 5px;
@@ -100,7 +119,8 @@
     }
 
     a.button:hover {
-        background-color: #0056b3; /* A darker shade of blue */
+        background-color: #0056b3;
+        /* A darker shade of blue */
     }
 
     .center-btn {
@@ -109,6 +129,7 @@
         margin-top: 20px;
         margin-bottom: 20px;
     }
+
     .button {
         display: inline-block;
         padding: 5px 15px;
@@ -119,13 +140,49 @@
         border-radius: 5px;
         font-size: 14px;
     }
+
     .button:hover {
         background-color: #0056b3;
     }
+
     .center-btn {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .navbar {
+        background-color: #007bff;
+        overflow: hidden;
+    }
+
+    .navbar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar li {
+        float: left;
+    }
+
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .navbar li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    .navbar li a:hover {
+        background-color: #0056b3;
     }
 </style>
-

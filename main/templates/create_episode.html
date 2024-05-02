@@ -49,7 +49,56 @@
         border: 1px solid #ddd;
         box-sizing: border-box;
     }
+    .navbar {
+        background-color: #007bff;
+        overflow: hidden;
+    }
+
+    .navbar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar li {
+        float: left;
+    }
+
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .navbar li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    .navbar li a:hover {
+        background-color: #0056b3;
+    }
 </style>
+
+<nav class="navbar">
+    <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Chart</a></li>
+        <li><a href="#">Search Bar</a></li>
+        <li><a href="#">Kelola Playlist</a></li>
+        <li><a href="#">Langganan Paket</a></li>
+        <li><a href="#">Kelola Podcast</a></li>
+        <li><a href="#">Kelola Album & Songs</a></li>
+        <li><a href="#">Cek Royalti</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+</nav>
+
 </head>
 
 <body>
