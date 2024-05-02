@@ -30,39 +30,14 @@
                 </div>
             </div>
         </form>
+        
       </div>
     </div>
 </div>
 
-<table class="table table-bordered" style="width: 50%; margin: auto auto;"">
-    <thead>
-        <tr>
-            <th colspan="4" style="text-align: center;"> Hasil Pencarian "{{ judul }}" </th>
-        </tr>
-    </thead>
-
-    <thead>
-      <tr style="text-align: center;">
-        <th scope="col"> Tipe </th>
-        <th scope="col"> Judul </th>
-        <th scope="col"> Oleh </th>
-        <th scope="col"> Actions </th>
-      </tr>
-    </thead>
-
-    <tbody>
-        {% for lagu in daftar_lagu %}
-            <tr style="text-align: center;">
-            {%for detail in lagu%}
-                <td>{{ detail }}</td>
-            {% endfor %}
-            <td>
-                <a href="" style="text-decoration: none;"> [Lihat] </a>
-            </td>
-
-            </tr>
-        {% endfor %}
-    </tbody>
-
-  </table>
+<div class="container" style="margin-top: 50px; border: 1px solid #ccc; padding: 20px;">
+    <div style="text-align: center;">
+        <p>Maaf, pencarian untuk "{{ judul }}" tidak ditemukan</p>
+    </div>
+</div>
 {% endblock content %}

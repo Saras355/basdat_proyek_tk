@@ -1,6 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-# def init_paket():
+def show_navbar(request):
+    context = {
+
+    }
+    return render(request, "navbar.html", context)
     
 def show_langganan_paket(request):
     paket = {
@@ -34,7 +38,14 @@ def show_riwayat_langganan(request):
 
     return render(request, "langganan_paket/riwayat_langganan.html", context)
 
-def show_hasil_cari(request, query):
+def show_cari_konten(request):
+    if 'query' in request.GET:
+        query = request.GET['query']
+        return redirect(f'/search/{query}')
+    
+    return render(request, "search_content/cari_konten.html")
+
+def show_hasil_cari(request, judul):
     daftar_lagu = [
         ["SONG", "Love is in the air", "Henry Soedibjo"],
         ["SONG", "What is love", "Narendra"],
@@ -42,11 +53,20 @@ def show_hasil_cari(request, query):
         ["USER PLAYLIST", "90s Love Songs", "Nano"]
     ]
 
+    if 'query' in request.GET:
+        judul = request.GET['query']
+
+    flag = any(judul.lower() in lagu[1].lower() for lagu in daftar_lagu)
+
     context = {
-        'query': query,
+        'judul': judul,
         'daftar_lagu': daftar_lagu
     }
-    return render(request, "search_content/hasil_cari.html", context)
+
+    if flag is True:
+        return render(request, "search_content/hasil_cari.html", context)
+    else:
+        return render(request, "search_content/hasil_cari_not_found.html", context)
 
 def show_downloaded_song(request):
     daftar_lagu = {
