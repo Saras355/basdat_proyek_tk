@@ -156,7 +156,7 @@
 
         /* Button Style */
         button {
-            background-color: #A07300; /* Warna latar belakang */
+            background-color: #007bff; /* Warna latar belakang */
             color: #fff; /* Warna teks */
             border: none; /* Hapus border */
             padding: 8px 16px; /* Padding */
@@ -166,7 +166,7 @@
         }
 
         button:hover {
-            background-color: #875f00; /* Warna latar belakang saat dihover */
+            background-color: #0056b3; /* Warna latar belakang saat dihover */
         }
     </style>
 </head>
@@ -174,8 +174,16 @@
      <!-- Navbar -->
      <div class="navbar">
         <ul>
-            <li><a href="#">Login</a></li>
-            <li><a href="#">Registrasi</a></li>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Chart</a></li>
+            <li><a href="#">Search Bar</a></li>
+            <li><a href="#">Kelola Playlist</a></li>
+            <li><a href="#">Langganan Paket</a></li>
+            <!-- <li><a href="#">Kelola Album & Songs</a></li>
+            <li><a href="#">Cek Royalti</a></li> -->
+            <li><a href="#">Logout</a></li>
+            <!-- <li><a href="#">Login</a></li>
+            <li><a href="#">Registrasi</a></li> -->
         </ul>
     </div>
     <div class="container">
@@ -190,7 +198,7 @@
         <h2>Daftar Lagu</h2>
         <td>
             <a href="#"><button>Shuffle Play</button></a>
-            <a href="#"><button>Kembali</button></a>
+            <a href="{% url 'main:show_user_playlist' %}"><button>Kembali</button></a>
         </td>
         <table>
             <tr>

@@ -154,7 +154,7 @@
         }
 
         button {
-            background-color: #A07300;
+            background-color: #007bff;
             color: #fff;
             border: none;
             padding: 8px 16px;
@@ -164,16 +164,24 @@
         }
 
         button:hover {
-            background-color: #875f00;
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-     <!-- Navbar -->
-     <div class="navbar">
+    <!-- Navbar -->
+    <div class="navbar">
         <ul>
-            <li><a href="#">Login</a></li>
-            <li><a href="#">Registrasi</a></li>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Chart</a></li>
+            <li><a href="#">Search Bar</a></li>
+            <li><a href="#">Kelola Playlist</a></li>
+            <li><a href="#">Langganan Paket</a></li>
+            <!-- <li><a href="#">Kelola Album & Songs</a></li>
+            <li><a href="#">Cek Royalti</a></li> -->
+            <li><a href="#">Logout</a></li>
+            <!-- <li><a href="#">Login</a></li>
+            <li><a href="#">Registrasi</a></li> -->
         </ul>
     </div>
     <h1>User Playlist</h1>
@@ -190,8 +198,8 @@
         {% for playlist in playlists %}
             <tr>
                 <td>{{playlist.judul}}</td>
-                <td>{{playlist.jumlah_lagu}}</td>
-                <td>{{playlist.total_durasi}}</td>
+                <td>1</td>
+                <td>4 menit</td>
                 <td>
                     <a href="{% url 'main:playlist_detail' playlist_id=playlist.id_User_playlist %}"><button>Detail</button></a>
                     <a href="{% url 'main:edit_playlist' playlist_id=playlist.id_User_playlist %}"><button>Edit</button></a>

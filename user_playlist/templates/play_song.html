@@ -1,14 +1,14 @@
-{% extends 'base.html' %}
+<!-- {% extends 'base.html' %}
 {% load static %}
-{% block meta %}
+{% block meta %} -->
     <title>User Playlist Details</title>
-{% endblock meta %}
+<!-- {% endblock meta %} -->
 
-{% block content %}
+<!-- {% block content %} -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONG DETAILS</title>
+    <title>Song Detail</title>
     <style>
                 .navbar {
     background-color: #007bff; /* Warna latar belakang navbar */
@@ -152,7 +152,7 @@
         }
 
         button {
-            background-color: #A07300; /* Warna latar belakang */
+            background-color: #007bff; /* Warna latar belakang */
             color: #fff; /* Warna teks */
             border: none; /* Hapus border */
             padding: 8px 16px; /* Padding */
@@ -162,7 +162,7 @@
         }
 
         button:hover {
-            background-color: #875f00; /* Warna latar belakang saat dihover */
+            background-color: #0056b3; /* Warna latar belakang saat dihover */
         }
 
         /* Popup styling */
@@ -192,32 +192,40 @@
      <!-- Navbar -->
      <div class="navbar">
         <ul>
-            <li><a href="#">Login</a></li>
-            <li><a href="#">Registrasi</a></li>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Chart</a></li>
+            <li><a href="#">Search Bar</a></li>
+            <li><a href="#">Kelola Playlist</a></li>
+            <!-- <li><a href="#">Langganan Paket</a></li> -->
+            <li><a href="#">Kelola Downloaded Songs</a></li>
+            <li><a href="#">Logout</a></li>
+
         </ul>
     </div>
     <div class="container">
         <h1>Song Details</h1>
-        <p>Judul: this is me trying</p>
-        <p>Genre(s):</p>
+        <p><strong>Judul:</strong> Reckless</p>
+        <p><strong>Genre(s):</strong></p>
         <ul>
             <!-- {% for genre in playlist.id_Konten.genre.all %} -->
-            <li>- pop</li>
+            <li><strong>-</strong> pop</li>
             <!-- {% endfor %} -->
-        </ul><br/>
-        <p>Artist: Taylor Swift</p>
-        <p>Songwriter(s):</p>
+        </ul>
+        <p><strong>Artist:</strong> Madison Beer</p>
+        <p><strong>Songwriter(s):</strong></p>
         <ul>
             <!-- {% for songwriter in playlist.id_Konten.songwriter_set.all %} -->
-            <li>- Taylor Swift</li>
+            <li><strong>-</strong> Madison Beer</li>
+            <li><strong>-</strong> Leroy Clampitt</li>
+            <li><strong>-</strong> Tim Sommers</li>
             <!-- {% endfor %} -->
-        </ul><br/>
-        <p>Durasi: 3.15 menit</p>
-        <p>Tanggal Rilis: 28/04/24</p>
-        <p>Tahun: 2024</p>
-        <p>TotalPlay: 0</p>
-        <p>TotalDownloads: 0</p>
-        <p>Album: folklore</p>
+        </ul>
+        <p><strong>Durasi:</strong> 4 menit</p>
+        <p><strong>Tanggal Rilis:</strong> 28/04/24</p>
+        <p><strong>Tahun:</strong> 2024</p>
+        <p><strong>Total Play:</strong> 487,949,767</p>
+        <p><strong>Total Downloads:</strong> 500,000</p>
+        <p><strong>Album:</strong> Reckless</p>
         <div class="divider"></div>
         <div class="actions">
             <a href="#"><button class="button">Play</button></a>
@@ -229,7 +237,7 @@
 
     <!-- Popup -->
     <div class="popup" id="downloadPopup">
-        <p>Berhasil mengunduh Lagu dengan judul ‘Song1’!</p>
+        <p>Berhasil mengunduh Lagu dengan judul ‘Reckless’!</p>
         <button class="button" onclick="goToDownloadList()">Ke Daftar Download</button>
         <a href="#"><button class="button">Kembali</button></a>
     </div>
@@ -246,4 +254,4 @@
         }
     </script>
 </body>
-{% endblock content %}
+<!-- {% endblock content %} -->
