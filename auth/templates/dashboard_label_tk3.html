@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style2.css"> <!-- Link CSS di sini -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Chart</a></li>
+            <li class="search-bar">
+                <form action="#" method="get">
+                    <input type="search" name="search" id="search" placeholder="Search...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </li>
+            <li><a href="#">Kelola Playlist</a></li>
+            <li><a href="#">Langganan Paket</a></li>
+            <li><a href="#">Kelola Podcast</a></li>
+            <li><a href="#">Kelola Album & Songs</a></li>
+            <li><a href="#">Cek Royalti</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </nav>
+
+    <h1>Dashboard</h1>
+    <h2>Informasi Profil Pengguna:</h2>
+    <p>Nama: John Doe</p>
+    <p>Email: john@example.com</p>
+    <p>Kota Asal: New York</p>
+    <p>Role: Label</p>
+
+    <!-- Jika pengguna adalah label -->
+    <!-- Tampilkan albumnya, jika belum ada tulis "Belum Memproduksi Album " -->
+    <!-- {% if user_data.is_label %}
+        {% if albums %}
+            <h2>Daftar Album</h2>
+            <ul>
+                {% for album in albums %}
+                    <li>{{ album.nama }}</li>
+                {% endfor %}
+            </ul>
+        {% else %} -->
+            <p>Belum memiliki album.</p>
+        <!-- {% endif %}
+    {% endif %} -->
+</body>
+</html>
+<!-- user_data = {
+    'nama': 'John Doe',
+    'email': 'john@example.com',
+    'kontak': 'New York',
+    'role': 'Label',
+    'is_label': True
+}
+
+# Data dummy untuk daftar album
+albums = [
+    {'nama': 'Album 1'},
+    {'nama': 'Album 2'},
+    {'nama': 'Album 3'}
+] -->

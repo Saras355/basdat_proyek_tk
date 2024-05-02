@@ -1,0 +1,97 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head> -->
+
+{% extends 'base.html' %}
+
+<body>
+    <h1>Dashboard</h1>
+    <h2>Informasi Profil Pengguna:</h2>
+    <p>Nama: {{ user_data.nama }}</p>
+    <p>Email: {{ user_data.email }}</p>
+    {% if user_data.kota_asal %}
+    <p>Kota Asal: {{ user_data.kota_asal }}</p>
+    {% endif %}
+    {% if user_data.gender %}
+    <p>Gender: {{ user_data.gender }}</p>
+    {% endif %}
+    {% if user_data.tempat_lahir %}
+    <p>Tempat Lahir: {{ user_data.tempat_lahir }}</p>
+    {% endif %}
+    {% if user_data.tanggal_lahir %}
+    <p>Tanggal Lahir: {{ user_data.tanggal_lahir }}</p>
+    {% endif %}
+    {% if user_data.role %}
+    <p>Role: {{ user_data.role }}</p>
+    {% endif %}
+
+
+<!-- next harusnya ini sudah bener tapi mintol cek lagi :))  -->
+     <!-- Jika pengguna biasa -->
+     {% if not user_data.is_artist and not user_data.is_podcaster and not user_data.is_songwriter %}
+     <!-- Tampilkan playlistnya jika belum memiliki playlist -->
+     {% if playlists %}
+     <h2>Daftar Playlist</h2>
+     <ul>
+         {% for playlist in playlists %}
+         <li>{{ playlist.nama }}</li>
+         {% endfor %}
+     </ul>
+     {% else %}
+     <p>Belum memiliki playlist.</p>
+     {% endif %}
+     {% endif %}
+ 
+     <!-- Jika pengguna adalah artist atau songwriter -->
+     {% if user_data.is_artist or user_data.is_songwriter %}
+     <!-- Tampilkan daftar lagu yang dimilikinya jika belum memiliki lagu -->
+     {% if songs %}
+     <h2>Daftar Lagu</h2>
+     <ul>
+         {% for song in songs %}
+         <li>{{ song.judul }}</li>
+         {% endfor %}
+     </ul>
+     {% else %}
+     <p>Belum memiliki lagu.</p>
+     {% endif %}
+     {% endif %}
+ 
+     <!-- Jika pengguna adalah podcaster -->
+     {% if user_data.is_podcaster %}
+     <!-- Tampilkan daftar podcast yang dimilikinya jika belum memiliki podcast -->
+     {% if podcasts %}
+     <h2>Daftar Podcast</h2>
+     <ul>
+         {% for podcast in podcasts %}
+         <li>{{ podcast.judul }}</li>
+         {% endfor %}
+     </ul>
+     {% else %}
+     <p>Belum memiliki podcast.</p>
+     {% endif %}
+     {% endif %}
+ </body>
+ </html>
+
+
+
+    <!-- {% if user_data.is_premium %}
+    <p>Ini adalah pengguna premium.</p>
+    {% endif %}
+    {% if user_data.is_artist %}
+    <p>Ini adalah seorang artis.</p>
+    {% endif %}
+    {% if user_data.is_songwriter %}
+    <p>Ini adalah seorang penulis lagu.</p>
+    {% endif %}
+    {% if user_data.is_podcaster %}
+    <p>Ini adalah seorang podcaster.</p>
+    {% endif %} -->
+    <!-- {% if user_data.is_label %}
+    <p>Ini adalah seorang label.</p>
+    {% endif %} -->

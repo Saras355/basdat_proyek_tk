@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Royalti</title>
+    <!-- Link CSS di sini -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<!-- jika navbarnya adalah  artist dan songwriter -->
+<nav class="navbar">
+    <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Chart</a></li>
+        <!-- <li><a href="#">Search Bar</a></li> -->
+        <li class="search-bar">
+            <form action="#" method="get">
+                <input type="search" name="search" id="search" placeholder="Search...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </li>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+        <li><a href="#">Kelola Playlist</a></li>
+        <li><a href="#">Langganan Paket</a></li>
+        <li><a href="#">Kelola Album & Songs</a></li>
+        <li><a href="#">Cek Royalti</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+</nav>
+
+<!-- jika navbarnya adalah label -->
+<!-- 
+<nav class="navbar">
+    <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Kelola Album</a></li>
+        <li><a href="#">Cek Royalti</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+</nav> -->
+<body>
+    <!-- LIST ROYALTI table -->
+    <h2>LIST ROYALTI</h2>
+    <table>
+        <tr>
+            <th>Judul Lagu</th>
+            <th>Judul Album</th>
+            <th>Total Play</th>
+            <th>Total Download</th>
+            <th>Total Royalti Didapat</th>
+        </tr>
+        <!-- Dummy data -->
+        <tr>
+            <td>Lagu1</td>
+            <td>Album1</td>
+            <td>3</td>
+            <td>0</td>
+            <td>Rp 450000</td>
+        </tr>
+        <tr>
+            <td>Lagu2</td>
+            <td>Album2</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Rp 520000</td>
+        </tr>
+        <!-- Dummy data ends -->
+    </table>
+</body>
+</html>

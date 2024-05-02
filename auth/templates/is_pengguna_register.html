@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: #007bff;
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar li {
+            float: left;
+        }
+
+        .navbar li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .navbar li a:hover {
+            background-color: #555;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            /* border: 1px solid #ccc; */
+            /* border-radius: 5px; */
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+            /* background-color: #f9f9f9; */
+            height: 100%;
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .container form label,
+        .container form input[type="email"],
+        .container form input[type="password"],
+        .container form input[type="text"],
+        .container form input[type="date"],
+        .container form select {
+            display: block;
+            margin-bottom: 15px;
+            width: 100%;
+            transition: border-color 0.3s;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .container form input[type="submit"] {
+            width: auto;
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .container form input[type="submit"]:hover {
+            background-color:#007bff;
+        }
+
+        .container form input[type="checkbox"] {
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="#">Login</a></li>
+            <li><a href="#">Registrasi</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h2>FORM REGISTRASI</h2>
+        <form action="#" method="post">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email">
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+            
+            <label for="nama">Nama:</label>
+            <input type="text" id="nama" name="nama">
+            
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+            </select>
+            
+            <label for="tempat_lahir">Tempat lahir:</label>
+            <input type="text" id="tempat_lahir" name="tempat_lahir">
+            
+            <label for="tanggal_lahir">Tanggal lahir:</label>
+            <input type="date" id="tanggal_lahir" name="tanggal_lahir">
+            
+            <label for="kota_asal">Kota asal:</label>
+            <input type="text" id="kota_asal" name="kota_asal">
+            
+            <label for="role">Role:</label>
+            <input type="checkbox" id="podcaster" name="role[]" value="Podcaster">
+            <label for="podcaster">Podcaster</label>
+            
+            <input type="checkbox" id="artist" name="role[]" value="Artist">
+            <label for="artist">Artist</label>
+            
+            <input type="checkbox" id="songwriter" name="role[]" value="Songwriter">
+            <label for="songwriter">Songwriter</label>
+            
+            <input type="submit" value="Register">
+        </form>
+    </div>
+</body>
+</html>
