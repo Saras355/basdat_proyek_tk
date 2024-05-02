@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<table class="table table-dark table-hover" style="width: 50%; margin: 50px auto;"">
+<div class="border border-3 rounded border-dark mx-5 mt-5">
+  <table class="table table-dark table-hover" style="width: 50%; margin: 50px auto;"">
     <thead>
         <tr>
             <th colspan="2" style="border: none;"> LANGGANAN PAKET</th>
             <th style="border: none; text-align: right;">
-                <a href="riwayat-langganan/">[Riwayat Transaksi]</a>
+                <a href="riwayat-langganan/" style="text-decoration: none;">[Riwayat Transaksi]</a>
             </th>
         </tr>
     </thead>
@@ -24,10 +25,11 @@
       <tr style="text-align: center;">
         <td>{{ jenis }}</td>
         <td>Rp{{ harga }}</td>
-        <td> <a href="{{ jenis }}/{{ harga }}">[Berlangganan]</a> </td>
+        <td> <a href="{{ jenis }}/{{ harga }}" style="text-decoration: none;">[Berlangganan]</a> </td>
       </tr>
         {% endfor %}
     </tbody>
-
   </table>
+</div>
+
 {% endblock content %}

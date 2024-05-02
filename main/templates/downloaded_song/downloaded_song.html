@@ -1,40 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<table class="table table-bordered" style="width: 50%; margin: 50px auto;"">
-    <thead class="table-dark">
-        <tr>
-            <th colspan="4" style="text-align: center;"> DAFTAR LAGU </th>
+<div class="border border-3 rounded border-dark mx-5 mt-5">
+  <table class="table table-bordered table-striped" style="width: 50%; margin: 50px auto;"">
+      <thead class="table-dark">
+          <tr>
+              <th colspan="4" style="text-align: center;"> DAFTAR LAGU </th>
+          </tr>
+      </thead>
+
+      <thead >
+        <tr style="text-align: center;">
+          <th scope="col"> Judul Lagu</th>
+          <th scope="col"> Oleh </th>
+          <th scope="col"> Actions </th>
         </tr>
-    </thead>
+      </thead>
 
-    <thead>
-      <tr style="text-align: center;">
-        <th scope="col"> Judul Lagu</th>
-        <th scope="col"> Oleh </th>
-        <th scope="col"> Actions </th>
-      </tr>
-    </thead>
+      <tbody>
+          {% for artis, lagu in daftar_lagu.items %}
 
-    <tbody>
-        {% for artis, lagu in daftar_lagu.items %}
+              <tr style="text-align: center;">
+              <td>{{ artis }}</td>
+              <td>{{ lagu }}</td>
+              <td>
+                  <a href="" style="text-decoration: none;">[Lihat]</a>
+                  <a href="/downloaded-song/delete/{{ lagu }}/" style="text-decoration: none;">[Hapus]</a>
+              </td>
+              </tr>
+          {% endfor %}
+      </tbody>
 
-            <tr style="text-align: center;">
-            <td>{{ artis }}</td>
-            <td>{{ lagu }}</td>
-            <td>
-                <a href="" style="text-decoration: none;">Lihat</a>
-                <a href="/downloaded-song/delete/{{ lagu }}/" style="text-decoration: none;">Hapus</a>
-            </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-
-    <thead>
-        <tr>
-            <th colspan="4" style="text-align: center;"> <a href="">Kembali</a> </th>
-        </tr>
-    </thead>
-
+      <thead>
+          <tr>
+              <th colspan="4" style="text-align: center;"> <a href="">Kembali</a> </th>
+          </tr>
+      </thead>
   </table>
+</div>
 {% endblock content %}

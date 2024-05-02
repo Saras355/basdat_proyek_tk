@@ -8,10 +8,10 @@ def show_navbar(request):
     
 def show_langganan_paket(request):
     paket = {
-        "1 Bulan": 20_000,
-        "3 Bulan": 50_000,
-        "6 Bulan": 100_000,
-        "1 Tahun": 150_000
+        "1 Bulan": 60_000,
+        "3 Bulan": 180_000,
+        "6 Bulan": 350_000,
+        "1 Tahun": 600_000
     }
 
     context = {
@@ -47,10 +47,10 @@ def show_cari_konten(request):
 
 def show_hasil_cari(request, judul):
     daftar_lagu = [
-        ["SONG", "Love is in the air", "Henry Soedibjo"],
-        ["SONG", "What is love", "Narendra"],
-        ["PODCAST", "Love is Blind Pod", "Johan"],
-        ["USER PLAYLIST", "90s Love Songs", "Nano"]
+        ["SONG", "Love is in the air", "John Doe"],
+        ["SONG", "What is love", "Ada"],
+        ["PODCAST", "Love is Blind Pod", "Laplace"],
+        ["USER PLAYLIST", "90s Love Songs", "Kleene"]
     ]
 
     if 'query' in request.GET:
