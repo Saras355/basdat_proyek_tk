@@ -11,10 +11,10 @@
                 {% if not is_logged_in %}
                     <!-- Navbar for guests -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        <a class="nav-link" href="{% url 'akun:login' %}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Registrasi</a>
+                        <a class="nav-link" href="{% url 'akun:register_choice' %}">Registrasi</a>
                     </li>
                 {% else %}
                     <!-- Navbar for logged-in users -->

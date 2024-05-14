@@ -25,6 +25,12 @@ def show_login(request):
     return render(request, "login.html")
 #next blm ganti
 
+def list_tables(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';")
+        tables = cursor.fetchall()
+        table_list = [table[0] for table in tables]  # Extract table names from tuples
+    return render(request, ''auth/list_tables.html'', {'tables': table_list})
 
 @csrf_exempt
 def logout_with_postgres(request):
