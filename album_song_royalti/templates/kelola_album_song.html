@@ -1,0 +1,194 @@
+<nav class="navbar">
+    <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Chart</a></li>
+        <li><a href="#">Search Bar</a></li>
+
+        <!-- <li class="search-bar">
+            <form action="#" method="get">
+                <input type="search" name="search" id="search" placeholder="Search...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </li>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> -->
+
+        <!-- <li><a href="#">Search Bar</a></li> -->
+        <li><a href="#">Kelola Playlist</a></li>
+        <li><a href="#">Langganan Paket</a></li>
+        <li><a href="#">Kelola Album & Songs</a></li>
+        <li><a href="#">Cek Royalti</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+</nav>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Kelola Album & Song</title>
+    <!-- Link CSS di sini -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- CREATE ALBUM form -->
+    <h2>CREATE ALBUM</h2>
+    <form action="#" method="post">
+        <label for="judul">Judul:</label><br>
+        <input type="text" id="judul" name="judul"><br>
+        <label for="label">Label:</label><br>
+        <select id="label" name="label">
+            <option value="label1">Label 1</option>
+            <option value="label2">Label 2</option>
+            <!-- Dropdown daftar label dari database -->
+        </select><br><br>
+        <input type="submit" value="SUBMIT">
+    </form>
+
+    <!-- LIST ALBUM table -->
+    <h2>LIST ALBUM</h2>
+    <table>
+        <tr>
+            <th>Judul</th>
+            <th>Label</th>
+            <th>Jumlah Lagu</th>
+            <th>Total Durasi</th>
+            <th>Action</th>
+        </tr>
+        <!-- Dummy data -->
+        <tr>
+            <td>Album1</td>
+            <td>LabelA</td>
+            <td>0</td>
+            <td>0 menit</td>
+            <td>
+                <a href="#">Lihat Daftar Lagu</a>
+                <a href="#">Tambah Lagu</a>
+                <a href="#">Hapus</a>
+            </td>
+        </tr>
+        <tr>
+            <td>Album2</td>
+            <td>LabelB</td>
+            <td>2</td>
+            <td>4 menit</td>
+            <td>
+                <a href="#">Lihat Daftar Lagu</a>
+                <a href="#">Tambah Lagu</a>
+                <a href="#">Hapus</a>
+            </td>
+        </tr>
+        <!-- Dummy data ends -->
+    </table>
+
+    <!-- CREATE LAGU form -->
+    <h2>CREATE LAGU</h2>
+    <form action="#" method="post">
+        <label for="album">Album:</label><br>
+        <input type="text" id="album" name="album" value="Album1" ><br>
+        <label for="judul">Judul:</label><br>
+        <input type="text" id="judul" name="judul"><br>
+        <div class="multiselect-container">
+            <label for="artist">Artist:</label><br>
+            <div class="multiselect">
+                <input type="hidden" id="artist" name="artist"> <!-- Hidden input untuk menyimpan nilai terpilih -->
+                <div class="select-box"> <!-- Kotak pilihan yang menampilkan nilai terpilih -->
+                    <span>Pilih artist</span>
+                    <i class="fas fa-caret-down"></i> <!-- Ikon panah bawah -->
+                </div>
+                <div class="option-list"> <!-- Daftar pilihan -->
+                    <div class="option">
+                        <input type="checkbox" id="artist1" name="artist[]" value="artist1">
+                        <label for="artist1">Artist 1</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="artist2" name="artist[]" value="artist2">
+                        <label for="artist2">Artist 2</label>
+                    </div>
+                    <!-- Tambahkan pilihan artist lainnya di sini -->
+                </div>
+            </div>
+        </div>
+        <div class="multiselect-container">
+            <label for="songwriter">Songwriter:</label><br>
+            <div class="multiselect">
+                <input type="hidden" id="songwriter" name="songwriter"> <!-- Hidden input untuk menyimpan nilai terpilih -->
+                <div class="select-box"> <!-- Kotak pilihan yang menampilkan nilai terpilih -->
+                    <span>Pilih songwriter</span>
+                    <i class="fas fa-caret-down"></i> <!-- Ikon panah bawah -->
+                </div>
+                <div class="option-list"> <!-- Daftar pilihan -->
+                    <div class="option">
+                        <input type="checkbox" id="songwriter1" name="songwriter[]" value="songwriter1">
+                        <label for="songwriter1">Songwriter 1</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="songwriter2" name="songwriter[]" value="songwriter2">
+                        <label for="songwriter2">Songwriter 2</label>
+                    </div>
+                    <!-- Tambahkan pilihan songwriter lainnya di sini -->
+                </div>
+            </div>
+        </div>
+        <div class="multiselect-container">
+            <label for="genre">Genre:</label><br>
+            <div class="multiselect">
+                <input type="hidden" id="genre" name="genre"> <!-- Hidden input untuk menyimpan nilai terpilih -->
+                <div class="select-box"> <!-- Kotak pilihan yang menampilkan nilai terpilih -->
+                    <span>Pilih genre</span>
+                    <i class="fas fa-caret-down"></i> <!-- Ikon panah bawah -->
+                </div>
+                <div class="option-list"> <!-- Daftar pilihan -->
+                    <div class="option">
+                        <input type="checkbox" id="genre1" name="genre[]" value="genre1">
+                        <label for="genre1">Genre 1</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="genre2" name="genre[]" value="genre2">
+                        <label for="genre2">Genre 2</label>
+                    </div>
+                    <!-- Tambahkan pilihan genre lainnya di sini -->
+                </div>
+            </div>
+        </div>
+        <label for="durasi">Durasi:</label><br>
+        <input type="text" id="durasi" name="durasi"><br><br>
+        <input type="submit" value="SUBMIT">
+    </form>
+
+    <!-- DAFTAR LAGU PADA ALBUM1 table -->
+    <h2>DAFTAR LAGU PADA ALBUM1</h2>
+    <table>
+        <tr>
+            <th>Judul</th>
+            <th>Durasi</th>
+            <th>Total Play</th>
+            <th>Total Download</th>
+            <th>Action</th>
+        </tr>
+        <!-- Dummy data -->
+        <tr>
+            <td>Lagu1</td>
+            <td>2 menit</td>
+            <td>3</td>
+            <td>0</td>
+            <td>
+                <a href="#">Lihat Detail</a>
+                <a href="#">Hapus</a>
+            </td>
+        </tr>
+        <tr>
+            <td>Lagu2</td>
+            <td>3 menit</td>
+            <td>2</td>
+            <td>2</td>
+            <td>
+                <a href="#">Lihat Detail</a>
+                <a href="#">Hapus</a>
+            </td>
+        </tr>
+        <!-- Dummy data ends -->
+    </table>
+</body>
+</html>

@@ -17,7 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from akun.views import list_tables
+
 urlpatterns = [
+    # path("admin/", admin.site.urls),
+    # path('auth/', include('auth.urls')),
     path("admin/", admin.site.urls),
     path("", include('user_playlist.urls')),
 ]
