@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+import uuid
 # from .forms import LoginForm -> ga usah pakai form langsung dari login.html aja(?)
 import json
 from django.db import connection
@@ -259,6 +260,9 @@ def login_with_postgres(request):
 #     return render(request, "login.html")
 #BATASSSSSSSSSSSSSS
 
+#show_home
+def home(request):
+    return render(request, 'home.html')
 
 #register yang dasar
 def register_choice(request):
@@ -286,7 +290,6 @@ def register_label(request):
 @csrf_exempt
 def register_pengguna(request):
     if request.method == 'POST':
-        # SAMA ---------------------------
         email = request.POST.get('email')
         password = request.POST.get('password')
         nama = request.POST.get('nama')
@@ -296,7 +299,7 @@ def register_pengguna(request):
         kota_asal = request.POST.get('kota_asal')
         roles = request.POST.getlist('role')
         is_verified = True
-
+        
         #next : mungkin nanti baru ada triggernya 
         #kalau ga ada role yang dipilih 
         if not roles:
@@ -311,8 +314,79 @@ def register_pengguna(request):
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """, [email, password, nama, gender, tempat_lahir, tanggal_lahir, is_verified, kota_asal])
        
+            #tambahkan di table  masing masing role    
+            #tambahkan jika podcaster
+            if 'podcaster' in roles:
+                #attribut hanya email saja
+                #karena sudah ada emailnya di table akun, harusnya emailnya bisa langsung tanpa perlu fk lagi 
+                with connection.cursor() as cursor:
+                    cursor.execute("""
+                        INSERT INTO marmut.podcaster (email)
+                        VALUES (%s)
+                    """, [email])
             
-        
+            #tambahkan jika artist
+                #note kalau FK berarti data tersebut harus ada di tabel yang di FKan terlebih dahulu
+                #jadi asumsinya sudah ada 
+            #attributnya ada id dari UUID PK
+            #ada email_akun yang FK ke AKUN.email
+            #ada id_pemilik_hak_cipta dengan tipe data UUID , yang FK ke pemilik_hak_cipta.id
+
+            #next harusnya bisa -> tanyain -> krn pemilik hak cipta kan dibuat independen 
+            if 'artist' in roles:
+                artist_id = uuid.uuid4()
+                cursor.execute("""SELECT * FROM marmut.akun WHERE email = %s LIMIT 1;""", [email])
+                email_akun = cursor.fetchall()
+                #ambil email dari table akun
+                email_akun = email_akun[0][0] #NEXT
+                #ambil id dari table pemilik hak cipta
+                cursor.execute("""  SELECT DISTINCT r.id_pemilik_hak_cipta 
+                               FROM song s
+                               JOIN royalti r ON s.id_konten = r.id_song
+                               WHERE s.id_artist = %s;""", [artist_id])
+                id_pemilik_hak_cipta = cursor.fetchall()
+                
+                #masukkan ke table artist
+                query_insert_artist = """
+                INSERT INTO marmut.artist (id, email_akun, id_pemilik_hak_cipta)
+                VALUES (%s, %s, %s)
+                """
+                cursor.execute(query_insert_artist, (artist_id, email_akun, id_pemilik_hak_cipta))
+                
+            
+            #cek di dataset apakah ada orang yang id song writernya sama dengan id artist 
+            #tapi ada kemungkinan kalau satu orang kan bisa jadi artist dan bisa jadi songwriter harusnya saling berbagi id?
+            #cek dataset -> 
+                #pakai 
+               # SELECT * FROM ARTIST WHERE ARTIST.id in (SELECT id FROM SONGWRITER); -> idnya ga ada yg sama antara di kedua table itu
+               # SELECT * FROM ARTIST WHERE ARTIST.email_akun in (SELECT email_akun FROM SONGWRITER); -> tapiii ada email yang sama 
+            #asumsi: ini berarti untuk satu orangyag rolenya bisa artist dan songwriter maka idnya berbeda, tetapi email_akunnya boleh sama
+
+            #tambahkan jika songwriter
+            if 'songwriter' in roles:
+                songwriter_id = uuid.uuid4()
+                cursor.execute("""SELECT * FROM marmut.akun WHERE email = %s LIMIT 1;""", [email])
+                email_akun = cursor.fetchall()
+                #ambil email dari table akun
+                email_akun = email_akun[0][0] #NEXT
+                #ambil id pemilik hak cipta -> ambil dari songwriter_write_song dulu baru dapat id_songnya 
+                query = """
+                    SELECT DISTINCT r.id_pemilik_hak_cipta
+                    FROM songwriter_write_song sws
+                    JOIN song s ON sws.id_song = s.id_konten
+                    JOIN royalti r ON s.id_konten = r.id_song
+                    WHERE sws.id_songwriter = %s
+                """
+                cursor.execute(query, (artist_id,))
+                id_pemilik_hak_cipta = cursor.fetchone()
+                
+                #masukkan ke table artist
+                query_insert_artist = """
+                INSERT INTO marmut.songwriter (id, email_akun, id_pemilik_hak_cipta)
+                VALUES (%s, %s, %s)
+                """
+                cursor.execute(query_insert_artist, (songwriter_id, email_akun, id_pemilik_hak_cipta))
+            
             return HttpResponseRedirect('/login/') 
             # except psycopg2.Error as error:
             #     messages.error(request, f'{error}')

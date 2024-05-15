@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from akun import views as akun_views
 
 from akun.views import list_tables
 
@@ -23,5 +24,6 @@ urlpatterns = [
     # path("admin/", admin.site.urls),
     # path('auth/', include('auth.urls')),
     path("admin/", admin.site.urls),
-    path('', include('akun.urls')),
+    path('akun/', include('akun.urls')),
+    path('', akun_views.home, name='home'),
 ]
