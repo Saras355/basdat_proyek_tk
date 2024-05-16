@@ -180,16 +180,16 @@
     </div>
     <div class="container">
         <h1>Tambah Lagu</h1>
-        <form method="POST">
-            <label for="song">Lagu:</label>
-            <select id="song" name="song">
-                <option value="judul1-artist1">Judul Lagu 1 - Nama Artis 1</option>
-                <option value="judul2-artist2">Judul Lagu 2 - Nama Artis 2</option>
-                <option value="judul3-artist3">Judul Lagu 3 - Nama Artis 3</option>
-                <!-- Add more options as needed -->
-            </select>
-            <input type="submit" value="Submit">
-        </form>
+            <form method="POST">
+                {% csrf_token %}
+                <label for="song">Lagu:</label>
+                    <select id="song" name="song_id">
+                        {% for song in songs %}
+                        <option value="{{ song.id_konten }}">{{song.judul}} - {{song.artist}}</option>
+                        {% endfor %}
+                    </select>
+                <input type="submit" value="Submit">
+            </form>
     </div>
 </body>
 <!-- {% endblock content %} -->

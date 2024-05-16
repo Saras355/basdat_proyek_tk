@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     "label",
     "main",
     "pengguna_biasa",
-    "podcaster"
+    "podcaster",
+    "user_playlist"
 ]
 
 MIDDLEWARE = [

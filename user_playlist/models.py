@@ -1,7 +1,7 @@
 from django.db import models
 import uuid
 
-# Create your models here.
+# Models ini tidak dipakai
 class Akun(models.Model):
     email = models.EmailField(max_length=50, primary_key=True)
     password = models.CharField(max_length=50)

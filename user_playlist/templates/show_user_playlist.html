@@ -190,6 +190,7 @@
     <table>
         <tr>
             <th>Judul</th>
+            <!-- <th>ID playlist</th> -->
             <th>Jumlah Lagu</th>
             <th>Total Durasi</th>
             <th>Actions</th>
@@ -198,22 +199,31 @@
         {% for playlist in playlists %}
             <tr>
                 <td>{{playlist.judul}}</td>
-                <td>1</td>
-                <td>4 menit</td>
+                <!-- <td>{{playlist.id_playlist}}</td> -->
+                <td>{{playlist.jumlah_lagu}}</td>
+                <td>{{playlist.total_durasi}} menit</td>
                 <td>
-                    <a href="{% url 'main:playlist_detail' playlist_id=playlist.id_User_playlist %}"><button>Detail</button></a>
-                    <a href="{% url 'main:edit_playlist' playlist_id=playlist.id_User_playlist %}"><button>Edit</button></a>
-                    <a href="{% url 'main:delete_playlist' playlist_id=playlist.id_User_playlist %}"><button>Delete</button></a>
+                    <a href="{% url 'main:detail_user_playlist' playlist_id=playlist.id_playlist %}"><button>Detail</button></a>
+                    <a href="{% url 'main:edit_playlist' playlist_id=playlist.id_playlist %}"><button>Edit</button></a>
+                    <a href="{% url 'main:delete_playlist' playlist_id=playlist.id_playlist %}"><button>Delete</button></a>
                 </td>
             </tr>
         {% endfor %}
     </table>
     <br />
     <div style="text-align: center;">
-        <a href="{% url 'main:add_playlist' %}">
+        <a href="{% url 'main:add_user_playlist' %}">
             <button>Tambah Playlist</button>
         </a>
     </div>
 </body>
 
 {% endblock content %}
+<!-- <a href="{% url 'main:add_playlist' %}">
+    <button>Tambah Playlist</button>
+</a> -->
+
+<!-- <a href="{% url 'main:playlist_detail' playlist_id=playlist.id_User_playlist %}"><button>Detail</button></a>
+<a href="{% url 'main:edit_playlist' playlist_id=playlist.id_User_playlist %}"><button>Edit</button></a>
+<a href="{% url 'main:delete_playlist' playlist_id=playlist.id_User_playlist %}"><button>Delete</button></a> -->
+ <!-- <a href="{% url 'main:delete_playlist' playlist_id=playlist.id %}"><button>Delete</button></a> -->

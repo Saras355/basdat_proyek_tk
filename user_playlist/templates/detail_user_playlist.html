@@ -189,9 +189,9 @@
     <div class="container">
         <h1>User Playlist Detail</h1>
         <p>Judul: {{playlist.judul}}</p>
-        <p>Pembuat: Gina</p>
-        <p>Jumlah Lagu: 1</p>
-        <p>Total Durasi: 4 menit</p>
+        <p>Pembuat: {{playlist.pembuat}}</p>
+        <p>Jumlah Lagu: {{playlist.jumlah_lagu}}</p>
+        <p>Total Durasi: {{playlist.total_durasi}} menit</p>
         <p>Tanggal Dibuat: {{playlist.tanggal_dibuat}}</p>
         <p>Deskripsi: {{playlist.deskripsi}}</p>
         <br/>
@@ -207,21 +207,23 @@
                 <th>Durasi</th>
                 <th>Actions</th>
             </tr>
+            {% for song in songs %}
             <tr>
-                <td>Reckless</td>
-                <td>Madison Beer</td>
-                <td>4 menit</td>
+                <td>{{ song.judul }}</td>
+                <td>{{ song.oleh }}</td>
+                <td>{{ song.durasi }} menit</td>
                 <td>
                     <a href="#"><button>Lihat</button></a>
                     <a href="#"><button>Play</button></a>
                     <a href="#"><button>Hapus</button></a>
                 </td>
             </tr>
+            {% endfor %}
 
         </table>
         <br/>
         <td>
-            <a href="#"><button>Tambah Lagu</button></a>
+            <a href="{% url 'main:add_song' playlist_id=playlist.id_playlist %}"><button>Tambah Lagu</button></a>
         </td>
     </div>
 </body>

@@ -183,7 +183,15 @@
     <form method="POST">
         {% csrf_token %}
         <table>
-            {{ form.as_table }}
+            <tr>
+                <td><label for="judul">Judul:</label></td>
+                <td><input type="text" id="judul" name="judul" required></td>
+            </tr>
+            <tr>
+                <td><label for="deskripsi">Deskripsi:</label></td>
+                <td><textarea id="deskripsi" name="deskripsi" required></textarea></td>
+            </tr>
+            <!-- Tambahkan input fields lainnya sesuai kebutuhan -->
             <tr>
                 <td></td>
                 <td>
