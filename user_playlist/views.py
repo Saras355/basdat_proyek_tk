@@ -28,12 +28,15 @@ def add_user_playlist(request):
             cursor.execute("INSERT INTO marmut.playlist (id) VALUES (%s);", [id_playlist])
         
         # Setelah mendapatkan id_playlist, gunakan id_playlist tersebut saat menyimpan data user_playlist
+        #if playlist baru
         with connection.cursor() as cursor:
             cursor.execute(""" 
             INSERT INTO marmut.user_playlist (email_pembuat, judul, deskripsi, jumlah_lagu, tanggal_dibuat, id_user_playlist, id_playlist, total_durasi)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
             """, ["cburns@gmail.com", judul, deskripsi, 0, datetime.date.today(), str(uuid.uuid4()), id_playlist, 0])
         return redirect('main:show_user_playlist')
+        #elseif lagunya udh ada 
+
     return render(request, 'add_user_playlist.html')
 
 def delete_playlist(request, playlist_id):
@@ -85,7 +88,7 @@ def detail_user_playlist(request, playlist_id):
 
     # Fetch songs in the playlist (this is a placeholder, adjust according to your database schema)
     songs = query_result(f"""
-    SELECT k.judul, k.durasi, k.tanggal_rilis, ak.nama as oleh
+    SELECT k.id, k.judul, k.durasi, k.tanggal_rilis, ak.nama as oleh
     FROM marmut.playlist_song ps
     JOIN marmut.konten k ON k.id = ps.id_song
     JOIN marmut.song s ON s.id_konten = k.id
@@ -109,23 +112,20 @@ def add_song(request, playlist_id):
         song_id = request.POST.get('song_id')
 
         # Check if the song is already in the playlist
-        existing_song = query_result(f"""
-            SELECT s.* FROM marmut.user_playlist up
-            JOIN marmut.playlist_song ps ON ps.id_playlist = up.id_playlist
-            JOIN marmut.song s ON ps.id_song = s.id_konten
-            WHERE up.id_playlist = '{playlist_id}' AND s.id_konten = '{song_id}';
-        """)
+        # existing_song = query_result(f"""
+        #     SELECT s.* FROM marmut.user_playlist up
+        #     JOIN marmut.playlist_song ps ON ps.id_playlist = up.id_playlist
+        #     JOIN marmut.song s ON ps.id_song = s.id_konten
+        #     WHERE up.id_playlist = '{playlist_id}' AND s.id_konten = '{song_id}';
+        # """)
+        # if existing_song:
+        #     return HttpResponse("Lagu sudah ada di dalam playlist", status=400)
 
-        if existing_song:
-            return HttpResponse("Lagu sudah ada di dalam playlist", status=400)
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO marmut.playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
+                           [playlist_id, song_id])
 
-        # Add the song to the playlist
-        query_result(f"""
-            INSERT INTO marmut.playlist_song (id_playlist, id_song)
-            VALUES ('{playlist_id}', '{song_id}');
-        """)
-
-        return redirect(reverse('detail_user_playlist', args=[playlist_id]))
+        return redirect(reverse('main:detail_user_playlist', args=[playlist_id]))
 
     # Get the list of all songs for the dropdown
     songs = query_result(f"""
@@ -137,3 +137,99 @@ def add_song(request, playlist_id):
     """)
 
     return render(request, 'add_song.html', {'songs': songs, 'playlist_id': playlist_id})
+
+def delete_song(request, playlist_id, song_id):
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM marmut.playlist_song WHERE id_playlist = %s AND id_song = %s;", 
+                        [playlist_id, song_id])
+
+    return redirect(reverse('main:detail_user_playlist', args=[playlist_id]))
+
+def play_song(request, playlist_id, song_id):
+    playlist = query_result(f"""
+    SELECT up.*, a.nama as pembuat
+    FROM marmut.user_playlist up
+    JOIN marmut.akun a ON up.email_pembuat = a.email
+    WHERE up.id_playlist = '{playlist_id}';
+    """)
+
+    song_details = query_result(f"""
+        SELECT k.judul, g.genre, ak_artist.nama as artist, ak_songwriter.nama as songwriter, k.durasi, k.tanggal_rilis, k.tahun, s.total_play, s.total_download, al.judul as album, s.id_konten
+        FROM marmut.playlist_song ps
+        JOIN marmut.song s ON ps.id_song = s.id_konten
+        JOIN marmut.konten k ON s.id_konten = k.id
+        JOIN marmut.artist ar ON s.id_artist = ar.id
+        JOIN marmut.akun ak_artist ON ar.email_akun = ak_artist.email
+        JOIN marmut.album al ON s.id_album = al.id
+        JOIN marmut.genre g ON s.id_konten = g.id_konten
+        JOIN marmut.songwriter_write_song sws ON s.id_konten = sws.id_song
+        JOIN marmut.songwriter sw ON sws.id_songwriter = sw.id
+        JOIN marmut.akun ak_songwriter ON sw.email_akun = ak_songwriter.email
+        WHERE ps.id_playlist = '{playlist_id}' AND ps.id_song = '{song_id}';
+    """)
+
+    if not song_details:
+        return HttpResponse("Song not found", status=404)
+
+    # Check if user has a premium account
+    # user_email = request.user.email  # Assuming you have user authentication and can get the user's email
+    # user_info = query_result(f"SELECT is_premium FROM marmut.akun WHERE email = '{user_email}';")
+    # is_premium = user_info[0]['is_premium'] if user_info else False
+
+    context = {
+        'song': song_details[0],
+        # 'is_premium': is_premium
+        'playlist': playlist[0]
+    }
+
+    return render(request, 'play_song.html', context)
+
+def add_song_to_another_playlist(request, playlist_id, song_id):
+    success_message = None
+    playlist_name = None
+    song_title = None
+    
+    if request.method == 'POST':
+        other_playlist_id = request.POST.get('other_playlist_id')
+        with connection.cursor() as cursor:
+            # Fetch song title
+            song_title_query = query_result("SELECT judul FROM marmut.konten WHERE id = %s", [song_id])
+            if song_title_query:
+                song_title = song_title_query[0]['judul']
+
+            # Fetch playlist name
+            playlist_name_query = query_result("SELECT judul FROM marmut.user_playlist WHERE id_playlist = %s", [other_playlist_id])
+            if playlist_name_query:
+                playlist_name = playlist_name_query[0]['judul']
+            
+            cursor.execute("INSERT INTO marmut.playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
+                           [other_playlist_id, song_id])
+            
+        success_message = f"Berhasil menambahkan Lagu dengan judul '{song_title}' ke '{playlist_name}'!"
+
+    # Fetch playlists created by the current user
+    playlists = query_result(f"""
+        SELECT id_playlist, judul FROM marmut.user_playlist WHERE email_pembuat = %s;
+    """, ["cburns@gmail.com"])
+
+    # Fetch song details
+    song = query_result(f"""
+        SELECT k.judul, a.nama as artist
+        FROM marmut.song s
+        JOIN marmut.konten k ON s.id_konten = k.id 
+        JOIN marmut.artist ar ON s.id_artist = ar.id
+        JOIN marmut.akun a ON ar.email_akun = a.email
+        WHERE s.id_konten = %s;
+    """, [song_id])
+    song = song[0] if song else None
+
+    context = {
+        'playlists': playlists,
+        'playlist_id': playlist_id,
+        'song_id': song_id,
+        'song': song,
+        'success_message': success_message,
+        'playlist_name': playlist_name
+    }
+
+    return render(request, 'add_song_to_another_playlist.html', context)

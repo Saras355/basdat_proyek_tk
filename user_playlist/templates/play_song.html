@@ -204,40 +204,36 @@
     </div>
     <div class="container">
         <h1>Song Details</h1>
-        <p><strong>Judul:</strong> Reckless</p>
+        <p><strong>Judul:</strong> {{ song.judul }}</p>
         <p><strong>Genre(s):</strong></p>
         <ul>
-            <!-- {% for genre in playlist.id_Konten.genre.all %} -->
-            <li><strong>-</strong> pop</li>
-            <!-- {% endfor %} -->
+            <li><strong>-</strong> {{ song.genre }}</li>
         </ul>
-        <p><strong>Artist:</strong> Madison Beer</p>
+        <p><strong>Artist:</strong> {{ song.artist }}</p>
         <p><strong>Songwriter(s):</strong></p>
         <ul>
-            <!-- {% for songwriter in playlist.id_Konten.songwriter_set.all %} -->
-            <li><strong>-</strong> Madison Beer</li>
-            <li><strong>-</strong> Leroy Clampitt</li>
-            <li><strong>-</strong> Tim Sommers</li>
-            <!-- {% endfor %} -->
+            <li><strong>-</strong> {{ song.songwriter }}</li>
         </ul>
-        <p><strong>Durasi:</strong> 4 menit</p>
-        <p><strong>Tanggal Rilis:</strong> 28/04/24</p>
-        <p><strong>Tahun:</strong> 2024</p>
-        <p><strong>Total Play:</strong> 487,949,767</p>
-        <p><strong>Total Downloads:</strong> 500,000</p>
-        <p><strong>Album:</strong> Reckless</p>
+        <p><strong>Durasi:</strong> {{ song.durasi }} menit</p>
+        <p><strong>Tanggal Rilis:</strong> {{ song.tanggal_rilis }}</p>
+        <p><strong>Tahun:</strong> {{ song.tahun }}</p>
+        <p><strong>Total Play:</strong> {{ song.total_play }}</p>
+        <p><strong>Total Downloads:</strong> {{ song.total_download }}</p>
+        <p><strong>Album:</strong> {{ song.album }}</p>
         <div class="divider"></div>
         <div class="actions">
             <a href="#"><button class="button">Play</button></a>
-            <a href="#"><button class="button">Add to Playlist</button></a>
-            <button class="button" onclick="showDownloadPopup()">Download</button>
-            <a href="#"><button class="button">Kembali</button></a>
+            <a href="{% url 'main:add_song_to_another_playlist' playlist_id=playlist.id_playlist song_id=song.id_konten %}"><button class="button">Add to Playlist</button></a>
+            <!-- {% if is_premium %}
+                <button class="button" onclick="showDownloadPopup()">Download</button>
+            {% endif %} -->
+            <a href="{% url 'main:detail_user_playlist' playlist_id=playlist.id_playlist %}"><button class="button">Kembali</button></a>
         </div>
     </div>
 
     <!-- Popup -->
     <div class="popup" id="downloadPopup">
-        <p>Berhasil mengunduh Lagu dengan judul ‘Reckless’!</p>
+        <p>Berhasil mengunduh Lagu dengan judul ‘{{song.judul}}’!</p>
         <button class="button" onclick="goToDownloadList()">Ke Daftar Download</button>
         <a href="#"><button class="button">Kembali</button></a>
     </div>
@@ -255,3 +251,4 @@
     </script>
 </body>
 <!-- {% endblock content %} -->
+<!-- {% url 'main:add_song_to_another_playlist' playlist_id=playlist.id_playlist song_id=song.id_konten %} -->

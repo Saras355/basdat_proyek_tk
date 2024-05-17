@@ -184,6 +184,7 @@
                 {% csrf_token %}
                 <label for="song">Lagu:</label>
                     <select id="song" name="song_id">
+                        <option value="">Pilih Lagu</option>
                         {% for song in songs %}
                         <option value="{{ song.id_konten }}">{{song.judul}} - {{song.artist}}</option>
                         {% endfor %}

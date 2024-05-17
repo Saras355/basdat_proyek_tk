@@ -211,57 +211,32 @@
     </div>
     <div class="container">
         <h1>Add Song to User Playlist</h1>
-        <p>Judul: Song1</p>
-        <p>Artist: Artist1</p>
-        <select name="playlist" id="playlist">
-            <option value="">Pilih Playlist</option>
-            <option value="playlist1">Playlist1</option>
-            <option value="playlist2">Playlist2</option>
-            <option value="playlist3">Playlist3</option>
-            <!-- Tambahkan daftar playlist milik pengguna di sini -->
-        </select>
-        <div class="actions">
-            <button class="button add" onclick="addToPlaylist()">Tambah</button>
-            <button class="button back" onclick="goBack()">Kembali</button>
-        </div>
+        <p>Judul: {{ song.judul }}</p>
+        <p>Artist: {{ song.artist }}</p>
+        <form method="POST">
+            {% csrf_token %}
+            <select name="other_playlist_id" id="playlist">
+                <option value="">Pilih Playlist</option>
+                {% for playlist in playlists %}
+                    <option value="{{ playlist.id_playlist }}">{{ playlist.judul }}</option>
+                {% endfor %}
+            </select>
+            <div class="actions">
+                <button type="submit" class="button add">Tambah</button>
+                <!-- <a href="{% url 'main:play_song' playlist_id song_id %}"><button class="button">Kembali</button></a> -->
+            </div>
+        </form>
+        {% if success_message %}
+            <div class="popup" id="popup">
+                <p>{{ success_message }}</p>
+                <form method="get" action="{% url 'main:detail_user_playlist' playlist_id %}">
+                    <button type="submit" class="button">Ke Playlist</button>
+                </form>
+                <form method="get" action="{% url 'main:add_song_to_another_playlist' playlist_id song_id %}">
+                    <button type="submit" class="button">Kembali</button>
+                </form>
+            </div>
+        {% endif %}
     </div>
-    <!-- Popup -->
-    <div class="popup" id="popup">
-        <p>Berhasil menambahkan Lagu dengan judul ‘Song1’ ke ‘Playlist1’!</p>
-        <button class="button" onclick="goToPlaylist()">KE PLAYLIST</button>
-        <button class="button" onclick="hidePopup()">KEMBALI</button>
-    </div>
-    <script>
-         function showPopup() {
-            var popup = document.getElementById("popup");
-            popup.classList.add("show");
-        }
-
-        function hidePopup() {
-            var popup = document.getElementById("popup");
-            popup.classList.remove("show");
-        }
-
-        function goToPlaylist() {
-            // Redirect ke halaman playlist
-            window.location.href = "playlist.html";
-        }
-
-        function addToPlaylist() {
-            var playlist = document.getElementById("playlist").value;
-            if (playlist) {
-                // Jika pengguna memilih playlist
-                alert("Berhasil menambahkan lagu dengan judul 'Song1' ke playlist '" + playlist + "'!");
-            } else {
-                // Jika pengguna belum memilih playlist
-                alert("Silakan pilih playlist terlebih dahulu!");
-            }
-        }
-
-        function goBack() {
-            // Kembali ke halaman sebelumnya
-            history.back();
-        }
-    </script>
 </body>
 <!-- {% endblock content %} -->
