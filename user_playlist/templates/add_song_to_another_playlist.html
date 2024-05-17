@@ -215,24 +215,38 @@
         <p>Artist: {{ song.artist }}</p>
         <form method="POST">
             {% csrf_token %}
-            <select name="other_playlist_id" id="playlist">
-                <option value="">Pilih Playlist</option>
-                {% for playlist in playlists %}
+            <label for="playlist">Pilih Lagu:</label>
+                <select id="playlist" name="other_playlist_id">
+                    <option value="">Pilih Lagu</option>
+                    {% for playlist in playlists %}
                     <option value="{{ playlist.id_playlist }}">{{ playlist.judul }}</option>
-                {% endfor %}
-            </select>
-            <div class="actions">
-                <button type="submit" class="button add">Tambah</button>
-                <!-- <a href="{% url 'main:play_song' playlist_id song_id %}"><button class="button">Kembali</button></a> -->
-            </div>
+                    {% endfor %}
+                </select>
+            <input type="submit" value="Submit">
         </form>
+        <!-- <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="playlist">Pilih Playlist:</label>
+                <select class="form-control" name="other_playlist_id" id="playlist">
+                    <option value="">Pilih Playlist</option>
+                    {% for playlist in playlists %}
+                        <option value="{{ playlist.id_playlist }}">{{ playlist.judul }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="button add">Tambah</button>
+            <a href="{% url 'user_playlist:play_song' playlist_id song_id %}"><button class="button">Kembali</button></a>
+        
+        </form> -->
+        
         {% if success_message %}
             <div class="popup" id="popup">
                 <p>{{ success_message }}</p>
-                <form method="get" action="{% url 'main:detail_user_playlist' playlist_id %}">
+                <form method="get" action="{% url 'user_playlist:detail_user_playlist' playlist_id %}">
                     <button type="submit" class="button">Ke Playlist</button>
                 </form>
-                <form method="get" action="{% url 'main:add_song_to_another_playlist' playlist_id song_id %}">
+                <form method="get" action="{% url 'user_playlist:add_song_to_another_playlist' playlist_id song_id %}">
                     <button type="submit" class="button">Kembali</button>
                 </form>
             </div>

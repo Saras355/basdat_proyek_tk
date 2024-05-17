@@ -33,8 +33,8 @@ def add_user_playlist(request):
             cursor.execute(""" 
             INSERT INTO marmut.user_playlist (email_pembuat, judul, deskripsi, jumlah_lagu, tanggal_dibuat, id_user_playlist, id_playlist, total_durasi)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-            """, ["cburns@gmail.com", judul, deskripsi, 0, datetime.date.today(), str(uuid.uuid4()), id_playlist, 0])
-        return redirect('main:show_user_playlist')
+            """, ["fyang@hotmail.com", judul, deskripsi, 0, datetime.date.today(), str(uuid.uuid4()), id_playlist, 0])
+        return redirect('user_playlist:show_user_playlist')
         #elseif lagunya udh ada 
 
     return render(request, 'add_user_playlist.html')
@@ -49,7 +49,7 @@ def delete_playlist(request, playlist_id):
         cursor.execute("DELETE FROM marmut.playlist WHERE id = %s;", [playlist_id])
     
     # Redirect ke halaman show_user_playlist setelah berhasil menghapus
-    return redirect('main:show_user_playlist')
+    return redirect('user_playlist:show_user_playlist')
 
 def edit_playlist(request, playlist_id):
     playlist = query_result(f"SELECT * FROM marmut.user_playlist WHERE id_playlist = '{playlist_id}';")
@@ -70,7 +70,7 @@ def edit_playlist(request, playlist_id):
                 WHERE id_playlist = %s;
                 """, [judul, deskripsi, playlist_id])
             
-            return redirect('main:show_user_playlist')
+            return redirect('user_playlist:show_user_playlist')
     else:
         form = EditUserPlaylistForm(initial={'judul': playlist['judul'], 'deskripsi': playlist['deskripsi']})
 
@@ -125,7 +125,7 @@ def add_song(request, playlist_id):
             cursor.execute("INSERT INTO marmut.playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
                            [playlist_id, song_id])
 
-        return redirect(reverse('main:detail_user_playlist', args=[playlist_id]))
+        return redirect(reverse('user_playlist:detail_user_playlist', args=[playlist_id]))
 
     # Get the list of all songs for the dropdown
     songs = query_result(f"""
@@ -143,7 +143,7 @@ def delete_song(request, playlist_id, song_id):
         cursor.execute("DELETE FROM marmut.playlist_song WHERE id_playlist = %s AND id_song = %s;", 
                         [playlist_id, song_id])
 
-    return redirect(reverse('main:detail_user_playlist', args=[playlist_id]))
+    return redirect(reverse('user_playlist:detail_user_playlist', args=[playlist_id]))
 
 def play_song(request, playlist_id, song_id):
     playlist = query_result(f"""
@@ -204,13 +204,14 @@ def add_song_to_another_playlist(request, playlist_id, song_id):
             
             cursor.execute("INSERT INTO marmut.playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
                            [other_playlist_id, song_id])
-            
-        success_message = f"Berhasil menambahkan Lagu dengan judul '{song_title}' ke '{playlist_name}'!"
+        
+            success_message = f"Berhasil menambahkan Lagu dengan judul '{song_title}' ke '{playlist_name}'!"
+        return redirect(reverse('user_playlist:detail_user_playlist', args=[playlist_id]))
 
     # Fetch playlists created by the current user
     playlists = query_result(f"""
         SELECT id_playlist, judul FROM marmut.user_playlist WHERE email_pembuat = %s;
-    """, ["cburns@gmail.com"])
+    """, ["fyang@hotmail.com"])
 
     # Fetch song details
     song = query_result(f"""
@@ -233,3 +234,30 @@ def add_song_to_another_playlist(request, playlist_id, song_id):
     }
 
     return render(request, 'add_song_to_another_playlist.html', context)
+
+def download_song(request, playlist_id, song_id):
+    email_downloader = "fyang@hotmail.com"
+    is_premium = True  # Asumsikan semua pengguna premium untuk contoh ini
+    error_message = None
+    success_message = None
+
+    if request.method == 'POST':
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("INSERT INTO marmut.downloaded_song (id_song, email_downloader) VALUES (%s, %s);", 
+                               [song_id, email_downloader])
+            success_message = "Lagu berhasil diunduh!"
+        except Exception as e:
+            error_message = str(e)
+
+    # Konteks template
+    context = {
+        'playlist_id': playlist_id,
+        'song_id': song_id,
+        'error_message': error_message,
+        'success_message': success_message,
+        'is_premium': is_premium
+    }
+
+    return render(request, 'play_song.html', context)
+

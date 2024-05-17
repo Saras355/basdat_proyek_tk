@@ -198,7 +198,7 @@
         <h2>Daftar Lagu</h2>
         <td>
             <a href="#"><button>Shuffle Play</button></a>
-            <a href="{% url 'main:show_user_playlist' %}"><button>Kembali</button></a>
+            <a href="{% url 'user_playlist:show_user_playlist' %}"><button>Kembali</button></a>
         </td>
         <table>
             <tr>
@@ -214,8 +214,8 @@
                 <td>{{ song.durasi }} menit</td>
                 <td>
                     <a href="#"><button>Lihat</button></a>
-                    <a href="{% url 'main:play_song' playlist_id=playlist.id_playlist song_id=song.id %}"><button>Play</button></a>
-                    <a href="{% url 'main:delete_song' playlist_id=playlist.id_playlist song_id=song.id %}"><button>Hapus</button></a>
+                    <a href="{% url 'user_playlist:play_song' playlist_id=playlist.id_playlist song_id=song.id %}"><button>Play</button></a>
+                    <a href="{% url 'user_playlist:delete_song' playlist_id=playlist.id_playlist song_id=song.id %}"><button>Hapus</button></a>
                 </td>
             </tr>
             {% endfor %}
@@ -223,7 +223,7 @@
         </table>
         <br/>
         <td>
-            <a href="{% url 'main:add_song' playlist_id=playlist.id_playlist %}"><button>Tambah Lagu</button></a>
+            <a href="{% url 'user_playlist:add_song' playlist_id=playlist.id_playlist %}"><button>Tambah Lagu</button></a>
         </td>
     </div>
 </body>

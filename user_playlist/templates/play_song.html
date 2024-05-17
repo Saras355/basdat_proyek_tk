@@ -220,14 +220,24 @@
         <p><strong>Total Play:</strong> {{ song.total_play }}</p>
         <p><strong>Total Downloads:</strong> {{ song.total_download }}</p>
         <p><strong>Album:</strong> {{ song.album }}</p>
+
+        <form method="POST" class="mb-3">
+            {% csrf_token %}
+            <label for="progress" class="form-label"><strong>Progress:</strong></label>
+            <input type="range" id="progress" name="progress" min="0" max="100" class="form-range">
+        </form>
+
         <div class="divider"></div>
         <div class="actions">
             <a href="#"><button class="button">Play</button></a>
-            <a href="{% url 'main:add_song_to_another_playlist' playlist_id=playlist.id_playlist song_id=song.id_konten %}"><button class="button">Add to Playlist</button></a>
-            <!-- {% if is_premium %}
-                <button class="button" onclick="showDownloadPopup()">Download</button>
-            {% endif %} -->
-            <a href="{% url 'main:detail_user_playlist' playlist_id=playlist.id_playlist %}"><button class="button">Kembali</button></a>
+            <a href="{% url 'user_playlist:add_song_to_another_playlist' playlist_id=playlist.id_playlist song_id=song.id_konten %}"><button class="button">Add to Playlist</button></a>
+            {% if is_premium %}
+                <form method="POST" action="{% url 'user_playlist:download_song' playlist_id=playlist_id song_id=song_id %}">
+                    {% csrf_token %}
+                    <button class="button" type="submit">Download</button>
+                </form>
+            {% endif %}
+            <a href="{% url 'user_playlist:detail_user_playlist' playlist_id=playlist.id_playlist %}"><button class="button">Kembali</button></a>
         </div>
     </div>
 
@@ -251,4 +261,5 @@
     </script>
 </body>
 <!-- {% endblock content %} -->
-<!-- {% url 'main:add_song_to_another_playlist' playlist_id=playlist.id_playlist song_id=song.id_konten %} -->
+<!-- {% url 'user_playlist:add_song_to_another_playlist' playlist_id=playlist.id_playlist song_id=song.id_konten %} -->
+<!-- {% url 'user_playlist:download_song' playlist_id=playlist.id_playlist song_id=song.id_konten %} -->
