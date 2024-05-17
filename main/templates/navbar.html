@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<style>
+    /* CSS untuk menyesuaikan ukuran dan posisi search box */
+    .custom-search-box {
+      max-width: 500px; /* Lebar maksimum search box */
+      position: absolute;
+      top: 20px;
+      right: 20px; /* Jarak dari kanan */
+      border: 1px solid #ccc; /* Border search box */
+      border-radius: 10px; /* Sudut border */
+      padding: 10px; /* Padding di dalam search box */
+    }
+
+    /* CSS untuk menyesuaikan tombol search */
+    .search-btn {
+      width: 100%;
+    }
+</style>
+{% endblock meta %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-end">
+      <div class="col-auto">
+        <div class="input-group custom-search-box">
+          <input type="text" class="form-control" placeholder="Search...">
+          <div class="input-group-append">
+            <button class="btn btn-primary search-btn ms-2" type="button">Search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endblock content %}
