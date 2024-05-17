@@ -1,32 +1,97 @@
 <!DOCTYPE html>
-<html>
-    {% include 'nav.html' %}
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cek Royalti</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
 <body>
-    <h1>Daftar Royalti</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Judul Lagu</th>
-                <th>Judul Album</th>
-                <th>Total Play</th>
-                <th>Total Download</th>
-                <th>Total Royalti Didapat</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for royalti in royalti_list %}
-            <tr>
-                <td>{{ royalti.0 }}</td>
-                <td>{{ royalti.1 }}</td>
-                <td>{{ royalti.2 }}</td>
-                <td>{{ royalti.3 }}</td>
-                <td>Rp {{ royalti.4 }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="container mt-5">
+        <h1 class="mb-4">Cek Royalti</h1>
+
+        <!-- Royalti sebagai Artist -->
+        {% if  royalti_artist %}
+            <h2>Royalti sebagai Artist</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Judul Lagu</th>
+                        <th>Judul Album</th>
+                        <th>Total Play</th>
+                        <th>Total Download</th>
+                        <th>Total Royalti Didapat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for royalti in royalti_artist %}
+                    <tr>
+                        <td>{{ royalti.0 }}</td>
+                        <td>{{ royalti.1 }}</td>
+                        <td>{{ royalti.2 }}</td>
+                        <td>{{ royalti.3 }}</td>
+                        <td>{{ royalti.4 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        {% if royalti_songwriter %}
+            <!-- Royalti sebagai Songwriter -->
+            <h2>Royalti sebagai Songwriter</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Judul Lagu</th>
+                        <th>Judul Album</th>
+                        <th>Total Play</th>
+                        <th>Total Download</th>
+                        <th>Total Royalti Didapat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for royalti in royalti_songwriter %}
+                    <tr>
+                        <td>{{ royalti.0 }}</td>
+                        <td>{{ royalti.1 }}</td>
+                        <td>{{ royalti.2 }}</td>
+                        <td>{{ royalti.3 }}</td>
+                        <td>{{ royalti.4 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        
+        {% if royalti_label %}
+            <!-- Royalti sebagai Label -->
+            <h2>Royalti sebagai Label</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Judul Lagu</th>
+                        <th>Judul Album</th>
+                        <th>Total Play</th>
+                        <th>Total Download</th>
+                        <th>Total Royalti Didapat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for royalti in royalti_label %}
+                    <tr>
+                        <td>{{ royalti.0 }}</td>
+                        <td>{{ royalti.1}}</td>
+                        <td>{{ royalti.2 }}</td>
+                        <td>{{ royalti.3 }}</td>
+                        <td>{{ royalti.4 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
 </body>
 </html>

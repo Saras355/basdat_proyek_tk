@@ -250,6 +250,10 @@ def cek_royalti(request):
     # Raw query to retrieve royalty information
     user_data = request.session.get('user_data', {})
     user_email = user_data.get('email', '')
+    royalti_artist = []
+    royalti_songwriter = []
+    royalti_label = []
+
 
     #semuanya -> label, songwriter, dan artist -> ada pemilih hak cipta kan
     #cari terlebih dahulu id pemilik_hak_ciptanya
@@ -259,129 +263,156 @@ def cek_royalti(request):
             cursor.execute("""
             SELECT id FROM marmut.label WHERE email = %s
             """, [user_email])
-            label_hak_cipta_id = cursor.fetchall()['id_pemilik_hak_cipta']
+            label_hak_cipta_id = cursor.fetchall()
+            print("Keprinttt")
+            print(label_hak_cipta_id)
     #if is_artist -> cari dari table artist
     if user_data['is_artist']:
         with connection.cursor() as cursor:
             cursor.execute("""
             SELECT id FROM marmut.artist WHERE email_akun = %s
             """, [user_email])
-            artist_hak_cipta_id = cursor.fetchall()['id_pemilik_hak_cipta']
+            artist_hak_cipta_id = cursor.fetchall()
     #if is_songwriter -> cari dari table songwriter
     if user_data['is_songwriter']:
         with connection.cursor() as cursor:
             cursor.execute("""
             SELECT id FROM marmut.songwriter WHERE email_akun = %s
             """, [user_email])
-            songwriter_hak_cipta_id = cursor.fetchall()['id_pemilik_hak_cipta']
+            songwriter_hak_cipta_id = cursor.fetchall()
         
     #krn bisa multiple role -> berarti di html pakai as artist , or as sonrgwritre, dan seterunsya 
     #ambil dulu sebagai label
     if user_data['is_artist']:
         with connection.cursor() as cursor:
             cursor.execute("""
-            SELECT
-                S.judul AS JudulLagu,
-                A.judul AS JudulAlbum,
-                S.total_play AS TotalPlay,
-                S.total_download AS TotalDownload,
-                (S.total_play * PH.rate_royalti) AS TotalRoyalti
+            SET SEARCH_PATH TO MARMUT;
+            SELECT 
+            k.judul AS judul_lagu,
+            Al.judul AS judul_album,
+            S.total_play AS TotalPlay,
+            S.total_download AS TotalDownload,
+            (CAST(S.total_play AS NUMERIC) * CAST(PHC.rate_royalti AS NUMERIC)) AS TotalRoyalti,
+            PHC.id AS id_pemilik_hak_cipta,
+            S.id_konten AS id_song
             FROM
-                SONG AS S
-            JOIN
-                ALBUM AS A ON S.id_album = A.id
-            JOIN
-                ARTIST AS AR ON S.id_artist = AR.id
-            JOIN
-                PEMILIK_HAK_CIPTA AS PH ON AR.id_pemilik_hak_cipta = PH.id
+            ARTIST a
+            JOIN PEMILIK_HAK_CIPTA AS PHC On phc.id = A.id_pemilik_hak_cipta
+            
+            JOIN SONG as s on a.id = s.id_artist
+            JOIN KONTEN K ON K.id = S.id_konten
+            JOIN ALBUM Al ON al.id = s.id_album
             WHERE
-                AR.email_akun = %s
+            a.email_akun = %s;
 
             """, [user_email])
             royalti_artist = cursor.fetchall()
+            #JOIN ROYALTI AS R on r.id_pemilik_hak_cipta = a.id_pemilik_hak_cipta
+            #krn ini ada yg ga diamsukkin ke royalti
             for row in royalti_artist:
-                id_song = row[0]
-                id_pemilik_hak_cipta = row[1]
-                total_royalti = row[2]
+                id_song = row[6]
+                id_pemilik_hak_cipta = row[5]
+                total_royalti = row[4]
 
                 cursor.execute("""
                 UPDATE ROYALTI
                 SET jumlah = %s
                 WHERE id_pemilik_hak_cipta = %s AND id_song = %s
-                """, [total_royalti, id_pemilik_hak_cipta, id_song])
+                """, [total_royalti/10000, id_pemilik_hak_cipta, id_song])
+            print("ROYALTI ARTIS")
+            print(royalti_artist)
 
-    #if is_songwriter
+    # #if is_songwriter
     if user_data['is_songwriter']:
+        print("USERRRRRRRRRRRRRRR EMAILLLLLLLLLLLL SONGWRITERR")
+        print(user_email)
         with connection.cursor() as cursor:
             cursor.execute("""
-            SELECT
-                S.judul AS JudulLagu,
-                A.judul AS JudulAlbum,
+            
+                SET SEARCH_PATH TO MARMUT;
+                SELECT 
+                k.judul AS judul_lagu,
+                Al.judul AS judul_album,
                 S.total_play AS TotalPlay,
                 S.total_download AS TotalDownload,
-                (S.total_play * PH.rate_royalti) AS TotalRoyalti
-            FROM
-                SONG AS S
-            JOIN
-                ALBUM AS A ON S.id_album = A.id
-            JOIN
-                SONGWRITER AS AR ON S.id_artist = AR.id
-            JOIN
-                PEMILIK_HAK_CIPTA AS PH ON AR.id_pemilik_hak_cipta = PH.id
-            WHERE
-                AR.email_akun = %s
+                (CAST(S.total_play AS NUMERIC) * CAST(PHC.rate_royalti AS NUMERIC)) AS TotalRoyalti,
+                PHC.id AS id_pemilik_hak_cipta,
+                s.id_konten AS id_song
+                FROM
+                SONGWRITER a
+                JOIN songwriter_write_song as sw on a.id = sw.id_songwriter
+                JOIN PEMILIK_HAK_CIPTA AS PHC On phc.id = A.id_pemilik_hak_cipta
+               
+                JOIN song as s on s.id_konten = sw.id_song
+              
+      
+                JOIN KONTEN K ON K.id = S.id_konten
+                JOIN ALBUM Al ON al.id = s.id_album
+                WHERE
+                a.email_akun = %s;
 
             """, [user_email])
             royalti_songwriter = cursor.fetchall()
+            #ini karena ternyata ada yang belum diamsukkin ke royalti
+             # JOIN ROYALTI AS R on r.id_pemilik_hak_cipta = a.id_pemilik_hak_cipta
             for row in royalti_songwriter:
-                id_song = row[0]
-                id_pemilik_hak_cipta = row[1]
-                total_royalti = row[2]
+                id_song = row[6]
+                id_pemilik_hak_cipta = row[5]
+                total_royalti = row[4]
 
                 cursor.execute("""
                 UPDATE ROYALTI
                 SET jumlah = %s
                 WHERE id_pemilik_hak_cipta = %s AND id_song = %s
-                """, [total_royalti, id_pemilik_hak_cipta, id_song])
-    context = {
-        'royalti_list': royalti_artist
-    }
+                """, [total_royalti/10000, id_pemilik_hak_cipta, id_song])
+ 
 
-    #if is_songwriter
+    # #if is_songwriter
     if user_data['is_label']:
         with connection.cursor() as cursor:
             cursor.execute("""
+            SET SEARCH_PATH TO MARMUT;
             SELECT
-                S.judul AS JudulLagu,
-                A.judul AS JudulAlbum,
-                S.total_play AS TotalPlay,
-                S.total_download AS TotalDownload,
-                (S.total_play * PH.rate_royalti) AS TotalRoyalti
+            k.judul AS judul_lagu,
+            A.judul AS judul_album,
+            S.total_play AS TotalPlay,
+            S.total_download AS TotalDownload,
+            (CAST(S.total_play AS NUMERIC) * CAST(PHC.rate_royalti AS NUMERIC)) AS TotalRoyalti,
+            PHC.id AS id_pemilik_hak_cipta,
+            s.id_konten as id_song
             FROM
-                SONG AS S
-            JOIN
-                ALBUM AS A ON S.id_album = A.id
-            JOIN
-                SONGWRITER AS AR ON S.id_artist = AR.id
-            JOIN
-                PEMILIK_HAK_CIPTA AS PH ON AR.id_pemilik_hak_cipta = PH.id
+            LABEL L
+            JOIN ALBUM A ON L.id = A.id_label
+            JOIN SONG S ON S.id_album = A.id
+            JOIN KONTEN K ON K.id = S.id_konten
+            JOIN PEMILIK_HAK_CIPTA PHC ON L.id_pemilik_hak_cipta = PHC.id
             WHERE
-                AR.email_akun = %s
+            L.email = %s
 
             """, [user_email])
             royalti_label = cursor.fetchall()
+            print(royalti_label)
             for row in royalti_label:
-                id_song = row[0]
-                id_pemilik_hak_cipta = row[1]
-                total_royalti = row[2]
+                id_song = row[6]
+                id_pemilik_hak_cipta = row[5]
+                total_royalti = row[4]
 
                 cursor.execute("""
                 UPDATE ROYALTI
                 SET jumlah = %s
                 WHERE id_pemilik_hak_cipta = %s AND id_song = %s
-                """, [total_royalti, id_pemilik_hak_cipta, id_song])
+                """, [total_royalti/10000, id_pemilik_hak_cipta, id_song])
+    print("royalti artist")
+    print(royalti_artist)
+    print("royalti_songwriter")
+    print(royalti_songwriter)
+    print("royalti_label")
+    print(royalti_label)
     context = {
-        'royalti_list': royalti_artist
+        'royalti_artist': royalti_artist,
+        'royalti_songwriter': royalti_songwriter,
+        'royalti_label': royalti_label
+
     }
     return render(request, 'cek_royalti.html', context)
 
@@ -468,7 +499,7 @@ def list_album_artist(request):
                 WHERE sw.email_akun = %s
             """, [email])
             album_list_songwriter = cursor.fetchall()
-
+    album_list_songwriter = list(set(album_list_songwriter))
     if is_artist:
         with connection.cursor() as cursor:
             cursor.execute("""
@@ -575,12 +606,17 @@ def create_album(request):
         tanggal_rilis = datetime.datetime.now()
         tahun = tanggal_rilis.year
         
-        
-      
+        #carik artist email di database akun
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT email FROM marmut.akun WHERE nama = %s", [artists])
+            artist_email = cursor.fetchone()
+            print("AARTISTTTTTTTTTTTTTTTT EMAILLLLLLLLLLLLLL")
+            print(artist_email)
+        print("YANG INIIIII KEPRINTTT")
         #carik di artist_id pakai query dah 
         with connection.cursor() as cursor:
-            cursor.execute("SELECT id FROM marmut.artist WHERE email_akun = %s", [artists])
-            artist_id = cursor.fetchone()[0]
+            cursor.execute("SELECT id FROM marmut.artist WHERE email_akun = %s", [artist_email])
+            artist_id = cursor.fetchone()
         
         print(artist_id)
         
@@ -612,10 +648,14 @@ def create_album(request):
         song_id = str(uuid.uuid4())
         with connection.cursor() as cursor:
             cursor.execute("INSERT INTO marmut.konten (id, judul,  tanggal_rilis, tahun, durasi) VALUES (%s, %s, %s, %s, %s)", [song_id, judul_lagu, tanggal_rilis, tahun, durasi])
+        with connection.cursor() as cursor:
             cursor.execute("INSERT INTO marmut.album (id, judul, jumlah_lagu, id_label, total_durasi) VALUES (%s, %s, %s, %s, %s)", [album_id, judul_album, 1, label_id, int(durasi)])
+        with connection.cursor() as cursor:
             cursor.execute("INSERT INTO marmut.song (id_konten, id_artist, id_album) VALUES (%s, %s, %s)", [song_id, artist_id, album_id])
+        with connection.cursor() as cursor:
             for genre_id in genre_masuk:
                 cursor.execute("INSERT INTO marmut.genre (id_konten, genre) VALUES (%s, %s)", [song_id, genre_id])
+        with connection.cursor() as cursor:
             for songwriter_id in songwriter_ids:
                 cursor.execute("INSERT INTO marmut.songwriter_write_song (id_songwriter, id_song) VALUES (%s, %s)", [songwriter_id, song_id])
 
@@ -672,6 +712,7 @@ def create_lagu(request, album_id):
     album_id = album_id
     print("album idnya ")
     print(album_id)
+    artist_id = None
     with connection.cursor() as cursor:
                 cursor.execute("SELECT judul FROM marmut.album WHERE id = %s", [album_id])
                 judul_album = cursor.fetchone()[0]
@@ -702,11 +743,11 @@ def create_lagu(request, album_id):
             tahun = tanggal_rilis.year
             
             
-        
+            # print("KHUUUUUUUUUUUUUUUUUUUU")
             #carik di artist_id pakai query dah 
             with connection.cursor() as cursor:
-                cursor.execute("SELECT id FROM marmut.artist WHERE email_akun = %s", [artists])
-                artist_id = cursor.fetchone()[0]
+                cursor.execute("SELECT artist.id FROM marmut.AKUN JOIN marmut.artist ON akun.email = artist.email_akun WHERE nama = %s", [artists])
+                artist_id = cursor.fetchone()
             
             print(artist_id)
             
@@ -726,23 +767,38 @@ def create_lagu(request, album_id):
             #ambil dari nomor genre ke query
             print(songwriters)
             if user_data['is_songwriter']:
+                print(email)
                 with connection.cursor() as cursor:
-                    cursor.execute("SELECT DISTINCT id FROM marmut.songwriter WHERE email_akun = %s", (email,))
+                    cursor.execute("SELECT  id FROM marmut.songwriter WHERE email_akun = %s", (email,))
                     songwriter_orangnya = cursor.fetchall()
                     songwriters.append(str(songwriter_orangnya[0][0]))
             songwriter_ids = [songwriter for songwriter in songwriters]
             
 
             #sekarnag bagian insert data ke database
-           
+            
             song_id = str(uuid.uuid4())
             with connection.cursor() as cursor:
                 cursor.execute("INSERT INTO marmut.konten (id, judul,  tanggal_rilis, tahun, durasi) VALUES (%s, %s, %s, %s, %s)", [song_id, judul_lagu, tanggal_rilis, tahun, durasi])
                 # cursor.execute("INSERT INTO marmut.album (id, judul, jumlah_lagu, id_label, total_durasi) VALUES (%s, %s, %s, %s, %s)", [album_id, judul_album, 1, label_id, int(durasi)])
+            #carik artist lagi gatau kenapa ini jadi null
+            # with connection.cursor() as cursor:
+            #     cursor.execute("SELECT id FROM marmut.artist WHERE email_akun = %s", [artists])
+            #     artist_id = cursor.fetchone()
+            #     print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+            #     print(artist_id)
+            with connection.cursor() as cursor:
                 cursor.execute("INSERT INTO marmut.song (id_konten, id_artist, id_album) VALUES (%s, %s, %s)", [song_id, artist_id, album_id])
+                print("album_id cek dua kali")
+                print(album_id)
+                print(artist_id)
+            with connection.cursor() as cursor:
                 for genre_id in genre_masuk:
                     cursor.execute("INSERT INTO marmut.genre (id_konten, genre) VALUES (%s, %s)", [song_id, genre_id])
+            with connection.cursor() as cursor:
                 for songwriter_id in songwriter_ids:
+                    print("POOOOOOOOOOOOOOOOOOOOOOOOOOOOOGGGRHTUI GNRYTUGYWEFTEWFTYYYYYYYYYYY8")
+                    print(songwriter_id)
                     cursor.execute("INSERT INTO marmut.songwriter_write_song (id_songwriter, id_song) VALUES (%s, %s)", [songwriter_id, song_id])
 
 
@@ -799,10 +855,16 @@ def create_lagu(request, album_id):
         
 
 def hapus_album(request, album_id):
-    
+    user_data = request.session.get('user_data', {})
+    print("iniiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+    print(album_id)
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM marmut.album WHERE id = %s", [album_id])
-    return redirect(reverse('list_album_artist') if 'is_artist' in request.session['user_data'] or 'is_songwriter' in request.session['user_data'] else 'list_album')
+    if user_data['is_artist'] or user_data['is_songwriter']:
+        return redirect(reverse('list_album_artist'))
+   
+    return redirect(reverse('list_album'))
+    #return redirect(reverse('list_album_artist') if 'is_artist' in request.session['user_data'] or 'is_songwriter' in request.session['user_data'] else 'list_album')
 
 def hapus_lagu(request, song_id):
     with connection.cursor() as cursor:
