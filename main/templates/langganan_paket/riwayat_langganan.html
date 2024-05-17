@@ -72,13 +72,15 @@ body {
         </thead>
 
         <tbody>
-            {% for transaksi in riwayat_transaksi %}
                 <tr style="text-align: center;">
-                {%for detail in transaksi%}
-                    <td>{{ detail }}</td>
+                {%for jenis, mulai, selesai, metode, nominal in riwayat_transaksi%}
+                    <td>{{ jenis }}</td>
+                    <td>{{ mulai }}</td>
+                    <td>{{ selesai }}</td>
+                    <td>{{ metode }}</td>
+                    <td>Rp{{ nominal }}</td>
                 {% endfor %}
                 </tr>
-            {% endfor %}
         </tbody>
 
         <thead>

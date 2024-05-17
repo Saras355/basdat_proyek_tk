@@ -74,7 +74,7 @@ def beli_paket(request):
         elif (jenis_paket == "6 bulan"):
             timestamp_berakhir = timestamp_dimulai + timedelta(days=180)
         else:
-            timestamp_berakhir = timestamp_dimulai + timedelta(days=360)
+            timestamp_berakhir = timestamp_dimulai + timedelta(days=365)
 
         print(email)
         print(jenis_paket)
@@ -103,6 +103,7 @@ def beli_paket(request):
             """
             with connection.cursor() as cursor:
                 cursor.execute(insert_premium_query, [email])
+                cursor.execute("DELETE FROM marmut.nonpremium WHERE email = %s", (email,))
             user_data["is_premium"] = True
 
             print("\n================ DEBUG AREA ================")
@@ -122,9 +123,20 @@ def beli_paket(request):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 def show_riwayat_langganan(request):
-    riwayat_transaksi = [
-        ["1 Bulan", "8 April 2024, 23:00", "8 Mei 2024, 23:00", "E-Wallet", 20_000]
-        ]
+    user_data = request.session.get('user_data', {})
+    email = user_data['email']
+
+    query = """
+    SELECT jenis_paket, TO_CHAR(timestamp_dimulai, 'DD Month YYYY, HH24:MI'),
+    TO_CHAR(timestamp_berakhir, 'DD Month YYYY, HH24:MI'), metode_bayar, 
+    TO_CHAR(nominal, '999,999')
+    FROM marmut.transaction
+    WHERE email = %s;
+    """
+    with connection.cursor() as cursor:
+        cursor.execute(query, (email,))
+        riwayat_transaksi = cursor.fetchall()
+        print(riwayat_transaksi)
 
     context = {
         'riwayat_transaksi': riwayat_transaksi
@@ -233,7 +245,15 @@ def show_downloaded_song(request):
     return render(request, "downloaded_song/downloaded_song.html", context)
 
 def show_delete_song(request, song_id):
+    user_data = request.session.get('user_data', {})
+    email = user_data.get('email')
+
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM marmut.downloaded_song WHERE email_downloader = %s AND id_song = %s", (email, song_id,))
+        cursor.execute("SELECT judul FROM marmut.konten WHERE id = %s", (song_id,))
+        title = cursor.fetchone()[0]
+    
     context = {
-        'song_id': id
+        'title': title
     }
     return render(request, "downloaded_song/delete_song.html", context)
