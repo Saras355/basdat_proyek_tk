@@ -22,12 +22,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import connection
 # Create your views here.
-def list_tables(request):
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'marmut';")
-        tables = cursor.fetchall()
-        table_list = [table[0] for table in tables]  # Extract table names from tuples
-    return render(request, 'list_tables.html', {'tables': table_list})
 
 
 def dashboard(request):
