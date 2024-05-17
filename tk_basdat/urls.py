@@ -22,7 +22,6 @@ from akun.views import list_tables
 
 urlpatterns = [
     path('', include('main.urls')),
-    path('akun/', include('akun.urls')),
     path("admin/", admin.site.urls),
     path('akun/', include('akun.urls')),
     path('', akun_views.home, name='home'),

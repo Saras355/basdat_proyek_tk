@@ -154,6 +154,7 @@ def delete_song(request, playlist_id, song_id):
     return redirect(reverse('user_playlist:detail_user_playlist', args=[playlist_id]))
 
 def play_song(request, playlist_id, song_id):
+    email = request.COOKIES.get('email')
     playlist = query_result(f"""
     SELECT up.*, a.nama as pembuat
     FROM marmut.user_playlist up
@@ -193,7 +194,7 @@ def play_song(request, playlist_id, song_id):
             # Insert entry into AKUN_PLAY_SONG
             current_time = datetime.timezone.now()
             with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO marmut.akun_play_song (email_pemain, id_song, waktu) VALUES (%s, %s, %s);", ["fyang@hotmail.com", song_id, current_time])
+                cursor.execute("INSERT INTO marmut.akun_play_song (email_pemain, id_song, waktu) VALUES (%s, %s, %s);", [email, song_id, current_time])
 
             # Update total play count
             with connection.cursor() as cursor:
@@ -216,6 +217,7 @@ def add_song_to_another_playlist(request, playlist_id, song_id):
     playlist_name = None
     song_title = None
     error_message = None
+    email = request.COOKIES.get('email')
     
     if request.method == 'POST':
         other_playlist_id = request.POST.get('other_playlist_id')
@@ -248,7 +250,7 @@ def add_song_to_another_playlist(request, playlist_id, song_id):
     # Fetch playlists created by the current user
     playlists = query_result(f"""
         SELECT id_playlist, judul FROM marmut.user_playlist WHERE email_pembuat = %s;
-    """, ["fyang@hotmail.com"])
+    """, [email])
 
     # Fetch song details
     song = query_result(f"""
@@ -274,7 +276,7 @@ def add_song_to_another_playlist(request, playlist_id, song_id):
     return render(request, 'add_song_to_another_playlist.html', context)
 
 def download_song(request, playlist_id, song_id):
-    email_downloader = "fyang@hotmail.com"
+    email_downloader = request.COOKIES.get('email')
     is_premium = True  # Asumsikan semua pengguna premium untuk contoh ini
     error_message = None
     success_message = None
