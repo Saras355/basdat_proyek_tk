@@ -224,6 +224,15 @@
                 </select>
             <input type="submit" value="Submit">
         </form>
+         <!-- Display success message if exists -->
+         {% if success_message %}
+         <div class="alert alert-success">{{ success_message }}</div>
+         {% endif %}
+ 
+         <!-- Display error message if exists -->
+         {% if error_message %}
+         <div class="alert alert-danger">{{ error_message }}</div>
+         {% endif %}
         <!-- <form method="POST">
             {% csrf_token %}
             <div class="form-group">

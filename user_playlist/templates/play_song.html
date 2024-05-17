@@ -225,11 +225,11 @@
             {% csrf_token %}
             <label for="progress" class="form-label"><strong>Progress:</strong></label>
             <input type="range" id="progress" name="progress" min="0" max="100" class="form-range">
+            <button type="submit" class="btn btn-primary">Play</button>
         </form>
 
         <div class="divider"></div>
         <div class="actions">
-            <a href="#"><button class="button">Play</button></a>
             <a href="{% url 'user_playlist:add_song_to_another_playlist' playlist_id=playlist.id_playlist song_id=song.id_konten %}"><button class="button">Add to Playlist</button></a>
             {% if is_premium %}
                 <form method="POST" action="{% url 'user_playlist:download_song' playlist_id=playlist_id song_id=song_id %}">

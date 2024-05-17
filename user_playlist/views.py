@@ -5,7 +5,7 @@ from django.core import serializers
 from user_playlist.forms import AddUserPlaylistForm, EditUserPlaylistForm
 from django.urls import reverse
 from function.general import query_result
-from django.db import connection
+from django.db import DatabaseError, IntegrityError, InternalError, connection
 import datetime
 import uuid
 # from user_playlist.models import User_playlist
@@ -108,6 +108,7 @@ def detail_user_playlist(request, playlist_id):
     return render(request, 'detail_user_playlist.html', context)
 
 def add_song(request, playlist_id):
+    error_message = None
     if request.method == 'POST':
         song_id = request.POST.get('song_id')
 
@@ -121,11 +122,17 @@ def add_song(request, playlist_id):
         # if existing_song:
         #     return HttpResponse("Lagu sudah ada di dalam playlist", status=400)
 
-        with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO marmut.playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
-                           [playlist_id, song_id])
-
-        return redirect(reverse('user_playlist:detail_user_playlist', args=[playlist_id]))
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("INSERT INTO marmut.playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
+                               [playlist_id, song_id])
+            return redirect(reverse('user_playlist:detail_user_playlist', args=[playlist_id]))
+        except (DatabaseError, InternalError) as e:
+            # Check if the error is due to the song already existing in the playlist
+            if 'marmut.check_duplicate_song' in str(e):
+                error_message = "Lagu sudah ada dalam playlist"
+            else:
+                error_message = "Terjadi kesalahan saat menambahkan lagu ke playlist"
 
     # Get the list of all songs for the dropdown
     songs = query_result(f"""
@@ -136,7 +143,7 @@ def add_song(request, playlist_id):
         JOIN marmut.akun a ON ar.email_akun = a.email;
     """)
 
-    return render(request, 'add_song.html', {'songs': songs, 'playlist_id': playlist_id})
+    return render(request, 'add_song.html', {'songs': songs, 'playlist_id': playlist_id, 'error_message': error_message})
 
 def delete_song(request, playlist_id, song_id):
     with connection.cursor() as cursor:
@@ -176,6 +183,25 @@ def play_song(request, playlist_id, song_id):
     # user_info = query_result(f"SELECT is_premium FROM marmut.akun WHERE email = '{user_email}';")
     # is_premium = user_info[0]['is_premium'] if user_info else False
 
+    # Handle form submission
+    if request.method == "POST":
+        progress = int(request.POST.get('progress', 0))
+        if progress > 70:
+            user_email = request.user.email  # Assuming user authentication is available and user is logged in
+
+            # Insert entry into AKUN_PLAY_SONG
+            current_time = datetime.timezone.now()
+            with connection.cursor() as cursor:
+                cursor.execute("INSERT INTO marmut.akun_play_song (email_pemain, id_song, waktu) VALUES (%s, %s, %s);", ["fyang@hotmail.com", song_id, current_time])
+
+            # Update total play count
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE marmut.song SET total_play = total_play + 1 WHERE id_konten = %s;", [song_id])
+
+        # Render the song detail page with updated context
+        return redirect('user_playlist:play_song', playlist_id=playlist_id, song_id=song_id)
+
+
     context = {
         'song': song_details[0],
         # 'is_premium': is_premium
@@ -188,25 +214,35 @@ def add_song_to_another_playlist(request, playlist_id, song_id):
     success_message = None
     playlist_name = None
     song_title = None
+    error_message = None
     
     if request.method == 'POST':
         other_playlist_id = request.POST.get('other_playlist_id')
-        with connection.cursor() as cursor:
-            # Fetch song title
-            song_title_query = query_result("SELECT judul FROM marmut.konten WHERE id = %s", [song_id])
-            if song_title_query:
-                song_title = song_title_query[0]['judul']
+        try:
+            with connection.cursor() as cursor:
+                # Fetch song title
+                song_title_query = query_result("SELECT judul FROM marmut.konten WHERE id = %s", [song_id])
+                if song_title_query:
+                    song_title = song_title_query[0]['judul']
 
-            # Fetch playlist name
-            playlist_name_query = query_result("SELECT judul FROM marmut.user_playlist WHERE id_playlist = %s", [other_playlist_id])
-            if playlist_name_query:
-                playlist_name = playlist_name_query[0]['judul']
-            
-            cursor.execute("INSERT INTO marmut.playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
-                           [other_playlist_id, song_id])
-        
-            success_message = f"Berhasil menambahkan Lagu dengan judul '{song_title}' ke '{playlist_name}'!"
-        return redirect(reverse('user_playlist:detail_user_playlist', args=[playlist_id]))
+                # Fetch playlist name
+                playlist_name_query = query_result("SELECT judul FROM marmut.user_playlist WHERE id_playlist = %s", [other_playlist_id])
+                if playlist_name_query:
+                    playlist_name = playlist_name_query[0]['judul']
+
+                # Insert the song into the other playlist
+                cursor.execute("INSERT INTO marmut.playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
+                               [other_playlist_id, song_id])
+
+                success_message = f"Berhasil menambahkan Lagu dengan judul '{song_title}' ke '{playlist_name}'!"
+            return redirect(reverse('user_playlist:detail_user_playlist', args=[playlist_id]))
+
+        except (DatabaseError, InternalError) as e:
+            # Check if the error is due to the song already existing in the playlist
+            if 'marmut.check_duplicate_song' in str(e):
+                error_message = f"Lagu '{song_title}' sudah ada dalam playlist '{playlist_name}'"
+            else:
+                error_message = "Terjadi kesalahan saat menambahkan lagu ke playlist"
 
     # Fetch playlists created by the current user
     playlists = query_result(f"""
@@ -230,7 +266,8 @@ def add_song_to_another_playlist(request, playlist_id, song_id):
         'song_id': song_id,
         'song': song,
         'success_message': success_message,
-        'playlist_name': playlist_name
+        'playlist_name': playlist_name,
+        'error_message': error_message
     }
 
     return render(request, 'add_song_to_another_playlist.html', context)
