@@ -29,8 +29,8 @@ def list_tables(request):
         table_list = [table[0] for table in tables]  # Extract table names from tuples
     return render(request, 'list_tables.html', {'tables': table_list})
 
-
 def dashboard(request):
+    # Ambil data pengguna dari session
     user_data = request.session.get('user_data', {})
 
     # Initialize role flags
@@ -42,6 +42,8 @@ def dashboard(request):
         'is_pengguna': False,
         'is_premium' : False,
         'roles': [],
+        
+
     })
     #cek apakah dia premium atau tidak di table premium
     query_premium = f"SELECT 1 FROM marmut.premium WHERE email = '{user_data.get('email')}'"
@@ -86,8 +88,8 @@ def dashboard(request):
 
     # Update session with user_data
     user_data['is_logged_in'] = any([user_data['is_artist'], user_data['is_songwriter'], user_data['is_podcaster'], user_data['is_label'], user_data['is_pengguna']])
-    # print("cekk")
-    # print(user_data['is_logged_in'])
+    print("cekk")
+    print(user_data['is_logged_in'])
     request.session['user_data'] = user_data
 
     # Query to get user info
@@ -184,13 +186,13 @@ def dashboard(request):
         'podcasts': podcasts,
         'albums': albums
     }
-    # print(user_data)
-    # print("albummmm")
-    # print(albums)
+    print(user_data)
+    print("albummmm")
+    print(albums)
 
     return render(request, 'dashboard.html', context)
 
-#coba yang baru login nya
+
 @csrf_exempt
 def login_with_postgres(request):
     if request.method == 'POST':
@@ -233,7 +235,6 @@ def login_with_postgres(request):
                     cursor.execute(query_label, [email])
                     if cursor.fetchone():
                         is_label = True
-                    
 
                     # Set user data in session
                     request.session['user_data'] = {
@@ -247,50 +248,10 @@ def login_with_postgres(request):
                         'is_logged_in': True,
                         'roles': roles
                     }
-
-                    user_data = request.session['user_data']
-                    email = user_data['email']
-                    cursor.execute("SELECT * FROM marmut.premium WHERE email = %s", (email,))
-                    prem_flag = cursor.fetchone()
-                    print(email)
-                    print(prem_flag)
-                    # Jika None -> non prem
-
-
-                    # Jika pengguna premium
-                    if (prem_flag):
-                        email = prem_flag[0]
-                        query = """
-                                SELECT *
-                                FROM marmut.transaction
-                                WHERE email = %s
-                                ORDER BY timestamp_dimulai DESC
-                                LIMIT 1;
-                                """
-                        cursor.execute(query, (email,))
-                        latest_transaction = cursor.fetchone()
-
-                        if latest_transaction:
-                            timestamp_berakhir = latest_transaction[4]
-                            if timestamp_berakhir < datetime.datetime.now():
-                                cursor.execute("DELETE FROM marmut.downloaded_song WHERE email_downloader = %s", (email,))
-                                cursor.execute("DELETE FROM marmut.premium WHERE email = %s", (email,))
-                                cursor.execute("INSERT INTO marmut.nonpremium (email) VALUES (%s)", (email,))
-                            else:
-                                user_data['is_prem'] = True
-                                
-                    
-                    print("\n================ DEBUG AREA ================")
+                    #request.session['is_logged_in'] = True
+                    print("hihi")
                     print(request.session['user_data'])
-                    print("\n")
-                    user_data = request.session['user_data']
-                    for key, value in user_data.items():
-                        print(key + ": " + str(value))
-                    print("================ DEBUG AREA ================\n") 
-                    
-                    response=redirect('akun:dashboard')
-                    response.set_cookie('email', email)
-                    return response 
+                    return redirect('akun:dashboard')
                 else:
                     messages.error(request, 'Maaf, password yang Anda masukkan salah.')
             else:
@@ -299,7 +260,8 @@ def login_with_postgres(request):
     return render(request, "login.html")
 
 
-#show_home
+
+
 def home(request):
     return render(request, 'home.html')
 
@@ -327,6 +289,7 @@ def register_label(request):
 
 #register pengguna 
 @csrf_exempt
+#TO DO: apakah sebenarnya pas insert itu boleh null, kalau begitu insert seperti biasa saja NEXT 
 def register_pengguna(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -387,33 +350,14 @@ def register_pengguna(request):
                 cursor.execute(query_insert_artist, (artist_id, email_akun, id_pemilik_hak_cipta))
                 
             
-            #cek di dataset apakah ada orang yang id song writernya sama dengan id artist 
-            #tapi ada kemungkinan kalau satu orang kan bisa jadi artist dan bisa jadi songwriter harusnya saling berbagi id?
-            #cek dataset -> 
-                #pakai 
-               # SELECT * FROM ARTIST WHERE ARTIST.id in (SELECT id FROM SONGWRITER); -> idnya ga ada yg sama antara di kedua table itu
-               # SELECT * FROM ARTIST WHERE ARTIST.email_akun in (SELECT email_akun FROM SONGWRITER); -> tapiii ada email yang sama 
-            #asumsi: ini berarti untuk satu orangyag rolenya bisa artist dan songwriter maka idnya berbeda, tetapi email_akunnya boleh sama
-
-            #tambahkan jika songwriter
+        
             if 'songwriter' in roles:
                 songwriter_id = uuid.uuid4()
                 cursor.execute("""SELECT * FROM marmut.akun WHERE email = %s LIMIT 1;""", [email])
                 email_akun = cursor.fetchall()
                 #ambil email dari table akun
                 email_akun = email_akun[0][0] #NEXT
-                #ambil id pemilik hak cipta -> ambil dari songwriter_write_song dulu baru dapat id_songnya 
-                # query = """
-                #     SELECT DISTINCT r.id_pemilik_hak_cipta
-                #     FROM songwriter_write_song sws
-                #     JOIN song s ON sws.id_song = s.id_konten
-                #     JOIN royalti r ON s.id_konten = r.id_song
-                #     WHERE sws.id_songwriter = %s
-                # """
-                # cursor.execute(query, (artist_id,))
-                # id_pemilik_hak_cipta = cursor.fetchone()
-                
-                #masukkan ke table artist
+               
                 query_insert_artist = """
                 INSERT INTO marmut.songwriter (id, email_akun, id_pemilik_hak_cipta)
                 VALUES (%s, %s, %s)
@@ -441,3 +385,9 @@ def logout_view(request):
 
     # Redirect ke halaman login
     return redirect('akun:login')
+# def logout_view(request):
+#     # Hapus data sesi
+#     request.session.flush()
+
+#     # Redirect ke halaman login
+#     return redirect('akun:login')
