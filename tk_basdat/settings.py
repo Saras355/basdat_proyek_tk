@@ -42,12 +42,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "akun",
     # "auth",
     "album_song_royalti",
     "artist_songwriter",
     "label",
-    "main",
     "pengguna_biasa",
     "podcaster",
     "user_playlist"

@@ -23,6 +23,7 @@ def add_user_playlist(request):
         judul = request.POST.get('judul')
         deskripsi = request.POST.get('deskripsi')
         id_playlist = str(uuid.uuid4())  # Buat id_playlist baru
+        email = request.COOKIES.get('email')
         # Simpan id_playlist baru ke dalam tabel "playlist"
         with connection.cursor() as cursor:
             cursor.execute("INSERT INTO marmut.playlist (id) VALUES (%s);", [id_playlist])
@@ -33,7 +34,7 @@ def add_user_playlist(request):
             cursor.execute(""" 
             INSERT INTO marmut.user_playlist (email_pembuat, judul, deskripsi, jumlah_lagu, tanggal_dibuat, id_user_playlist, id_playlist, total_durasi)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-            """, ["fyang@hotmail.com", judul, deskripsi, 0, datetime.date.today(), str(uuid.uuid4()), id_playlist, 0])
+            """, [email, judul, deskripsi, 0, datetime.date.today(), str(uuid.uuid4()), id_playlist, 0])
         return redirect('user_playlist:show_user_playlist')
         #elseif lagunya udh ada 
 

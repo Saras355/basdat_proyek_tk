@@ -256,6 +256,7 @@ def login_with_postgres(request):
                     print(prem_flag)
                     # Jika None -> non prem
 
+
                     # Jika pengguna premium
                     if (prem_flag):
                         email = prem_flag[0]
@@ -287,7 +288,9 @@ def login_with_postgres(request):
                         print(key + ": " + str(value))
                     print("================ DEBUG AREA ================\n") 
                     
-                    return redirect('akun:dashboard')
+                    response=redirect('akun:dashboard')
+                    response.set_cookie('email', email)
+                    return response 
                 else:
                     messages.error(request, 'Maaf, password yang Anda masukkan salah.')
             else:
