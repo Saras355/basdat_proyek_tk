@@ -1,0 +1,18 @@
+{% include 'nav.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilihan Registrasi</title>
+</head>
+<body>
+    <h2>Pilihan Registrasi</h2>
+    <p>Silakan pilih peran Anda:</p>
+    <ul>
+        <li><a href="{% url 'akun:register_pengguna' %}">Pengguna</a></li>
+        <li><a href="{% url 'akun:register_label' %}">Label</a></li>
+    </ul>
+</body>
+</html>

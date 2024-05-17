@@ -70,14 +70,14 @@ body {
       </thead>
 
       <tbody>
-          {% for artis, lagu in daftar_lagu.items %}
+          {% for title, artist, song_id in songs %}
 
               <tr style="text-align: center;">
-              <td>{{ artis }}</td>
-              <td>{{ lagu }}</td>
+              <td>{{ title }}</td>
+              <td>{{ artist }}</td>
               <td>
                   <a href="" style="text-decoration: none;">[Lihat]</a>
-                  <a href="/downloaded-song/delete/{{ lagu }}/" style="text-decoration: none;">[Hapus]</a>
+                  <a href="/downloaded-song/delete/{{ song_id }}/" style="text-decoration: none;">[Hapus]</a>
               </td>
               </tr>
           {% endfor %}

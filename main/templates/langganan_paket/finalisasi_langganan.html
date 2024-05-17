@@ -36,12 +36,9 @@ body {
     padding: 20px;
 }
 </style>
-
 {% endblock meta %}
 
-
 {% block content %}
-
 <div class="navbar">
     <ul>
         <li><a href="#">Dashboard</a></li>
@@ -54,11 +51,8 @@ body {
 </div>
 
 <div style="border: 3px solid black; padding: 10px; border-radius: 10px;">
-
     <h3 style="text-align: center; margin-top: 50px;">Pembayaran Paket</h3>
-
     <p style="text-align: center;">Informasi Paket yang Ingin Dibeli</p>
-
     <table class="table table-bordered" style="width: 50%; margin: 50px auto;">
         <thead>
             <tr>
@@ -66,39 +60,46 @@ body {
                 <th scope="col">Harga</th>
             </tr>
         </thead>
-
         <tbody>
             <tr>
-                <td>{{jenis_paket}}</td>
-                <td>{{harga_paket}}</td>
+                <td>{{ jenis_paket }}</td>
+                <td>{{ harga_paket }}</td>
             </tr>
         </tbody>
     </table>
 
-    <div style="text-align: center;">
-        <p style="display: inline-block; margin-right: 10px;">Metode pembayaran:</p>
-        <div style="display: inline-block; vertical-align: middle;">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Transfer Bank
-                </button>
-                <ul class="dropdown-menu">
-                    <li class="dropdown-item" onclick="changeDropdownValue('Transfer Bank')">Transfer Bank</li>
-                    <li class="dropdown-item" onclick="changeDropdownValue('Kartu Kredit')">Kartu Kredit</li>
-                    <li class="dropdown-item" onclick="changeDropdownValue('E-wallet')">E-wallet</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
-        <a href="#" style="text-decoration: none;">[Submit]</a>
-    </div>
+    <form method="POST" action="{% url 'main:beli_paket' %}">
+        {% csrf_token %}
+        <input type="hidden" name="jenis_paket" value="{{ jenis_paket }}">
+        <input type="hidden" name="harga_paket" value="{{ harga_paket }}">
 
+        <div style="text-align: center;">
+            <p style="display: inline-block; margin-right: 10px;">Metode pembayaran:</p>
+            <div style="display: inline-block; vertical-align: middle;">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Transfer Bank
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item" onclick="changeDropdownValue('Transfer Bank')">Transfer Bank</li>
+                        <li class="dropdown-item" onclick="changeDropdownValue('Kartu Kredit')">Kartu Kredit</li>
+                        <li class="dropdown-item" onclick="changeDropdownValue('E-wallet')">E-wallet</li>
+                    </ul>
+                </div>
+            </div>
+            <input type="hidden" name="metode_bayar" id="metodeBayarInput" value="Transfer Bank">
+        </div>
+
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
+            <button type="submit" style="text-decoration: none;">[Submit]</button>
+        </div>
+    </form>
 </div>
 
 <script>
     function changeDropdownValue(value) {
         document.getElementById('dropdownMenuButton').innerHTML = value;
+        document.getElementById('metodeBayarInput').value = value;
     }
 </script>
 {% endblock content %}
