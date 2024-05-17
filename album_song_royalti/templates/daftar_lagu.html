@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daftar Lagu pada Album {{ album.judul }}</title>
+</head>
+<body>
+    <h1>Daftar Lagu pada Album {{ album.judul }}</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Judul</th>
+                <th>Durasi</th>
+                <th>Total Play</th>
+                <th>Total Download</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in song_list %}
+            <tr>
+                <td>{{ song.judul }}</td>
+                <td>{{ song.durasi }} menit</td>
+                <td>{{ song.total_play }}</td>
+                <td>{{ song.total_download }}</td>
+                <td>
+                    <a href="{% url 'lihat_detail_lagu' song.id %}">Lihat Detail</a>
+                    <form action="{% url 'hapus_lagu' song.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

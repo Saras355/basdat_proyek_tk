@@ -68,6 +68,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, "templates"),  # Tambahkan direktori template root proyek
             os.path.join(BASE_DIR, "akun", "templates"),  # Tambahkan direktori template dari aplikasi 'akun'
+            os.path.join(BASE_DIR, "album_song_royalti", "templates"),  # Tambahkan direktori template dari aplikasi 'album_song_royalti'
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -97,8 +98,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'postgres.wjvkpituiyaewdobydxl',
-        'PASSWORD': 'Marmut123_?',
+        'USER': 'postgres.lbqkgmspcxtmemnerifc',
+        'PASSWORD': 'saras355123?',
         'HOST': 'aws-0-ap-southeast-1.pooler.supabase.com',
         'PORT': '5432',
     }
@@ -116,6 +117,26 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
+#next test logging buat cek sebelum dan sesduahhnya gmn 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'akun.views': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+#next tes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
 # Internationalization
