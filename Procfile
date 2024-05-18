@@ -1,2 +1,2 @@
  
-web: gunicorn basdat_tk_proyek.wsgi --log-file - 
+web: gunicorn tk_basdat.wsgi --log-file - 
