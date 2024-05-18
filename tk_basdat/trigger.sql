@@ -106,25 +106,25 @@ FOR EACH ROW EXECUTE FUNCTION check_duplicate_song();
 
 
 --memeriksa lagu ganda pada download song
-SET SEARCH_PATH TO MARMUT;
-CREATE OR REPLACE FUNCTION cek_lagu_ganda_downloaded_song() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION check_duplicate_download()
+RETURNS TRIGGER AS $$
 BEGIN
-    IF EXISTS(
+    IF EXISTS (
         SELECT 1
-        FROM downloaded_song
+        FROM marmut.downloaded_song
         WHERE id_song = NEW.id_song
-          AND email_downloader = NEW.email_downloader
+        AND email_downloader = NEW.email_downloader
     ) THEN
-        RAISE EXCEPTION 'Lagu sudah diunduh sebelumnya';
+        RAISE EXCEPTION 'Lagu sudah pernah diunduh oleh pengguna ini!';
     END IF;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-SET SEARCH_PATH TO MARMUT;
-CREATE TRIGGER trg_cek_lagu_ganda_downloaded_song
-BEFORE INSERT ON downloaded_song
+
+CREATE TRIGGER check_duplicate_download_trigger
+BEFORE INSERT ON marmut.downloaded_song
 FOR EACH ROW
-EXECUTE FUNCTION cek_lagu_ganda_downloaded_song();
+EXECUTE FUNCTION check_duplicate_download();
 
 
 -- Nomor 3

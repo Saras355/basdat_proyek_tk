@@ -304,10 +304,11 @@ def add_song_to_another_playlist(request, playlist_id, song_id):
     return render(request, 'add_song_to_another_playlist.html', context)
 
 def download_song(request, song_id):
-    # error_message = None
+    error_message = None
     email = request.COOKIES.get('email')
     user_data = request.session.get('user_data', {})
     is_premium = user_data.get('is_premium', False)
+    playlist_id = request.COOKIES.get('id_playlist')
     
     if request.method == 'POST':
         if is_premium:
@@ -321,28 +322,34 @@ def download_song(request, song_id):
                     cursor.execute("UPDATE marmut.song SET total_download = total_download + 1 WHERE id_konten = %s;", [song_id])
 
                 messages.success(request, "Berhasil mengunduh Lagu!")
+
+                return redirect(reverse('user_playlist:play_song', args=[playlist_id, song_id]))
+
             except IntegrityError as e:
                 if 'Lagu sudah pernah diunduh oleh pengguna ini!' in str(e):
-                    messages.error(request, "Lagu sudah pernah di unduh!")
+                    # messages.error(request, "Lagu sudah pernah di unduh!")
+                    error_message = "Lagu sudah pernah di unduh!"
                 else:
-                    messages.error(request, "Terjadi kesalahan saat mengunduh lagu.")
+                    # messages.error(request, "Terjadi kesalahan saat mengunduh lagu.")
+                    error_message = "Terjadi kesalahan saat menambahkan lagu ke playlist"
         else:
             messages.error(request, "Anda harus memiliki akun premium untuk mengunduh lagu.")
 
         # Redirect back to song detail page
         # return redirect('user_playlist:play_song', playlist_id=playlist_id, song_id=song_id)
-    
+
     # If not POST request, render the song detail page
     context = {
         # 'song': song_details[0],
         'is_premium': is_premium,
         # 'playlist_id': playlist_id,
-        'song_id': song_id
+        'song_id': song_id,
+        'error_message': error_message
     }
     return render(request, 'play_song.html', context) #masih jelek ini harusnya pake reverse, tp missing param playlist_id
 
 def lihat_song(request, playlist_id, song_id):
-    # email = request.COOKIES.get('email')
+    email = request.COOKIES.get('email')
 
     # Ambil data pengguna dari session
     # user_data = request.session.get('user_data', {})
@@ -372,6 +379,7 @@ def lihat_song(request, playlist_id, song_id):
 
     if not song_details:
         return HttpResponse("Song not found", status=404)
+    
 
     context = {
         'song': song_details[0],
@@ -380,5 +388,7 @@ def lihat_song(request, playlist_id, song_id):
     }
 
     return render(request, 'lihat_song.html', context)
+
+
 
 

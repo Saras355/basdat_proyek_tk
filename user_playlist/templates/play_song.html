@@ -237,12 +237,13 @@
         <div class="divider"></div>
         <div class="actions">
             {% if is_premium %}
-                {% for song in songs %}
-                    <form method="post" action="{% url 'user_playlist:download_song' song_id=song.id_konten %}">
-                        {% csrf_token %}
-                        <button type="submit">Download</button>
-                    </form>
-                {% endfor %}
+                <form method="post" action="{% url 'user_playlist:download_song' song_id=song.id_konten %}">
+                    {% csrf_token %}
+                    <button type="submit">Download</button>
+                </form>
+                {% if error_message %}
+                    <div class="alert alert-danger">{{ error_message }}</div>
+                {% endif %}
             {% endif %}
             <a href="{% url 'user_playlist:add_song_to_another_playlist' playlist_id=playlist.id_playlist song_id=song.id_konten %}"><button class="button">Add to Playlist</button></a>
             <a href="{% url 'user_playlist:detail_user_playlist' playlist_id=playlist.id_playlist %}"><button class="button">Kembali</button></a>
