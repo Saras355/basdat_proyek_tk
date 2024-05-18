@@ -41,13 +41,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "akun",
-    # "auth",
     "album_song_royalti",
     "artist_songwriter",
     "label",
     "main",
     "pengguna_biasa",
-    "podcaster"
+    "podcaster",
+    "search",
+    "download",
+    "langganan"
 ]
 
 MIDDLEWARE = [
@@ -69,6 +71,9 @@ TEMPLATES = [
             os.path.join(BASE_DIR, "templates"),  # Tambahkan direktori template root proyek
             os.path.join(BASE_DIR, "akun", "templates"),  # Tambahkan direktori template dari aplikasi 'akun'
             os.path.join(BASE_DIR, "album_song_royalti", "templates"),  # Tambahkan direktori template dari aplikasi 'album_song_royalti'
+            os.path.join(BASE_DIR, "search", "templates"),
+            os.path.join(BASE_DIR, "download", "templates"),
+            os.path.join(BASE_DIR, "langganan", "templates")
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -88,18 +93,12 @@ WSGI_APPLICATION = "tk_basdat.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'postgres.lbqkgmspcxtmemnerifc',
-        'PASSWORD': 'saras355123?',
+        'USER': 'postgres.wjvkpituiyaewdobydxl',
+        'PASSWORD': 'Marmut123_?',
         'HOST': 'aws-0-ap-southeast-1.pooler.supabase.com',
         'PORT': '5432',
     }

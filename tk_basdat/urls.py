@@ -18,14 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from akun import views as akun_views
 from album_song_royalti.views import *
-from akun.views import list_tables
+from search.views import *
 
 urlpatterns = [
-    # path("admin/", admin.site.urls),
-    # path('auth/', include('auth.urls')),
     path("admin/", admin.site.urls),
     path('akun/', include('akun.urls')),
     path('', akun_views.home, name='home'),
-    # path('list_tables/', list_tables, name='list_tables'),
     path('album_song_royalti/', include('album_song_royalti.urls')),
+    path('search/', include('search.urls')),
+    path('download/', include('download.urls')),
+    path('langganan/', include('langganan.urls'))
 ]

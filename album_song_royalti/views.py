@@ -692,11 +692,7 @@ def create_album(request):
         print(labels)
         print(songwriters)
         print(artists)
-    
-
        
-
-    
     return render(request, 'create_album.html', {
         'labels': labels,
         'artists': artists,
@@ -843,16 +839,7 @@ def create_lagu(request, album_id):
         'artists': artists,
         'songwriters': songwriters,
         'genres': genres,
-    })
-          
-
-        
-
-
-
-       
-
-        
+    })     
 
 def hapus_album(request, album_id):
     user_data = request.session.get('user_data', {})
