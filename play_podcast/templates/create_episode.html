@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% include 'nav.html' %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buat dan Daftar Episode</title>
@@ -83,25 +84,11 @@
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Chart</a></li>
-            <li><a href="#">Search Bar</a></li>
-            <li><a href="#">Kelola Playlist</a></li>
-            <li><a href="#">Langganan Paket</a></li>
-            <li><a href="#">Kelola Podcast</a></li>
-            <li><a href="#">Kelola Album & Songs</a></li>
-            <li><a href="#">Cek Royalti</a></li>
-            <li><a href="#">Logout</a></li>
-        </ul>
-    </nav>
-
     <div class="container mt-4">
         <div class="card mb-4">
             <div class="card-body">
                 <h2 class="card-title text-center">CREATE EPISODE</h2>
-                <form method="POST" action="{% url 'podcast:manage_episodes' podcast_id %}">
+                <form method="POST" action="{% url 'play_podcast:manage_episodes' podcast_id %}">
                     {% csrf_token %}
                     <div class="form-group row">
                         <label for="episode-title" class="col-form-label col-sm-2">Judul Episode:</label>

@@ -20,16 +20,18 @@ def query_result(query, params=None):
 def show_chart_detail(request, playlist_id):
     with connection.cursor() as cursor:
         cursor.execute("""
+            SET SEARCH_PATH TO MARMUT;
             SELECT tipe, id_playlist
-            FROM CHART
+            FROM MARMUT.CHART
             WHERE id_playlist = %s;
         """, [playlist_id])
         chart = cursor.fetchone()
 
         if chart:
             cursor.execute("""
+                SET SEARCH_PATH TO MARMUT;
                 SELECT K.judul, A.nama, K.tanggal_rilis, S.total_play
-                FROM SONG S
+                FROM MARMUT.SONG S
                 JOIN KONTEN K ON S.id_konten = K.id
                 JOIN ARTIST AR ON S.id_artist = AR.id
                 JOIN AKUN A ON AR.email_akun = A.email
@@ -56,8 +58,9 @@ def show_chart_detail(request, playlist_id):
 def show_chart_list(request):
     with connection.cursor() as cursor:
         cursor.execute("""
+            SET SEARCH_PATH TO MARMUT;
             SELECT id_playlist, tipe
-            FROM CHART;
+            FROM MARMUT.CHART;
         """)
         charts = cursor.fetchall()
 
@@ -76,6 +79,7 @@ def show_chart_list(request):
 
 def show_detail_podcast(request, podcast_id):
     podcast = query_result("""
+        SET SEARCH_PATH TO MARMUT;
         SELECT
             K.judul AS judul,
             K.tanggal_rilis AS tanggal_rilis,
@@ -94,6 +98,7 @@ def show_detail_podcast(request, podcast_id):
     """, [podcast_id])
 
     episodes = query_result(f"""
+        SET SEARCH_PATH TO MARMUT;
         SELECT 
             E.judul AS judul_episode,
             E.deskripsi AS deskripsi,
@@ -108,6 +113,7 @@ def show_detail_podcast(request, podcast_id):
     """, [podcast_id])
 
     genres = query_result(f"""
+        SET SEARCH_PATH TO MARMUT;
         SELECT 
             G.genre AS genre
         FROM 
@@ -178,6 +184,7 @@ def manage_podcasts(request):
     else:
         with connection.cursor() as cursor:
             cursor.execute("""
+                SET SEARCH_PATH TO MARMUT;
                 SELECT K.id, K.judul AS judul,
                     COALESCE(COUNT(E.id_episode), 0) AS jumlah_episode,
                     COALESCE(SUM(E.durasi), 0) AS total_durasi
@@ -225,6 +232,7 @@ def manage_episodes(request, podcast_id):
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
+                    SET SEARCH_PATH TO MARMUT;
                     INSERT INTO EPISODE (id_episode, id_konten_podcast, judul, deskripsi, durasi, tanggal_rilis)
                     VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
                     """,
@@ -233,6 +241,7 @@ def manage_episodes(request, podcast_id):
 
                 cursor.execute(
                     """
+                    SET SEARCH_PATH TO MARMUT;
                     UPDATE KONTEN
                     SET durasi = COALESCE(durasi, 0) + %s
                     WHERE id = %s
@@ -252,6 +261,7 @@ def manage_episodes(request, podcast_id):
         with connection.cursor() as cursor:
             cursor.execute(
                 """
+                SET SEARCH_PATH TO MARMUT;
                 SELECT K.judul
                 FROM KONTEN K
                 JOIN PODCAST P ON K.id = P.id_konten
@@ -262,6 +272,7 @@ def manage_episodes(request, podcast_id):
             judul_podcast = cursor.fetchone()
 
             cursor.execute("""
+                SET SEARCH_PATH TO MARMUT;
                 SELECT E.id_episode,
                         E.judul AS judul_episode,
                         E.deskripsi AS deskripsi,

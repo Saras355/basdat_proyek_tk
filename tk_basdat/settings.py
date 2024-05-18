@@ -49,8 +49,8 @@ INSTALLED_APPS = [
     "podcaster",
     "search",
     "download",
-    "langganan"
-    "play_podcast"
+    "langganan",
+    "play_podcast",
 ]
 
 MIDDLEWARE = [

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% include 'nav.html' %}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chart List</title>
@@ -78,20 +79,6 @@
 </style>
 </head>
 <body>
-<nav class="navbar">
-    <ul>
-        <li><a href="#">Dashboard</a></li>
-        <li><a href="#">Chart</a></li>
-        <li><a href="#">Search Bar</a></li>
-        <li><a href="#">Kelola Playlist</a></li>
-        <li><a href="#">Langganan Paket</a></li>
-        <li><a href="#">Kelola Podcast</a></li>
-        <li><a href="#">Kelola Album & Songs</a></li>
-        <li><a href="#">Cek Royalti</a></li>
-        <li><a href="#">Logout</a></li>
-    </ul>
-</nav>
-
 <h1 class="center-text">Chart List</h1>
 <table>
     <thead>
@@ -105,7 +92,7 @@
         <tr>
             <td class="center-text">{{ chart.name }}</td>
             <td class="center-text">
-                <a href="{% url 'podcast:show_chart_detail' playlist_id=chart.id %}" class="button">View Song List</a>
+                <a href="{% url 'play_podcast:show_chart_detail' playlist_id=chart.id %}" class="button">View Song List</a>
             </td>
         </tr>
         {% empty %}
