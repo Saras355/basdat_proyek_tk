@@ -1,13 +1,14 @@
-{% extends 'base.html' %}
-
+<!-- {% extends 'base.html' %}
 {% load static %}
+{% block meta %} -->
+<title>User Playlist Details</title>
+<!-- {% endblock meta %} -->
 
-{% block content %}
-
+<!-- {% block content %} -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Product</title>
+    <title>Song Detail</title>
     <style>
                 .navbar {
     background-color: #007bff; /* Warna latar belakang navbar */
@@ -121,13 +122,8 @@
             padding: 0;
         }
 
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-
-        form {
-            max-width: 500px;
+        .container {
+            max-width: 800px;
             margin: 20px auto;
             background-color: #fff;
             padding: 20px;
@@ -135,38 +131,63 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        table {
-            width: 100%;
+        h1 {
+            color: #333;
+            text-align: center;
         }
 
-        td {
-            padding: 10px 0;
+        p {
+            margin: 10px 0;
+            line-height: 1.6; /* Tinggi baris */
         }
 
-        input[type="text"],
-        input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        button {
+            background-color: #007bff; /* Warna latar belakang */
+            color: #fff; /* Warna teks */
+            border: none; /* Hapus border */
+            padding: 8px 16px; /* Padding */
+            border-radius: 4px; /* Rounded border */
+            cursor: pointer; /* Pointer ketika dihover */
+            transition: background-color 0.3s; /* Efek transisi */
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Warna latar belakang saat dihover */
+        }
+
+        /* Popup styling */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
             border-radius: 5px;
-            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
         }
 
-        input[type="submit"] {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        .popup.show {
+            display: block;
         }
 
-        input[type="submit"]:hover {
-            background-color: #0056b3;
+        .popup button {
+            margin-top: 10px;
         }
     </style>
 </head>
-
 <body>
      <!-- Navbar -->
      <div class="navbar">
@@ -186,20 +207,51 @@
             <li><a href="#">Registrasi</a></li> -->
         </ul>
     </div>
-    <h1>Edit Product</h1>
+    <div class="container">
+        <h1>Song Details</h1>
+        <p><strong>Judul:</strong> {{ song.judul }}</p>
+        <p><strong>Genre(s):</strong></p>
+        <ul>
+            <li><strong>-</strong> {{ song.genre }}</li>
+        </ul>
+        <p><strong>Artist:</strong> {{ song.artist }}</p>
+        <p><strong>Songwriter(s):</strong></p>
+        <ul>
+            <li><strong>-</strong> {{ song.songwriter }}</li>
+        </ul>
+        <p><strong>Durasi:</strong> {{ song.durasi }} menit</p>
+        <p><strong>Tanggal Rilis:</strong> {{ song.tanggal_rilis }}</p>
+        <p><strong>Tahun:</strong> {{ song.tahun }}</p>
+        <p><strong>Total Play:</strong> {{ song.total_play }}</p>
+        <p><strong>Total Downloads:</strong> {{ song.total_download }}</p>
+        <p><strong>Album:</strong> {{ song.album }}</p>
+        <!-- <p><strong>ID konten:</strong> {{ song.id_konten }}</p> -->
 
-    <form method="POST">
-        {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-            <tr>
-                <td></td>
-                <td>
-                    <input type="submit" value="Edit Product">
-                </td>
-            </tr>
-        </table>
-    </form>
+        <div class="divider"></div>
+        <div class="actions">
+            <a href="{% url 'user_playlist:detail_user_playlist' playlist_id=playlist.id_playlist %}"><button class="button">Kembali</button></a>
+        </div>
+    </div>
+
+    <!-- Popup -->
+    <div class="popup" id="downloadPopup">
+        <p>Berhasil mengunduh Lagu dengan judul ‘{{song.judul}}’!</p>
+        <button class="button" onclick="goToDownloadList()">Ke Daftar Download</button>
+        <a href="#"><button class="button">Kembali</button></a>
+    </div>
+
+    <script>
+        function showDownloadPopup() {
+            var popup = document.getElementById("downloadPopup");
+            popup.classList.add("show");
+        }
+
+        function goToDownloadList() {
+            // Redirect ke halaman daftar download
+            window.location.href = "download_list.html";
+        }
+    </script>
 </body>
-
-{% endblock content %}
+<!-- {% endblock content %} -->
+<!-- {% url 'user_playlist:add_song_to_another_playlist' playlist_id=playlist.id_playlist song_id=song.id_konten %} -->
+<!-- {% url 'user_playlist:download_song' playlist_id=playlist.id_playlist song_id=song.id_konten %} -->

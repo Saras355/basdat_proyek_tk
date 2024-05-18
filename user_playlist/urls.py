@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib import admin
 from user_playlist.views import add_song_to_another_playlist, show_user_playlist, add_user_playlist, delete_playlist, edit_playlist, detail_user_playlist
-from user_playlist.views import add_song, delete_song, play_song, download_song
+from user_playlist.views import add_song, delete_song, play_song, download_song, lihat_song
 
 app_name = 'user_playlist'
 
@@ -17,6 +17,6 @@ urlpatterns = [
     path('delete_song/<uuid:playlist_id>/<uuid:song_id>/', delete_song, name='delete_song'),
     path('play_song/<uuid:playlist_id>/<uuid:song_id>/', play_song, name='play_song'),
     path('add_song_to_another_playlist/<uuid:playlist_id>/<uuid:song_id>/', add_song_to_another_playlist, name='add_song_to_another_playlist'),
-    path('download_song/<uuid:playlist_id>/<uuid:song_id>/', download_song, name='download_song'),
-
+    path('download_song/<uuid:song_id>/', download_song, name='download_song'),
+    path('lihat_song/<uuid:playlist_id>/<uuid:song_id>/', lihat_song, name='lihat_song'),
 ]

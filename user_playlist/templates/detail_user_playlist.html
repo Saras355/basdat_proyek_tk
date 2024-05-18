@@ -177,7 +177,10 @@
             <li><a href="{% url 'akun:dashboard' %}">Dashboard</a></li>
             <li><a href="#">Chart</a></li>
             <li><a href="#">Search Bar</a></li>
-            <li><a href="#">Kelola Playlist</a></li>
+            <li><a href="{% url 'user_playlist:show_user_playlist' %}">Kelola Playlist</a></li>
+            {% if is_premium %}
+                <li><a href="#">Kelola Downloaded Songs</a></li>
+            {% endif %}
             <li><a href="#">Langganan Paket</a></li>
             <!-- <li><a href="#">Kelola Album & Songs</a></li>
             <li><a href="#">Cek Royalti</a></li> -->
@@ -213,7 +216,7 @@
                 <td>{{ song.oleh }}</td>
                 <td>{{ song.durasi }} menit</td>
                 <td>
-                    <a href="#"><button>Lihat</button></a>
+                    <a href="{% url 'user_playlist:lihat_song' playlist_id=playlist.id_playlist song_id=song.id %}"><button>Lihat</button></a>
                     <a href="{% url 'user_playlist:play_song' playlist_id=playlist.id_playlist song_id=song.id %}"><button>Play</button></a>
                     <a href="{% url 'user_playlist:delete_song' playlist_id=playlist.id_playlist song_id=song.id %}"><button>Hapus</button></a>
                 </td>
