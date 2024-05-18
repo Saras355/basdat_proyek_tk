@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% include 'nav.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <h1>Dashboard</h1>
+    <h2>Informasi Profil Pengguna</h2>
+    <ul>
+        <li>Nama: {{ request.session.user_data.nama }}</li>
+        <li>Email: {{ request.session.user_data.email }}</li>
+        <!-- kalau dia pengguna cek status langganan  -->
+        {% if not request.session.user_data.is_label %}
+            {% if request.session.user_data.is_premium %}
+                <li>Status Langganan: Premium</li>
+            {% else %}
+                <li>Status Langganan: Non Premium</li>
+            {% endif %}
+        {% endif %}
+        
+        <!-- next -->
+         {% if request.session.user_data.is_label%}
+            <!-- <li>Label: {{ request.session.user_data.is_label}}</li> -->
+            <li>Kontak: {{user_data.kontak }}</li>
+        {% endif %}
+
+        {% if not request.session.user_data.is_label%}
+            <li>Kota Asal: {{ user_data.kota_asal }}</li>
+            {% if request.session.user_data.gender == 0 %}
+                <li>Gender: Perempuan</li>
+            {% else %}
+                <li>Gender: Laki-laki</li>
+            {% endif%}
+            <li>Tempat Lahir: {{ user_data.tempat_lahir }}</li>
+            <li>Tanggal Lahir: {{ user_data.tanggal_lahir }}</li>
+        {% endif %}
+        {% if request.session.user_data.roles %}
+        <li>Role: 
+            {% for role in request.session.user_data.roles %}
+                {% if not forloop.first %}, {% endif %}
+                {{ role }}
+            {% endfor %}
+        </li>
+        {% endif %}
+
+
+    {% if not request.session.user_data.is_label and not request.session.user_data.is_artist and not  request.session.user_data.is_songwriter and not request.session.user_data.is_podcaster %}
+        {% if playlists %}
+            <h2>Daftar Playlist</h2>
+            <ul>
+                {% for playlist in playlists %}
+                    <li>{{ playlist }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Belum Memiliki Playlist</p>
+        {% endif %}
+    {% endif %}
+
+    {% if request.session.user_data.is_artist or request.session.user_data.is_songwriter and not request.session.user_data.is_podcaster%}
+        {% if songs %}
+            <h2>Daftar Lagu</h2>
+            <ul>
+                {% for song in songs %}
+                    <li>{{ song }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Belum Memiliki Lagu</p>
+        {% endif %}
+
+    {% endif %}
+
+    {% if request.session.user_data.is_podcaster %}
+        {% if podcasts %}
+            <h2>Daftar Podcast</h2>
+            <ul>
+                {% for podcast in podcasts %}
+                    <li>{{ podcast }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Belum Memiliki Podcast</p>
+        {% endif %}
+    {% endif %}
+
+    {% if request.session.user_data.is_label %}
+        {% if albums %}
+            <h2>Daftar Album</h2>
+            <ul>
+                {% for album in albums %}
+                    <li>{{ album }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Belum Memproduksi Album</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

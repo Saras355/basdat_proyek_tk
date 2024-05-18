@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- list album untuk label -->
+    <title>Daftar Album - Label</title>
+</head>
+<body>
+    <h1>Daftar Album</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Judul</th>
+                <th>Jumlah Lagu</th>
+                <th>Total Durasi</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for album in album_list %}
+            <tr>
+                <td>{{ album.judul }}</td>
+                <td>{{ album.jumlah_lagu }}</td>
+                <td>{{ album.total_durasi }} menit</td>
+                <td>
+                    <a href="{% url 'lihat_daftar_lagu_label' album.id %}">Lihat Daftar Lagu</a>
+                    <form action="{% url 'hapus_album' album.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

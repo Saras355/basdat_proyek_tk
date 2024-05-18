@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    {% include 'nav.html' %}
+<head>
+    <title>Detail Lagu</title>
+</head>
+<body>
+    <h1>Detail Lagu</h1>
+    
+    {% if song %}
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <td>{{ song.id }}</td>
+            </tr>
+            <tr>
+                <th>Judul</th>
+                <td>{{ song.judul }}</td>
+            </tr>
+            <tr>
+                <th>Durasi</th>
+                <td>{{ song.durasi }} menit</td>
+            </tr>
+            <tr>
+                <th>Total Play</th>
+                <td>{{ song.total_play }}</td>
+            </tr>
+            <tr>
+                <th>Total Download</th>
+                <td>{{ song.total_download }}</td>
+            </tr>
+        </table>
+    {% else %}
+        <p>Lagu tidak ditemukan.</p>
+    {% endif %}
+    
+    <!-- <a href="{% url 'list_album_artist' %}">Kembali ke Daftar Album</a> -->
+</body>
+</html>
