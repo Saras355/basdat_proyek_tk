@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<style>
+  .navbar {
+    background-color: #007bff; /* Warna latar belakang navbar */
+    overflow: hidden;
+}
+
+.navbar ul {
+    list-style-type: none; /* Menghilangkan bullet list */
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    float: left;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: #0056b3; /* Warna latar belakang saat mouse hover */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+</style>
+
+{% endblock meta %}
+
+
+{% block content %}
+<div class="navbar">
+    <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Chart</a></li>
+        <li><a href="#">Search Bar</a></li>
+        <li><a href="#">Kelola Playlist</a></li>
+        <li><a href="#">Langganan Paket</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+  </div>
+
+
+<div class="border border-3 rounded border-dark mt-5 mx-5">
+    <table class="table table-bordered mx-auto mt-5" style="width: 50%;"">
+        <thead>
+            <tr>
+                <th colspan="5" style="text-align: center;"> RIWAYAT TRANSAKSI PAKET </th>
+            </tr>
+        </thead>
+
+        <thead>
+        <tr style="text-align: center;">
+            <th scope="col">Jenis</th>
+            <th scope="col">Tanggal Dimulai</th>
+            <th scope="col"> Tanggal Berakhir </th>
+            <th scope="col"> Metode Pembayaran </th>
+            <th scope="col"> Nominal </th>
+        </tr>
+        </thead>
+
+        <tbody>
+                <tr style="text-align: center;">
+                {%for jenis, mulai, selesai, metode, nominal in riwayat_transaksi%}
+                    <td>{{ jenis }}</td>
+                    <td>{{ mulai }}</td>
+                    <td>{{ selesai }}</td>
+                    <td>{{ metode }}</td>
+                    <td>Rp{{ nominal }}</td>
+                {% endfor %}
+                </tr>
+        </tbody>
+
+        <thead>
+            <tr>
+                <th colspan="5" style="text-align: center;"> <a href="/langganan/"> Kembali </a> </th>
+            </tr>
+        </thead>
+    </table>
+</div>
+{% endblock content %}

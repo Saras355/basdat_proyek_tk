@@ -1,0 +1,28 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+    {% include 'nav.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilihan Registrasi</title>
+</head>
+<body>
+    <h2>CRUD KELOLA ALBUM & SONG</h2>
+    <ul>
+        <li><a href="{% url 'create_album' %}">CREATE ALBUM</a></li>
+        {% if request.session.user_data.is_label %}
+            <li><a href="{% url 'list_album' %}">LIST ALBUM, ANDA LABEL</a></li>
+        {% endif %}
+        {% if request.session.user_data.is_artist or request.session.user_data.is_songwriter %}
+            <li><a href="{% url 'list_album_artist' %}">LIST ALBUM, ANDA BUKAN LABEL </a></li>
+        {% endif %}
+       
+
+        <!-- <li><a href="{% url 'akun:register_label' %}">LIST ALBUM</a></li> -->
+        <!-- daftar lagu pada album1 conothnya berarti buat entry pointnya ketika dia liat list album  -->
+    </ul>
+</body>
+</html>
+

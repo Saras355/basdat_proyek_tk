@@ -1,0 +1,58 @@
+<!-- {% extends 'base.html' %} -->
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style2.css"> <!-- Link CSS di sini -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+</head>
+<nav class="navbar">
+    <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Kelola Album</a></li>
+        <li><a href="#">Cek Royalti</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+</nav> 
+
+
+<body>
+    
+    <h1>Dashboard</h1>
+    <h2>Informasi Profil Pengguna:</h2>
+    <!-- <p>Nama: {{ user_data.nama }}</p> -->
+    <p>Nama: kiki</p>
+    <p>Email: email@gmail.com</p>
+    <!-- {% if user_data.kontak %}
+    <p>Kota Asal: {{ user_data.kontak }}</p>
+    {% endif %}
+  -->
+    <p>Kontak: 435463653</p>
+    <!-- {% if user_data.role %}
+    <p>Role: {{ user_data.role }}</p>
+    {% endif %} -->
+    <p>Role: Label</p>
+
+<!-- next harusnya ini sudah bener tapi mintol cek lagi :))  -->
+     <!-- Jika pengguna biasa
+     {% if user_data.is_label %}
+     Tampilkan albumnya, jika belum ada tulis "Belum Memproduksi Album " -->
+     <!-- {% if album %}
+     <h2>Daftar Album</h2>
+     <ul>
+         {% for album_one in album %}
+         <li>{{ album_one.nama }}</li>
+         {% endfor %}
+     </ul>
+    
+     {% else %} --> 
+     <h2>Daftar Album</h2>
+     <p>Belum memiliki album.</p>
+     <!-- {% endif %}
+     {% endif %} -->
+ 
+ </body>
+ </html>

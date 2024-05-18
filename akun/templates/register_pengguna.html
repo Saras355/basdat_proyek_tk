@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+{% include 'nav.html' %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Pengguna</title>
+    <!-- Tambahkan link CSS Bootstrap atau CSS kustom Anda di sini -->
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h2 class="text-center">Register Pengguna</h2>
+                <form method="post" action="{% url 'akun:register_pengguna' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nama" class="form-label">Nama:</label>
+                        <input type="text" class="form-control" id="nama" name="nama" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">Gender:</label>
+                        <select class="form-control" id="gender" name="gender" required>
+                            <option value="0">Perempuan</option>
+                            <option value="1">Laki-laki</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tempat_lahir" class="form-label">Tempat Lahir:</label>
+                        <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tanggal_lahir" class="form-label">Tanggal Lahir:</label>
+                        <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="kota_asal" class="form-label">Kota Asal:</label>
+                        <input type="text" class="form-control" id="kota_asal" name="kota_asal" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="roles" class="form-label">Role:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Podcaster" id="rolePodcaster" name="role">
+                            <label class="form-check-label" for="rolePodcaster">Podcaster</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Artist" id="roleArtist" name="role">
+                            <label class="form-check-label" for="roleArtist">Artist</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Songwriter" id="roleSongwriter" name="role">
+                            <label class="form-check-label" for="roleSongwriter">Songwriter</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

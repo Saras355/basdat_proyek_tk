@@ -1,0 +1,41 @@
+<!-- templates/list_lagu.html -->
+<!DOCTYPE html>
+<html lang="en">
+{% include 'nav.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Lagu</title>
+</head>
+<body>
+    <h1>Daftar Lagu pada Album {{ album.judul }}</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Judul</th>
+                <th>Durasi</th>
+                <th>Total Play</th>
+                <th>Total Download</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lagu in lagu_list %}
+                <tr>
+                    <td>{{ lagu.judul }}</td>
+                    <td>{{ lagu.durasi }} menit</td>
+                    <td>{{ lagu.total_play }}</td>
+                    <td>{{ lagu.total_download }}</td>
+                    <td>
+                        <a href="{% url 'lihat_detail_lagu' lagu.id %}">Lihat Detail</a>
+                        <form method="post" action="{% url 'hapus_lagu' lagu.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

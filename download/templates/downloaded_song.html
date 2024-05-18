@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<style>
+  .navbar {
+    background-color: #007bff; /* Warna latar belakang navbar */
+    overflow: hidden;
+}
+
+.navbar ul {
+    list-style-type: none; /* Menghilangkan bullet list */
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    float: left;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: #0056b3; /* Warna latar belakang saat mouse hover */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+</style>
+
+{% endblock meta %}
+
+
+{% block content %}
+<div class="navbar">
+    <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Chart</a></li>
+        <li><a href="#">Search Bar</a></li>
+        <li><a href="#">Kelola Playlist</a></li>
+        <li><a href="#">Kelola Downloaded Song</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+  </div>
+
+
+<div class="border border-3 rounded border-dark mx-5 mt-5">
+  <table class="table table-bordered table-striped" style="width: 50%; margin: 50px auto;"">
+      <thead class="table-dark">
+          <tr>
+              <th colspan="4" style="text-align: center;"> DAFTAR LAGU </th>
+          </tr>
+      </thead>
+
+      <thead >
+        <tr style="text-align: center;">
+          <th scope="col"> Judul Lagu</th>
+          <th scope="col"> Oleh </th>
+          <th scope="col"> Actions </th>
+        </tr>
+      </thead>
+
+      <tbody>
+          {% for title, artist, song_id in songs %}
+
+              <tr style="text-align: center;">
+              <td>{{ title }}</td>
+              <td>{{ artist }}</td>
+              <td>
+                  <a href="" style="text-decoration: none;">[Lihat]</a>
+                  <a href="/download/downloaded-song/delete/{{ song_id }}/" style="text-decoration: none;">[Hapus]</a>
+              </td>
+              </tr>
+          {% endfor %}
+      </tbody>
+
+      <thead>
+          <tr>
+              <th colspan="4" style="text-align: center;"> <a href="">Kembali</a> </th>
+          </tr>
+      </thead>
+  </table>
+</div>
+{% endblock content %}
