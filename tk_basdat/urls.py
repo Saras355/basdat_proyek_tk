@@ -15,7 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+
 from django.urls import path, include
+from django.urls import *
 from akun import views as akun_views
 from album_song_royalti.views import *
 from search.views import *
@@ -27,5 +29,6 @@ urlpatterns = [
     path('album_song_royalti/', include('album_song_royalti.urls')),
     path('search/', include('search.urls')),
     path('download/', include('download.urls')),
-    path('langganan/', include('langganan.urls'))
+    path('langganan/', include('langganan.urls')),
+    path("play_podcast/", include("play_podcsat.urls")),
 ]
