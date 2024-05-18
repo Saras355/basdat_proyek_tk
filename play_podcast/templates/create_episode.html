@@ -1,127 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Podcast</title>
-<style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f4f4;
-        color: #333;
-        margin: 0;
-        padding: 20px;
-    }
-    .center-text {
-        text-align: center;
-    }
-    .button {
-        display: inline-block;
-        padding: 5px 15px;
-        text-align: center;
-        text-decoration: none;
-        color: #ffffff;
-        background-color: #007bff;
-        border-radius: 5px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    .button:hover {
-        background-color: #0056b3;
-    }
-    .center-btn {
-        display: flex;
-        justify-content: center;
-    }
-    .form-group {
-        margin-bottom: 15px;
-    }
-    label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-    input[type="text"] {
-        width: 100%;
-        padding: 8px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-        box-sizing: border-box;
-    }
-    .navbar {
-        background-color: #007bff;
-        overflow: hidden;
-    }
-
-    .navbar ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .navbar li {
-        float: left;
-    }
-
-    .container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-    }
-
-    .navbar li a {
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-    }
-
-    .navbar li a:hover {
-        background-color: #0056b3;
-    }
-</style>
-
-<nav class="navbar">
-    <ul>
-        <li><a href="#">Dashboard</a></li>
-        <li><a href="#">Chart</a></li>
-        <li><a href="#">Search Bar</a></li>
-        <li><a href="#">Kelola Playlist</a></li>
-        <li><a href="#">Langganan Paket</a></li>
-        <li><a href="#">Kelola Podcast</a></li>
-        <li><a href="#">Kelola Album & Songs</a></li>
-        <li><a href="#">Cek Royalti</a></li>
-        <li><a href="#">Logout</a></li>
-    </ul>
-</nav>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat dan Daftar Episode</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1E1E1E;
+            color: #DADADA;
+        }
+        .navbar {
+            background-color: #007bff;
+            overflow: hidden;
+        }
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar li {
+            float: left;
+        }
+        .navbar li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .navbar li a:hover {
+            background-color: #0056b3;
+        }
+        .card {
+            background-color: #262626;
+            border: none;
+        }
+        .card-title {
+            color: #8A5CF5;
+        }
+        .form-control {
+            background-color: #1E1E1E;
+            color: #DADADA;
+            border: 1px solid #B3B3B3;
+        }
+        .form-control:focus {
+            background-color: #1E1E1E;
+            color: #DADADA;
+            border-color: #8A5CF5;
+            box-shadow: none;
+        }
+        .table {
+            color: #DADADA;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #1E1E1E;
+        }
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #262626;
+        }
+        .table th, .table td {
+            border-top: 1px solid #B3B3B3;
+        }
+        .btn-primary {
+            background-color: #8A5CF5;
+            border-color: #8A5CF5;
+        }
+        .btn-primary:hover {
+            background-color: #7E53DF;
+            border-color: #7E53DF;
+        }
+        .btn-danger {
+            background-color: #ff4c4c;
+            border-color: #ff4c4c;
+        }
+        .btn-danger:hover {
+            background-color: #e84343;
+            border-color: #e84343;
+        }
+    </style>
 </head>
-
 <body>
-    <h1 class="center-text"><b>CREATE EPISODE</b></h1>
+    <nav class="navbar">
+        <ul>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Chart</a></li>
+            <li><a href="#">Search Bar</a></li>
+            <li><a href="#">Kelola Playlist</a></li>
+            <li><a href="#">Langganan Paket</a></li>
+            <li><a href="#">Kelola Podcast</a></li>
+            <li><a href="#">Kelola Album & Songs</a></li>
+            <li><a href="#">Cek Royalti</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </nav>
 
-    <form action="/submit" method="post"> <!-- Anda harus menyesuaikan action dengan URL pengolahan formulir Anda -->
-        <p>Podcast: Podcast1</p>
-        <div class="form-group">
-            <label for="title">Judul:</label>
-            <input type="text" id="title" name="title" required>
-        </div>
-        <div class="form-group">
-            <label for="deskripsi">Deskripsi:</label>
-            <input type="text" id="deskripsi" name="deskripsi" required>
-        </div>
-        <div class="form-group">
-            <label for="durasi">Durasi:</label>
-            <input type="text" id="durasi" name="durasi" required>
+    <div class="container mt-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-center">CREATE EPISODE</h2>
+                <form method="POST" action="{% url 'podcast:manage_episodes' podcast_id %}">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label for="episode-title" class="col-form-label col-sm-2">Judul Episode:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="episode-title" name="judul" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="description" class="col-form-label col-sm-2">Deskripsi:</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="description" name="deskripsi" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="duration" class="col-form-label col-sm-2">Durasi (menit):</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="duration" name="durasi" required>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary mt-2">Simpan</button>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a href="{% url 'podcast:manage_podcasts' %}" class="btn btn-primary mt-2">Kembali</a>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <div class="center-btn">
-            <button type="submit" class="button">SUBMIT</button>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-center">DAFTAR EPISODE</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Judul Episode</th>
+                            <th>Deskripsi</th>
+                            <th>Durasi</th>
+                            <th>Tanggal Rilis</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for episode in episodes %}
+                        <tr>
+                            <td>{{ episode.judul_episode }}</td>
+                            <td>{{ episode.deskripsi }}</td>
+                            <td>{{ episode.durasi }}</td>
+                            <td>{{ episode.tanggal_rilis|date:"d/m/Y" }}</td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <a href="{% url 'podcast:delete_episode' podcast_id episode.id_episode %}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">Tidak ada episode tersedia.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
