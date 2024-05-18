@@ -4,7 +4,6 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.urls import reverse
 import uuid
 
-# Create your views here.
 def query_result(query, params=None):
     with connection.cursor() as cursor:
         cursor.execute(query, params)
@@ -17,7 +16,63 @@ def query_result(query, params=None):
         for row in results:
             data.append(dict(zip(columns, row))) 
         return data
+    
+def show_chart_detail(request, playlist_id):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT tipe, id_playlist
+            FROM CHART
+            WHERE id_playlist = %s;
+        """, [playlist_id])
+        chart = cursor.fetchone()
 
+        if chart:
+            cursor.execute("""
+                SELECT K.judul, A.nama, K.tanggal_rilis, S.total_play
+                FROM SONG S
+                JOIN KONTEN K ON S.id_konten = K.id
+                JOIN ARTIST AR ON S.id_artist = AR.id
+                JOIN AKUN A ON AR.email_akun = A.email
+                JOIN PLAYLIST_SONG PS ON PS.id_song = S.id_konten
+                WHERE PS.id_playlist = %s;
+            """, [playlist_id])
+            songs = cursor.fetchall()
+        else:
+            songs = []
+
+    context = {
+        'chart_type': chart[0] if chart else 'No Chart Found',
+        'songs': [
+            {
+                'title': song[0],
+                'artist': song[1],
+                'release_date': song[2].strftime('%d/%m/%Y'),
+                'total_plays': song[3]
+            } for song in songs
+        ]
+    }
+    return render(request, 'chart_detail.html', context)
+
+def show_chart_list(request):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT id_playlist, tipe
+            FROM CHART;
+        """)
+        charts = cursor.fetchall()
+
+    chart_data = [
+        {
+            'id': chart[0],
+            'name': chart[1]
+        } for chart in charts
+    ]
+
+    context = {
+        'charts': chart_data
+    }
+
+    return render(request, 'chart_list.html', context)
 
 def show_detail_podcast(request, podcast_id):
     podcast = query_result("""
@@ -259,9 +314,7 @@ def delete_podcast(request, podcast_id):
     if "Podcaster" in list_role:
         try:
             with connection.cursor() as cursor:
-                # Delete episodes related to this podcast first
                 cursor.execute("DELETE FROM EPISODE WHERE id_konten_podcast = %s", [podcast_id])
-                # Now delete the podcast
                 cursor.execute("DELETE FROM PODCAST WHERE id_konten = %s AND email_podcaster = %s", [podcast_id, email])
                 cursor.execute("DELETE FROM KONTEN WHERE id = %s", [podcast_id])
                 connection.commit()
@@ -283,7 +336,6 @@ def delete_episode(request, podcast_id, episode_id):
     if "Podcaster" in list_role:
         try:
             with connection.cursor() as cursor:
-                # Delete the episode
                 cursor.execute("DELETE FROM EPISODE WHERE id_episode = %s", [episode_id])
                 connection.commit()
         except Exception as e:
@@ -292,60 +344,3 @@ def delete_episode(request, podcast_id, episode_id):
         return HttpResponseRedirect(reverse('podcast:manage_episodes', args=[podcast_id]))
     else:
         return HttpResponseForbidden("You are not authorized to delete this episode.")
-
-def show_chart_list(request):
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            SELECT id_playlist, tipe
-            FROM CHART;
-        """)
-        charts = cursor.fetchall()
-
-    chart_data = [
-        {
-            'id': chart[0],
-            'name': chart[1]
-        } for chart in charts
-    ]
-
-    context = {
-        'charts': chart_data
-    }
-
-    return render(request, 'chartList.html', context)
-
-def show_chart_detail(request, playlist_id):
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            SELECT tipe, id_playlist
-            FROM CHART
-            WHERE id_playlist = %s;
-        """, [playlist_id])
-        chart = cursor.fetchone()
-
-        if chart:
-            cursor.execute("""
-                SELECT K.judul, A.nama, K.tanggal_rilis, S.total_play
-                FROM SONG S
-                JOIN KONTEN K ON S.id_konten = K.id
-                JOIN ARTIST AR ON S.id_artist = AR.id
-                JOIN AKUN A ON AR.email_akun = A.email
-                JOIN PLAYLIST_SONG PS ON PS.id_song = S.id_konten
-                WHERE PS.id_playlist = %s;
-            """, [playlist_id])
-            songs = cursor.fetchall()
-        else:
-            songs = []
-
-    context = {
-        'chart_type': chart[0] if chart else 'No Chart Found',
-        'songs': [
-            {
-                'title': song[0],
-                'artist': song[1],
-                'release_date': song[2].strftime('%d/%m/%Y'),
-                'total_plays': song[3]
-            } for song in songs
-        ]
-    }
-    return render(request, 'chartDetail.html', context)
