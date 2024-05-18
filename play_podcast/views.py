@@ -206,7 +206,7 @@ def manage_podcasts(request):
             'podcasts': podcast_data
         }
 
-        return render(request, 'createPodcast.html', context)
+        return render(request, 'create_podcast.html', context)
 
 def manage_episodes(request, podcast_id):
     if request.method == 'POST':
@@ -297,7 +297,7 @@ def manage_episodes(request, podcast_id):
             print(episode)
 
 
-        return render(request, 'createEpisode.html', context)
+        return render(request, 'create_episode.html', context)
 
 
 
