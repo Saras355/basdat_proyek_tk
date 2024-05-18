@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -7,36 +8,63 @@ from django.urls import reverse
 from function.general import query_result
 from django.db import DatabaseError, IntegrityError, InternalError, connection
 import datetime
+from datetime import datetime
 import uuid
 # from user_playlist.models import User_playlist
 # from connect_postgres import execute_sql_query, execute_sql_query_no_fetch
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 def show_user_playlist(request):
+    email = request.COOKIES.get('email')
+    
+    if not email:
+        return HttpResponse("User not logged in", status=403)
+    
     playlists = query_result(f"""
-    SELECT * FROM marmut.user_playlist;
-    """)
-    context = {'playlists':playlists}
+    SELECT * FROM marmut.user_playlist WHERE email_pembuat = %s;
+    """, [email])
+    
+    context = {'playlists': playlists}
     return render(request, "show_user_playlist.html", context)
+
 
 def add_user_playlist(request):
     if request.method == 'POST':
-        judul = request.POST.get('judul')
-        deskripsi = request.POST.get('deskripsi')
-        id_playlist = str(uuid.uuid4())  # Buat id_playlist baru
-        email = request.COOKIES.get('email')
-        # Simpan id_playlist baru ke dalam tabel "playlist"
-        with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO marmut.playlist (id) VALUES (%s);", [id_playlist])
-        
-        # Setelah mendapatkan id_playlist, gunakan id_playlist tersebut saat menyimpan data user_playlist
-        #if playlist baru
-        with connection.cursor() as cursor:
-            cursor.execute(""" 
-            INSERT INTO marmut.user_playlist (email_pembuat, judul, deskripsi, jumlah_lagu, tanggal_dibuat, id_user_playlist, id_playlist, total_durasi)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-            """, [email, judul, deskripsi, 0, datetime.date.today(), str(uuid.uuid4()), id_playlist, 0])
-        return redirect('user_playlist:show_user_playlist')
-        #elseif lagunya udh ada 
+        try:
+            judul = request.POST.get('judul')
+            deskripsi = request.POST.get('deskripsi')
+            id_playlist = str(uuid.uuid4())  # Create a new id_playlist
+            email = request.COOKIES.get('email')
+            logger.info(f"Email retrieved from cookies: {email}")
+            
+            # Check if email is present
+            if not email:
+                return HttpResponse("User not logged in", status=403)
+
+            # Log the details
+            logger.info(f"Creating new playlist with title: {judul} by user: {email}")
+
+            # Save new id_playlist to the "playlist" table
+            with connection.cursor() as cursor:
+                cursor.execute("INSERT INTO marmut.playlist (id) VALUES (%s);", [id_playlist])
+
+            # Save data to user_playlist table
+            with connection.cursor() as cursor:
+                cursor.execute(""" 
+                INSERT INTO marmut.user_playlist (email_pembuat, judul, deskripsi, jumlah_lagu, tanggal_dibuat, id_user_playlist, id_playlist, total_durasi)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+                """, [email, judul, deskripsi, 0, datetime.date.today(), str(uuid.uuid4()), id_playlist, 0])
+
+            # Commit the transaction
+            # connection.commit()
+
+            return redirect('user_playlist:show_user_playlist')
+
+        except Exception as e:
+            logger.error(f"Error occurred while adding playlist: {e}")
+            return HttpResponse("An error occurred while adding the playlist", status=500)
 
     return render(request, 'add_user_playlist.html')
 
@@ -155,6 +183,11 @@ def delete_song(request, playlist_id, song_id):
 
 def play_song(request, playlist_id, song_id):
     email = request.COOKIES.get('email')
+
+    # Ambil data pengguna dari session
+    user_data = request.session.get('user_data', {})
+    is_premium = user_data.get('is_premium', False)
+    
     playlist = query_result(f"""
     SELECT up.*, a.nama as pembuat
     FROM marmut.user_playlist up
@@ -180,19 +213,14 @@ def play_song(request, playlist_id, song_id):
     if not song_details:
         return HttpResponse("Song not found", status=404)
 
-    # Check if user has a premium account
-    # user_email = request.user.email  # Assuming you have user authentication and can get the user's email
-    # user_info = query_result(f"SELECT is_premium FROM marmut.akun WHERE email = '{user_email}';")
-    # is_premium = user_info[0]['is_premium'] if user_info else False
-
     # Handle form submission
     if request.method == "POST":
         progress = int(request.POST.get('progress', 0))
         if progress > 70:
-            user_email = request.user.email  # Assuming user authentication is available and user is logged in
+            # user_email = request.COOKIES.get('email')  # Assuming user authentication is available and user is logged in
 
             # Insert entry into AKUN_PLAY_SONG
-            current_time = datetime.timezone.now()
+            current_time = datetime.now()
             with connection.cursor() as cursor:
                 cursor.execute("INSERT INTO marmut.akun_play_song (email_pemain, id_song, waktu) VALUES (%s, %s, %s);", [email, song_id, current_time])
 
@@ -206,7 +234,7 @@ def play_song(request, playlist_id, song_id):
 
     context = {
         'song': song_details[0],
-        # 'is_premium': is_premium
+        'is_premium': is_premium,
         'playlist': playlist[0]
     }
 
@@ -276,28 +304,17 @@ def add_song_to_another_playlist(request, playlist_id, song_id):
     return render(request, 'add_song_to_another_playlist.html', context)
 
 def download_song(request, playlist_id, song_id):
-    email_downloader = request.COOKIES.get('email')
-    is_premium = True  # Asumsikan semua pengguna premium untuk contoh ini
-    error_message = None
-    success_message = None
-
+    # error_message = None
+    email = request.COOKIES.get('email')
     if request.method == 'POST':
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO marmut.downloaded_song (id_song, email_downloader) VALUES (%s, %s);", 
-                               [song_id, email_downloader])
-            success_message = "Lagu berhasil diunduh!"
-        except Exception as e:
-            error_message = str(e)
+        # Insert entry into DOWNLOADED_SONG
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO marmut.downloaded_song (id_song, email_downloader) VALUES (%s, %s);", [song_id, email])
+        
+        # Update total download count
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE marmut.song SET total_download = total_download + 1 WHERE id_konten = %s;", [song_id])
 
-    # Konteks template
-    context = {
-        'playlist_id': playlist_id,
-        'song_id': song_id,
-        'error_message': error_message,
-        'success_message': success_message,
-        'is_premium': is_premium
-    }
-
-    return render(request, 'play_song.html', context)
-
+        # return redirect('user_playlist:play_song', playlist_id=playlist_id, song_id=song_id)
+    return redirect(reverse('user_playlist:play_song', args=[playlist_id, song_id]))
+        

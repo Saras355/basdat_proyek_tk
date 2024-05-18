@@ -43,8 +43,8 @@ def dashboard(request):
         'is_premium' : False,
         'roles': [],
         
-
     })
+    
     #cek apakah dia premium atau tidak di table premium
     query_premium = f"SELECT 1 FROM marmut.premium WHERE email = '{user_data.get('email')}'"
     with connection.cursor() as cursor:
@@ -249,9 +249,12 @@ def login_with_postgres(request):
                         'roles': roles
                     }
                     #request.session['is_logged_in'] = True
-                    print("hihi")
-                    print(request.session['user_data'])
-                    return redirect('akun:dashboard')
+                    # print("hihi")
+                    # print(request.session['user_data'])
+                    # return redirect('akun:dashboard')
+                    response = redirect('akun:dashboard')
+                    response.set_cookie('email', email)
+                    return response
                 else:
                     messages.error(request, 'Maaf, password yang Anda masukkan salah.')
             else:

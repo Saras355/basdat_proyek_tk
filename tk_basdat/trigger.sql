@@ -51,51 +51,59 @@ EXECUTE FUNCTION cek_status_langganan();
 
 -- Nomor 2
 -- Memperbarui atribut durasi dan jumlah lagu
-SET SEARCH_PATH TO MARMUT;
-CREATE OR REPLACE FUNCTION update_durasi_jumlah_lagu() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION update_user_playlist_data()
+RETURNS TRIGGER AS
+$$
+DECLARE
+    total_duration INT;
+    total_songs INT;
 BEGIN
-    IF TG_OP = 'INSERT' THEN
-        UPDATE user_playlist
-        SET total_durasi = total_durasi + NEW.durasi,
-            jumlah_lagu = jumlah_lagu + 1
-        WHERE id = NEW.id_playlist;
-    ELSIF TG_OP = 'DELETE' THEN
-        UPDATE user_playlist
-        SET total_durasi = total_durasi - OLD.durasi,
-            jumlah_lagu = jumlah_lagu - 1
-        WHERE id = OLD.id_playlist;
-    END IF;
-    RETURN NULL;
+    SELECT SUM(k.durasi), COUNT(*)
+    INTO total_duration, total_songs
+    FROM marmut.playlist_song ps
+    JOIN marmut.song s ON ps.id_song = s.id_konten
+    JOIN marmut.konten k ON s.id_konten = k.id
+    WHERE ps.id_playlist = COALESCE(NEW.id_playlist, OLD.id_playlist);
+
+    UPDATE marmut.user_playlist
+    SET total_durasi = COALESCE(total_duration, 0),
+        jumlah_lagu = total_songs
+    WHERE id_playlist = COALESCE(NEW.id_playlist, OLD.id_playlist);
+
+    RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
-SET SEARCH_PATH TO MARMUT;
-CREATE TRIGGER trg_update_durasi_jumlah_lagu
-AFTER INSERT OR DELETE ON playlist_song
-FOR EACH ROW
-EXECUTE FUNCTION update_durasi_jumlah_lagu();
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_user_playlist_data_trigger
+AFTER INSERT OR DELETE ON marmut.playlist_song
+FOR EACH ROW EXECUTE FUNCTION update_user_playlist_data();
+
 
 
 
 -- Memeriksa lagu ganda pada playlist
-SET SEARCH_PATH TO MARMUT;
-CREATE OR REPLACE FUNCTION cek_lagu_ganda_playlist() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION check_duplicate_song()
+RETURNS TRIGGER AS
+$$
 BEGIN
-    IF EXISTS(
+    IF EXISTS (
         SELECT 1
-        FROM playlist_song
-        WHERE id_playlist = NEW.id_playlist
-          AND id_song = NEW.id_song
+        FROM marmut.playlist_song
+        WHERE id_playlist = NEW.id_playlist AND id_song = NEW.id_song
     ) THEN
         RAISE EXCEPTION 'Lagu sudah ada dalam playlist';
     END IF;
+
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
-SET SEARCH_PATH TO MARMUT;
-CREATE TRIGGER trg_cek_lagu_ganda_playlist
-BEFORE INSERT ON playlist_song
-FOR EACH ROW
-EXECUTE FUNCTION cek_lagu_ganda_playlist();
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER check_duplicate_song_trigger
+BEFORE INSERT ON marmut.playlist_song
+FOR EACH ROW EXECUTE FUNCTION check_duplicate_song();
+
 
 --memeriksa lagu ganda pada download song
 SET SEARCH_PATH TO MARMUT;
