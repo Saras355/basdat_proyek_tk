@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include 'nav.html' %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHART DETAIL</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1E1E1E;
+            color: #DADADA;
+        }
+        .card {
+            background-color: #262626;
+            border: none;
+        }
+        .card-title {
+            color: #8A5CF5;
+        }
+        .table {
+            color: #DADADA;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #1E1E1E;
+        }
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #262626;
+        }
+        .table th, .table td {
+            border-top: 1px solid #B3B3B3;
+        }
+        .btn-primary {
+            background-color: #8A5CF5;
+            border-color: #8A5CF5;
+        }
+        .btn-primary:hover {
+            background-color: #7E53DF;
+            border-color: #7E53DF;
+        }
+        .btn-info {
+            background-color: #8A5CF5;
+            border-color: #8A5CF5;
+        }
+        .btn-info:hover {
+            background-color: #7E53DF;
+            border-color: #7E53DF;
+        }
+        .navbar {
+            background-color: #007bff;
+            overflow: hidden;
+        }
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar li {
+            float: left;
+        }
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .navbar li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .navbar li a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-center">CHART DETAIL</h2>
+                <p class="text-center"><strong>Tipe:</strong> {{ chart_type }}</p>
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'play_podcast:show_chart_list' %}" class="btn btn-primary mt-2">Kembali</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-center">SONG LIST</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Judul Lagu</th>
+                            <th scope="col">Oleh</th>
+                            <th scope="col">Tanggal Rilis</th>
+                            <th scope="col">Total Plays</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for song in songs %}
+                        <tr>
+                            <td>{{ song.title }}</td>
+                            <td>{{ song.artist }}</td>
+                            <td>{{ song.release_date }}</td>
+                            <td>{{ song.total_plays }}</td>
+                            <td><a href="#" class="btn btn-info">Lihat</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">No songs found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrap.com/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
