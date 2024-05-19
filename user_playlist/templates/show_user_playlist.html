@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Playlist</title>
     <style>
-                .navbar {
-    background-color: #007bff; /* Warna latar belakang navbar */
-    overflow: hidden;
+        .navbar {
+            background-color: white; 
+            overflow: hidden;
         }
 
         .navbar ul {
-            list-style-type: none; /* Menghilangkan bullet list */
+            list-style-type: none; 
             margin: 0;
             padding: 0;
         }
@@ -23,14 +23,14 @@
 
         .navbar li a {
             display: block;
-            color: white;
+            color: black;
             text-align: center;
             padding: 14px 16px;
             text-decoration: none;
         }
 
         .navbar li a:hover {
-            background-color: #0056b3; /* Warna latar belakang saat mouse hover */
+            background-color: gray; 
         }
 
         * {
@@ -170,7 +170,7 @@
 </head>
 <body>
     <!-- Navbar -->
-    <div class="navbar">
+    <!-- <div class="navbar">
         <ul>
             <li><a href="{% url 'akun:dashboard' %}">Dashboard</a></li>
             <li><a href="#">Chart</a></li>
@@ -180,13 +180,14 @@
                 <li><a href="#">Kelola Downloaded Songs</a></li>
             {% endif %}
             <li><a href="#">Langganan Paket</a></li>
-            <!-- <li><a href="#">Kelola Album & Songs</a></li>
-            <li><a href="#">Cek Royalti</a></li> -->
+            <li><a href="#">Kelola Album & Songs</a></li>
+            <li><a href="#">Cek Royalti</a></li>
             <li><a href="{% url 'akun:logout' %}">Logout</a></li>
-            <!-- <li><a href="#">Login</a></li>
-            <li><a href="#">Registrasi</a></li> -->
+            <li><a href="#">Login</a></li>
+            <li><a href="#">Registrasi</a></li>
         </ul>
-    </div>
+    </div> -->
+    {% include 'nav.html' %}
     <h1>User Playlist</h1>
     <!-- <p>{{ curhat }}</p> -->
 

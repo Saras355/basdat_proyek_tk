@@ -184,10 +184,13 @@ def delete_song(request, playlist_id, song_id):
 
 def play_song(request, playlist_id, song_id):
     email = request.COOKIES.get('email')
-
+    # request.session['current_playlist_id'] = playlist_id
     # Ambil data pengguna dari session
     user_data = request.session.get('user_data', {})
     is_premium = user_data.get('is_premium', False)
+    request.session['current_playlist_id'] = {
+    'playlist_id': str(playlist_id)
+    }
     
     playlist = query_result(f"""
     SELECT up.*, a.nama as pembuat
@@ -308,7 +311,9 @@ def download_song(request, song_id):
     email = request.COOKIES.get('email')
     user_data = request.session.get('user_data', {})
     is_premium = user_data.get('is_premium', False)
-    playlist_id = request.COOKIES.get('id_playlist')
+    current_playlist_id = request.session.get('current_playlist_id', {})
+    playlist_id = current_playlist_id.get('playlist_id')
+    # user_data = request.session.get('user_data', {})
     
     if request.method == 'POST':
         if is_premium:
