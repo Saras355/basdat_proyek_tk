@@ -113,19 +113,19 @@ body {
         </tr>
         {% endfor %}
 
-        {% for podcast in podcasts %}
+        {% for judul, oleh, id in podcasts%}
         <tr style="text-align: center;">
           <td>
             PODCAST
           </td>
           <td>
-            {{ podcast.0 }}
+            {{ judul }}
           </td>
           <td>
-            {{ podcast.1 }}
+            {{ oleh }}
           </td>
           <td>
-            <a href=""> Lihat </a>
+            <a href="#"> Lihat </a>
           </td>
         </tr>
         {% endfor %}

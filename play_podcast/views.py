@@ -5,7 +5,7 @@ from django.urls import reverse
 import uuid
 
 def query_result(query, params=None):
-    user_data = request.session.get('user_data', {})
+    ### user_data = request.session.get('user_data', {})
     with connection.cursor() as cursor:
         cursor.execute(query, params)
         if cursor.description is None:
