@@ -10,12 +10,12 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', ''.join(secrets.choice(string.ascii_
 
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
-# ALLOWED_HOSTS = [ 'tkbasdat-kelompok1.up.railway.app',]
+ALLOWED_HOSTS = ["*"]
 
-ALLOWED_HOSTS= ["tkbasdat-kelompok1.up.railway.app", "127.0.0.1"]
-CSRF_TRUSTED_ORIGINS= ['https://tkbasdat-kelompok1.up.railway.app', 'https://127.0.0.1']
+# ALLOWED_HOSTS= ["tkbasdat-kelompok1.up.railway.app", "127.0.0.1"]
+# CSRF_TRUSTED_ORIGINS= ['https://tkbasdat-kelompok1.up.railway.app', 'https://127.0.0.1']
 
-SECURE_CROSS_ORIGIN_OPENER_POLICY ='same-origin-allow-popups'
+# SECURE_CROSS_ORIGIN_OPENER_POLICY ='same-origin-allow-popups'
 
 
 INSTALLED_APPS = [
