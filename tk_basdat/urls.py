@@ -27,5 +27,6 @@ urlpatterns = [
     path('album_song_royalti/', include('album_song_royalti.urls')),
     path('search/', include('search.urls')),
     path('download/', include('download.urls')),
-    path('langganan/', include('langganan.urls'))
+    path('langganan/', include('langganan.urls')),
+    path('user_playlist/', include('user_playlist.urls')),
 ]

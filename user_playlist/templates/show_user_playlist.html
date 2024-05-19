@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Playlist</title>
+    <style>
+        .navbar {
+            background-color: white; 
+            overflow: hidden;
+        }
+
+        .navbar ul {
+            list-style-type: none; 
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar li {
+            float: left;
+        }
+
+        .navbar li a {
+            display: block;
+            color: black;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar li a:hover {
+            background-color: gray; 
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        form label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        form input[type="text"],
+        form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form input[type="submit"] {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            margin-right: 10px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        p {
+            color: #777;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>User Playlist</h1>
+    <!-- <p>{{ curhat }}</p> -->
+
+    <table>
+        <tr>
+            <th>Judul</th>
+            <!-- <th>ID playlist</th> -->
+            <th>Jumlah Lagu</th>
+            <th>Total Durasi</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for playlist in playlists %}
+            <tr>
+                <td>{{playlist.judul}}</td>
+                <!-- <td>{{playlist.id_playlist}}</td> -->
+                <td>{{playlist.jumlah_lagu}}</td>
+                <td>{{playlist.total_durasi}} menit</td>
+                <td>
+                    <a href="{% url 'user_playlist:detail_user_playlist' playlist_id=playlist.id_playlist %}"><button>Detail</button></a>
+                    <a href="{% url 'user_playlist:edit_playlist' playlist_id=playlist.id_playlist %}"><button>Edit</button></a>
+                    <a href="{% url 'user_playlist:delete_playlist' playlist_id=playlist.id_playlist %}"><button>Delete</button></a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <br />
+    <div style="text-align: center;">
+        <a href="{% url 'user_playlist:add_user_playlist' %}">
+            <button>Tambah Playlist</button>
+        </a>
+    </div>
+</body>
+
+{% endblock content %}
+<!-- <a href="{% url 'user_playlist:add_playlist' %}">
+    <button>Tambah Playlist</button>
+</a> -->
+
+<!-- <a href="{% url 'user_playlist:playlist_detail' playlist_id=playlist.id_User_playlist %}"><button>Detail</button></a>
+<a href="{% url 'user_playlist:edit_playlist' playlist_id=playlist.id_User_playlist %}"><button>Edit</button></a>
+<a href="{% url 'user_playlist:delete_playlist' playlist_id=playlist.id_User_playlist %}"><button>Delete</button></a> -->
+ <!-- <a href="{% url 'user_playlist:delete_playlist' playlist_id=playlist.id %}"><button>Delete</button></a> -->
