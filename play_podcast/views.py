@@ -53,7 +53,7 @@ def show_chart_detail(request, playlist_id):
             } for song in songs
         ]
     }
-    return render(request, 'chart_detail.html', context)
+    return render(request, 'play_podcast:chart_detail.html', context)
 
 def show_chart_list(request):
     with connection.cursor() as cursor:
@@ -75,9 +75,14 @@ def show_chart_list(request):
         'charts': chart_data
     }
 
-    return render(request, 'chart_list.html', context)
+    return render(request, 'play_podcast:chart_list.html', context)
 
 def show_detail_podcast(request, podcast_id):
+    user_data = request.session.get('user_data', {})
+    print(user_data)
+    user_email = user_data.get('email', {})
+    print("lala")
+    print(podcast_id)
     podcast = query_result("""
         SET SEARCH_PATH TO MARMUT;
         SELECT
@@ -151,7 +156,7 @@ def show_detail_podcast(request, podcast_id):
         'message': 'Episodes not available.' if not episode_data else ''
     }
 
-    return render(request, "podcast.html", context)
+    return render(request, "play_podcast:podcast.html", context)
 
 
 def manage_podcasts(request):
@@ -179,7 +184,7 @@ def manage_podcasts(request):
             connection.rollback()
             print("An error occurred: ", e)
 
-        return HttpResponseRedirect(reverse('podcast:manage_podcasts'))
+        return HttpResponseRedirect(reverse('play_podcast:manage_podcasts'))
 
     else:
         with connection.cursor() as cursor:
@@ -213,7 +218,7 @@ def manage_podcasts(request):
             'podcasts': podcast_data
         }
 
-        return render(request, 'create_podcast.html', context)
+        return render(request, 'play_podcast:create_podcast.html', context)
 
 def manage_episodes(request, podcast_id):
     if request.method == 'POST':
@@ -255,7 +260,7 @@ def manage_episodes(request, podcast_id):
             connection.rollback()
             print("An error occurred: ", e)
 
-        return HttpResponseRedirect(reverse('podcast:manage_episodes', args=[podcast_id]))
+        return HttpResponseRedirect(reverse('play_podcast:manage_episodes', args=[podcast_id]))
 
     else:
         with connection.cursor() as cursor:
@@ -308,7 +313,7 @@ def manage_episodes(request, podcast_id):
             print(episode)
 
 
-        return render(request, 'create_episode.html', context)
+        return render(request, 'play_podcast:create_episode.html', context)
 
 
 
@@ -332,7 +337,7 @@ def delete_podcast(request, podcast_id):
         except Exception as e:
             connection.rollback()
             print("An error occurred: ", e)
-        return HttpResponseRedirect(reverse('podcast:manage_podcasts'))
+        return HttpResponseRedirect(reverse('play_podcast:manage_podcasts'))
     else:
         return HttpResponseForbidden("You are not authorized to delete this podcast.")
 
@@ -352,6 +357,9 @@ def delete_episode(request, podcast_id, episode_id):
         except Exception as e:
             connection.rollback()
             print("An error occurred: ", e)
-        return HttpResponseRedirect(reverse('podcast:manage_episodes', args=[podcast_id]))
+        return HttpResponseRedirect(reverse('play_podcast:manage_episodes', args=[podcast_id]))
     else:
         return HttpResponseForbidden("You are not authorized to delete this episode.")
+    
+def kelola_podcast(request):
+    return render(request, 'play_podcast:kelola_podcast.html')

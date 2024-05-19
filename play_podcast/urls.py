@@ -11,4 +11,5 @@ urlpatterns = [
     path('', manage_podcasts, name='manage_podcasts'),
     path('delete-episode/<str:podcast_id>/<str:episode_id>/', delete_episode, name='delete_episode'),
     path('manage-episodes/<str:podcast_id>/', manage_episodes, name='manage_episodes'),
+    path('kelola-podcast',kelola_podcast,name='kelola_podcast')
 ]

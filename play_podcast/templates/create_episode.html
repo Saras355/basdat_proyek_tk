@@ -87,8 +87,8 @@
     <div class="container mt-4">
         <div class="card mb-4">
             <div class="card-body">
-                <h2 class="card-title text-center">CREATE EPISODE</h2>
-                <form method="POST" action="{% url 'play_podcast:manage_episodes' podcast_id %}">
+                <h2 class="card-title text-center">BUAT EPISODE BARU</h2>
+                <form method="POST" action="{% url 'podcast:manage_episodes' podcast_id %}">
                     {% csrf_token %}
                     <div class="form-group row">
                         <label for="episode-title" class="col-form-label col-sm-2">Judul Episode:</label>
@@ -140,13 +140,14 @@
                             <td>{{ episode.tanggal_rilis|date:"d/m/Y" }}</td>
                             <td>
                                 <div class="d-flex justify-content-center">
+                                    <!-- <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button> -->
                                     <a href="{% url 'podcast:delete_episode' podcast_id episode.id_episode %}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
                                 </div>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center">Tidak ada episode tersedia.</td>
+                            <td colspan="5">Tidak ada episode tersedia.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

@@ -91,57 +91,54 @@
 </style>
 </head>
 <body>
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-body">
-            <h2 class="card-title text-center">PODCAST DETAIL</h2>
-            <p class="card-text"><strong>Judul:</strong> Podcast1</p>
-            <p class="card-text"><strong>Genre(s):</strong></p>
-            <ul class="list-unstyled">
-                <li>Genre1</li>
-                <li>Genre2</li>
-            </ul>
-            <p class="card-text"><strong>Podcaster:</strong> Artist1</p>
-            <p class="card-text"><strong>Total Durasi:</strong> 8 jam 20 menit</p>
-            <p class="card-text"><strong>Tanggal Rilis:</strong> 18/03/24</p>
-            <p class="card-text"><strong>Tahun:</strong> 2024</p>
-            <div class="center-btn">
-                <a href="#kembali" class="btn">Kembali</a>
+    <div class="container mt-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-center">PODCAST DETAIL</h2>
+                <p class="card-text"><strong>Judul:</strong> {{ podcast.judul }}</p>
+                <p class="card-text"><strong>Genre(s):</strong></p>
+                <ul class="list-unstyled">
+                    {% for genre in podcast.genres %}
+                    <li>{{ genre }}</li>
+                    {% endfor %}
+                </ul>
+                <p class="card-text"><strong>Podcaster:</strong> {{ podcast.podcaster }}</p>
+                <p class="card-text"><strong>Total Durasi:</strong> {{ podcast.total_durasi }}</p>
+                <p class="card-text"><strong>Tanggal Rilis:</strong> {{ podcast.tanggal_rilis }}</p>
+                <p class="card-text"><strong>Tahun:</strong> {{ podcast.tahun }}</p>
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'podcast:manage_podcasts' %}" class="btn btn-primary mt-2">Kembali</a>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-center">DAFTAR EPISODE</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Judul Episode</th>
+                            <th scope="col">Deskripsi</th>
+                            <th scope="col">Durasi</th>
+                            <th scope="col">Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for episode in episodes %}
+                        <tr>
+                            <td>{{ episode.judul_episode }}</td>
+                            <td>{{ episode.deskripsi }}</td>
+                            <td>{{ episode.durasi }}</td>
+                            <td>{{ episode.tanggal_rilis|date:"d/m/Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body">
-            <h2 class="card-title text-center">DAFTAR EPISODE</h2>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Judul Episode</th>
-                        <th>Deskripsi</th>
-                        <th>Durasi</th>
-                        <th>Tanggal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Subjudul1</td>
-                        <td>Lorem Ipsum ....</td>
-                        <td>59 menit</td>
-                        <td>18/03/2024</td>
-                    </tr>
-                    <tr>
-                        <td>Subjudul2</td>
-                        <td>Lorem Ipsum ....</td>
-                        <td>1 jam 2 menit</td>
-                        <td>25/03/2024</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
