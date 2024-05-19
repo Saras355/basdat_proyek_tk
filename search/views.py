@@ -4,6 +4,7 @@ from django.db import connection
 
 # Create your views here.
 def show_cari_konten(request):
+    user_data = request.session.get('user_data', {})
     if 'query' in request.GET:
         query = request.GET['query']
         return redirect(f'/search/{query}')
@@ -11,6 +12,7 @@ def show_cari_konten(request):
     return render(request, "cari_konten.html")
 
 def show_hasil_cari(request, judul):
+    user_data = request.session.get('user_data', {})
     # judul = str(judul)
     if 'query' in request.GET:
         judul = request.GET['query']
