@@ -7,7 +7,7 @@ import secrets
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', ''.join(secrets.choice(string.ascii_letters + string.digits + string.punctuation) for i in range(50)))
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', ''.join(secrets.choice(string.ascii_letters + string.digits + string.punctuation) for i in range(50)))
 
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
