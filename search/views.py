@@ -16,7 +16,6 @@ def show_hasil_cari(request, judul):
     # judul = str(judul)
     if 'query' in request.GET:
         judul = request.GET['query']
-    
     like_pattern = f'%{judul}%'
     flag = True
 
