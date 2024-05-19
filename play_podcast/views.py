@@ -362,4 +362,5 @@ def delete_episode(request, podcast_id, episode_id):
         return HttpResponseForbidden("You are not authorized to delete this episode.")
     
 def kelola_podcast(request):
-    return render(request, 'play_podcast:kelola_podcast.html')
+    print("halohalohalo")
+    return render(request, 'kelola_podcast.html')
