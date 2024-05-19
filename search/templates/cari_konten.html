@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<!-- <style>
+    .custom-search-box {
+      max-width: 400px;
+      margin: 0 auto;
+      margin-top: 100px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    .search-btn {
+      border-radius: 0 5px 5px 0;
+    }
+
+    .navbar {
+    background-color: #007bff; /* Warna latar belakang navbar */
+    overflow: hidden;
+}
+
+.navbar ul {
+    list-style-type: none; /* Menghilangkan bullet list */
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    float: left;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: #0056b3; /* Warna latar belakang saat mouse hover */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+</style> -->
+{% endblock meta %}
+
+{% block content %}
+<!-- <div class="navbar">
+  <ul>
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Chart</a></li>
+      <li><a href="#">Search Bar</a></li>
+      <li><a href="#">Kelola Playlist</a></li>
+      <li><a href="#">Langganan Paket</a></li>
+      <li><a href="#">Logout</a></li>
+  </ul>
+</div> -->
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <form action="/search/" method="GET">
+            <div class="input-group custom-search-box my-auto">
+                <input type="text" class="form-control" name="query" placeholder="Search...">
+                <div class="input-group-append">
+                  <button class="btn btn-primary search-btn ms-2" type="submit">Search</button>
+                </div>
+              </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<!-- <style>
+  .navbar {
+    background-color: #007bff; /* Warna latar belakang navbar */
+    overflow: hidden;
+}
+
+.navbar ul {
+    list-style-type: none; /* Menghilangkan bullet list */
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    float: left;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: #0056b3; /* Warna latar belakang saat mouse hover */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+</style> -->
+
+{% endblock meta %}
+
+{% block content %}
+<!-- <div class="navbar">
+  <ul>
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Chart</a></li>
+      <li><a href="#">Search Bar</a></li>
+      <li><a href="#">Kelola Playlist</a></li>
+      <li><a href="#">Langganan Paket</a></li>
+      <li><a href="#">Logout</a></li>
+  </ul>
+</div> -->
+
+<div class="border border-3 rounded border-dark mx-5 mt-5">
+  <table class="table table-dark table-hover" style="width: 50%; margin: 50px auto;"">
+    <thead>
+        <tr>
+            <th colspan="2" style="border: none;"> LANGGANAN PAKET</th>
+            <th style="border: none; text-align: right;">
+                <a href="riwayat-langganan/" style="text-decoration: none;">[Riwayat Transaksi]</a>
+            </th>
+        </tr>
+    </thead>
+
+    <thead>
+      <tr style="text-align: center;">
+        <th scope="col">Jenis</th>
+        <th scope="col">Harga</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+        {% for jenis, harga in paket.items %}
+      <tr style="text-align: center;">
+        <td>{{ jenis }}</td>
+        <td>Rp{{ harga }}</td>
+        <td> <a href="{{ jenis }}/{{ harga }}" style="text-decoration: none;">[Berlangganan]</a> </td>
+      </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}

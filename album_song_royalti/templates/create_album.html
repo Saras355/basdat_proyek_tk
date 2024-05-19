@@ -28,7 +28,7 @@
             <option value="" selected disabled>Pilih Artist</option>
             {% if request.session.user_data.is_artist %}
                 <option value="{{ request.session.user_data.nama }}">{{ request.session.user_data.nama }}</option>
-            {% elif request.session.user_data.is_songwriter %}
+            {% else %}
                 {% for artist in artists %}
                     <option value="{{ artist.email_akun }}">{{ artist.email_akun }}</option>
                 {% endfor %}
