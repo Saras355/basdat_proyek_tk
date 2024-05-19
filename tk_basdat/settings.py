@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "search",
     "download",
     "langganan",
-    "user_playlist"
+    "user_playlist",
     "play_podcast",
 ]
 

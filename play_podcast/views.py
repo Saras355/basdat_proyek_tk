@@ -82,10 +82,7 @@ def show_chart_list(request):
 
 def show_detail_podcast(request, podcast_id):    
     user_data = request.session.get('user_data', {})
-    print(user_data)
     user_email = user_data.get('email', {})
-    print("lala")
-    print(podcast_id)
     podcast = query_result("""
         SET SEARCH_PATH TO MARMUT;
         SELECT
