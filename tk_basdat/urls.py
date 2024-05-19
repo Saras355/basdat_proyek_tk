@@ -30,5 +30,6 @@ urlpatterns = [
     path('search/', include('search.urls')),
     path('download/', include('download.urls')),
     path('langganan/', include('langganan.urls')),
+    path('user_playlist/', include('user_playlist.urls')),
     path("play_podcast/", include("play_podcast.urls")),
 ]

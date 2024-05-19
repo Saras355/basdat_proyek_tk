@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="#">Marmut</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -26,18 +26,18 @@
                                 <a class="nav-link" href="#">Chart</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Search Bar</a>
+                                <a class="nav-link" href="{% url 'search:show_cari_konten' %}">Search Bar</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Kelola Playlist</a>
+                                <a class="nav-link" href="{% url 'user_playlist:show_user_playlist' %}">Kelola Playlist</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Langganan Paket</a>
+                                <a class="nav-link" href="{% url 'langganan:show_langganan_paket' %}">Langganan Paket</a>
                             </li>
                         {% endif %}
                         {% if user_data.is_premium %}
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Kelola Downloaded Songs</a>
+                                <a class="nav-link" href="{% url 'download:show_downloaded_song' %}">Kelola Downloaded Songs</a>
                             </li>
                         {% endif %}
                         {% if user_data.is_podcaster %}

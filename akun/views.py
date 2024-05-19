@@ -1,4 +1,5 @@
 import logging
+import random
 from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
@@ -245,33 +246,43 @@ def login_with_postgres(request):
 
                     user_data = request.session['user_data']
                     email = user_data['email']
-                    cursor.execute("SELECT * FROM marmut.premium WHERE email = %s", (email,))
-                    prem_flag = cursor.fetchone()
-                    print(email)
-                    print(prem_flag)
-                    # Jika None -> non prem
+                    try:
+                        cursor.execute("DELETE FROM marmut.premium WHERE email = %s", (email,))
+                    except psycopg2.Error as e:
+                        if 'Premium period still valid' in str(e):
+                            user_data['is_prem'] = True
+                        else:
+                            messages.error(request, e)
+                    if 'is_prem' not in user_data:
+                        user_data['is_prem'] = False
+                    
+                    # cursor.execute("SELECT * FROM marmut.premium WHERE email = %s", (email,))
+                    # prem_flag = cursor.fetchone()
+                    # print(email)
+                    # print(prem_flag)
+                    # # Jika None -> non prem
 
-                    # Jika pengguna premium
-                    if (prem_flag):
-                        email = prem_flag[0]
-                        query = """
-                                SELECT *
-                                FROM marmut.transaction
-                                WHERE email = %s
-                                ORDER BY timestamp_dimulai DESC
-                                LIMIT 1;
-                                """
-                        cursor.execute(query, (email,))
-                        latest_transaction = cursor.fetchone()
+                    # # Jika pengguna premium
+                    # if (prem_flag):
+                    #     email = prem_flag[0]
+                    #     query = """
+                    #             SELECT *
+                    #             FROM marmut.transaction
+                    #             WHERE email = %s
+                    #             ORDER BY timestamp_dimulai DESC
+                    #             LIMIT 1;
+                    #             """
+                    #     cursor.execute(query, (email,))
+                    #     latest_transaction = cursor.fetchone()
 
-                        if latest_transaction:
-                            timestamp_berakhir = latest_transaction[4]
-                            if timestamp_berakhir < datetime.datetime.now():
-                                cursor.execute("DELETE FROM marmut.downloaded_song WHERE email_downloader = %s", (email,))
-                                cursor.execute("DELETE FROM marmut.premium WHERE email = %s", (email,))
-                                cursor.execute("INSERT INTO marmut.nonpremium (email) VALUES (%s)", (email,))
-                            else:
-                                user_data['is_prem'] = True
+                        # if latest_transaction:
+                        #     timestamp_berakhir = latest_transaction[4]
+                        #     if timestamp_berakhir < datetime.datetime.now():
+                        #         cursor.execute("DELETE FROM marmut.downloaded_song WHERE email_downloader = %s", (email,))
+                        #         cursor.execute("DELETE FROM marmut.premium WHERE email = %s", (email,))
+                        #         cursor.execute("INSERT INTO marmut.nonpremium (email) VALUES (%s)", (email,))
+                        #     else:
+                        #         user_data['is_prem'] = True
                                 
                     
                     print("\n================ DEBUG AREA ================")
@@ -282,7 +293,10 @@ def login_with_postgres(request):
                         print(key + ": " + str(value))
                     print("================ DEBUG AREA ================\n")
                     
-                    return redirect('akun:dashboard')
+                    # return redirect('akun:dashboard')
+                    response = redirect('akun:dashboard')
+                    response.set_cookie('email', email)
+                    return response
                 else:
                     messages.error(request, 'Maaf, password yang Anda masukkan salah.')
             else:
@@ -307,12 +321,20 @@ def register_label(request):
         kontak = request.POST.get('kontak')
 
         with connection.cursor() as cursor:
+            id_hak_cipta = uuid.uuid4()
+            rate_pemilik_hak_cipta = random.randint(101,999)
             cursor.execute("""
-                INSERT INTO marmut.label (email, password, nama, kontak)
-                VALUES (%s, %s, %s, %s)
-            """, [email, password, nama, kontak])
+            INSERT INTO marmut.pemilik_hak_cipta (id, rate_royalti)
+            VALUES(%s, %s)
+            """, [id_hak_cipta, rate_pemilik_hak_cipta])
 
-        return redirect('~/akun/login')  # Ubah 'login' sesuai dengan nama URL untuk halaman login
+            id_label = uuid.uuid4()
+            cursor.execute("""
+                INSERT INTO marmut.label (id, email, password, nama, kontak, id_pemilik_hak_cipta)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, [id_label, email, password, nama, kontak, id_hak_cipta])
+
+        return redirect('/akun/login')  # Ubah 'login' sesuai dengan nama URL untuk halaman login
 
     return render(request, 'register_label.html')
 
@@ -328,96 +350,96 @@ def register_pengguna(request):
         tanggal_lahir = request.POST.get('tanggal_lahir')
         kota_asal = request.POST.get('kota_asal')
         roles = request.POST.getlist('role')
+        print("======================= INI ISI ROLES =======================")
+        print(roles)
         is_verified = True
-        #id pemilik hak cipta berarti gapapa None
-        id_pemilik_hak_cipta = None
-        
-        #next : mungkin nanti baru ada triggernya 
-        #kalau ga ada role yang dipilih 
-        if not roles:
-            #maka akan dibuat akund enagn status unverfied
-            #dan dikategorikan sebagai pengguna biasa
-            #langsung add ke database dulu
+
+        if len(roles) == 0:
             is_verified = False
+            print("======================= MASUKKKKK KEEEEE UNVERIFIED =======================")
         with connection.cursor() as cursor:
-            #next perlu distrip ga ya?
             cursor.execute("""
                 INSERT INTO marmut.akun (email, password, nama, gender, tempat_lahir, tanggal_lahir, is_verified, kota_asal)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """, [email, password, nama, gender, tempat_lahir, tanggal_lahir, is_verified, kota_asal])
        
-            #tambahkan di table  masing masing role    
-            #tambahkan jika podcaster
-            if 'podcaster' in roles:
-                #attribut hanya email saja
-                #karena sudah ada emailnya di table akun, harusnya emailnya bisa langsung tanpa perlu fk lagi 
-                with connection.cursor() as cursor:
-                    cursor.execute("""
-                        INSERT INTO marmut.podcaster (email)
-                        VALUES (%s)
-                    """, [email])
-            
-            #tambahkan jika artist
-                #note kalau FK berarti data tersebut harus ada di tabel yang di FKan terlebih dahulu
-                #jadi asumsinya sudah ada 
-            #attributnya ada id dari UUID PK
-            #ada email_akun yang FK ke AKUN.email
-            #ada id_pemilik_hak_cipta dengan tipe data UUID , yang FK ke pemilik_hak_cipta.id
+            if 'Podcaster' in roles:
+                print("======================= MASUKKKKK KEEEEE PODCASTER =======================")
+                print(email)
+                cursor.execute("""
+                    SET search_path TO marmut;
+                    INSERT INTO marmut.podcaster (email)
+                    VALUES (%s)
+                """, [email])
 
-            #next harusnya bisa -> tanyain -> krn pemilik hak cipta kan dibuat independen 
-            if 'artist' in roles:
+
+            if (len(roles) >= 2) & ('Artist' in roles) & ('Songwriter' in roles):
+                print("======================= MASUKKKKK KE ARTIST && SONGWRITER=======================")
+                id_pemilik_hak_cipta = uuid.uuid4()
+                rate_pemilik_hak_cipta = random.randint(100,999)
+                cursor.execute("""
+                INSERT INTO marmut.pemilik_hak_cipta (id, rate_royalti)
+                VALUES(%s, %s)
+                """, [id_pemilik_hak_cipta, rate_pemilik_hak_cipta])
+
                 artist_id = uuid.uuid4()
                 cursor.execute("""SELECT * FROM marmut.akun WHERE email = %s LIMIT 1;""", [email])
                 email_akun = cursor.fetchall()
-                #ambil email dari table akun
-                email_akun = email_akun[0][0] #NEXT
-                #ambil id dari table pemilik hak cipta
-                # cursor.execute("""  SELECT DISTINCT r.id_pemilik_hak_cipta 
-                #                FROM song s
-                #                JOIN royalti r ON s.id_konten = r.id_song
-                #                WHERE s.id_artist = %s;""", [artist_id])
-                # id_pemilik_hak_cipta = cursor.fetchall()
-                
-                #masukkan ke table artist
+                email_akun = email_akun[0][0]
                 query_insert_artist = """
                 INSERT INTO marmut.artist (id, email_akun, id_pemilik_hak_cipta)
                 VALUES (%s, %s, %s)
                 """
                 cursor.execute(query_insert_artist, (artist_id, email_akun, id_pemilik_hak_cipta))
-                
-            
-            #cek di dataset apakah ada orang yang id song writernya sama dengan id artist 
-            #tapi ada kemungkinan kalau satu orang kan bisa jadi artist dan bisa jadi songwriter harusnya saling berbagi id?
-            #cek dataset -> 
-                #pakai 
-               # SELECT * FROM ARTIST WHERE ARTIST.id in (SELECT id FROM SONGWRITER); -> idnya ga ada yg sama antara di kedua table itu
-               # SELECT * FROM ARTIST WHERE ARTIST.email_akun in (SELECT email_akun FROM SONGWRITER); -> tapiii ada email yang sama 
-            #asumsi: ini berarti untuk satu orangyag rolenya bisa artist dan songwriter maka idnya berbeda, tetapi email_akunnya boleh sama
 
-            #tambahkan jika songwriter
-            if 'songwriter' in roles:
                 songwriter_id = uuid.uuid4()
                 cursor.execute("""SELECT * FROM marmut.akun WHERE email = %s LIMIT 1;""", [email])
                 email_akun = cursor.fetchall()
-                #ambil email dari table akun
-                email_akun = email_akun[0][0] #NEXT
-                #ambil id pemilik hak cipta -> ambil dari songwriter_write_song dulu baru dapat id_songnya 
-                # query = """
-                #     SELECT DISTINCT r.id_pemilik_hak_cipta
-                #     FROM songwriter_write_song sws
-                #     JOIN song s ON sws.id_song = s.id_konten
-                #     JOIN royalti r ON s.id_konten = r.id_song
-                #     WHERE sws.id_songwriter = %s
-                # """
-                # cursor.execute(query, (artist_id,))
-                # id_pemilik_hak_cipta = cursor.fetchone()
-                
-                #masukkan ke table artist
-                query_insert_artist = """
+                email_akun = email_akun[0][0]
+                query_insert_songwriter = """
                 INSERT INTO marmut.songwriter (id, email_akun, id_pemilik_hak_cipta)
                 VALUES (%s, %s, %s)
                 """
-                cursor.execute(query_insert_artist, (songwriter_id, email_akun, id_pemilik_hak_cipta))
+                cursor.execute(query_insert_songwriter, (songwriter_id, email_akun, id_pemilik_hak_cipta))
+
+            else:
+                if 'Artist' in roles:
+                    print("======================= MASUKKKKK KE ARTIST =======================")
+                    id_pemilik_hak_cipta = uuid.uuid4()
+                    rate_pemilik_hak_cipta = random.randint(100,999)
+                    cursor.execute("""
+                    INSERT INTO marmut.pemilik_hak_cipta (id, rate_royalti)
+                    VALUES(%s, %s)
+                    """, [id_pemilik_hak_cipta, rate_pemilik_hak_cipta])
+                    
+                    artist_id = uuid.uuid4()
+                    cursor.execute("""SELECT * FROM marmut.akun WHERE email = %s LIMIT 1;""", [email])
+                    email_akun = cursor.fetchall()
+                    email_akun = email_akun[0][0]
+                    query_insert_artist = """
+                    INSERT INTO marmut.artist (id, email_akun, id_pemilik_hak_cipta)
+                    VALUES (%s, %s, %s)
+                    """
+                    cursor.execute(query_insert_artist, (artist_id, email_akun, id_pemilik_hak_cipta))
+
+                if 'Songwriter' in roles:
+                    print("======================= MASUKKKKK KEEEEE SONGWRITER =======================")
+                    id_pemilik_hak_cipta = uuid.uuid4()
+                    rate_pemilik_hak_cipta = random.randint(100,999)
+                    cursor.execute("""
+                    INSERT INTO marmut.pemilik_hak_cipta (id, rate_royalti)
+                    VALUES(%s, %s)
+                    """, [id_pemilik_hak_cipta, rate_pemilik_hak_cipta])
+
+                    songwriter_id = uuid.uuid4()
+                    cursor.execute("""SELECT * FROM marmut.akun WHERE email = %s LIMIT 1;""", [email])
+                    email_akun = cursor.fetchall()
+                    email_akun = email_akun[0][0]
+                    query_insert_songwriter = """
+                    INSERT INTO marmut.songwriter (id, email_akun, id_pemilik_hak_cipta)
+                    VALUES (%s, %s, %s)
+                    """
+                    cursor.execute(query_insert_songwriter, (songwriter_id, email_akun, id_pemilik_hak_cipta))
             
             return HttpResponseRedirect('/akun/login/') 
             # except psycopg2.Error as error:

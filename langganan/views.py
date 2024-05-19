@@ -37,6 +37,7 @@ def show_langganan_paket(request):
     return render(request, "langganan_paket.html", context)
 
 def show_finalisasi_paket(request, jenis, harga):
+    user_data = request.session.get('user_data', {})
     context = {
         'jenis_paket': jenis,
         'harga_paket': harga
@@ -45,6 +46,7 @@ def show_finalisasi_paket(request, jenis, harga):
 
 def beli_paket(request):
     print("INI METHODNYA: " + request.method)
+    user_data = request.session.get('user_data', {})
     if request.method == 'POST':
         user_data = request.session.get('user_data', {})
         email = user_data.get('email')
