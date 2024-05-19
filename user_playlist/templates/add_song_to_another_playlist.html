@@ -204,9 +204,9 @@
         <p>Artist: {{ song.artist }}</p>
         <form method="POST">
             {% csrf_token %}
-            <label for="playlist">Pilih Lagu:</label>
+            <label for="playlist">Pilih Playlist:</label>
                 <select id="playlist" name="other_playlist_id">
-                    <option value="">Pilih Lagu</option>
+                    <option value="">Pilih Playlist</option>
                     {% for playlist in playlists %}
                     <option value="{{ playlist.id_playlist }}">{{ playlist.judul }}</option>
                     {% endfor %}

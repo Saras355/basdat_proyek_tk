@@ -231,7 +231,7 @@
                 <td>
                     <a href="{% url 'user_playlist:lihat_song' playlist_id=playlist.id_playlist song_id=song.id %}"><button>Lihat</button></a>
                     <a href="{% url 'user_playlist:play_song' playlist_id=playlist.id_playlist song_id=song.id %}"><button>Play</button></a>
-                    <a href="{% url 'user_playlist:delete_song' playlist_id=playlist.id_playlist song_id=song.id %}"><button>Hapus</button></a>
+                    <a href="{% url 'user_playlist:delete_song' playlist_id=playlist.id_playlist song_id=song.id %}"><button>Delete</button></a>
                 </td>
             </tr>
             {% endfor %}

@@ -153,6 +153,16 @@ def add_song(request, playlist_id):
         #     return HttpResponse("Lagu sudah ada di dalam playlist", status=400)
 
         try:
+            # Fetch song title
+            song_title_query = query_result("SELECT judul FROM marmut.konten WHERE id = %s", [song_id])
+            if song_title_query:
+                song_title = song_title_query[0]['judul']
+
+            # Fetch playlist name
+            playlist_name_query = query_result("SELECT judul FROM marmut.user_playlist WHERE id_playlist = %s", [playlist_id])
+            if playlist_name_query:
+                playlist_name = playlist_name_query[0]['judul']
+
             with connection.cursor() as cursor:
                 cursor.execute("INSERT INTO marmut.playlist_song (id_playlist, id_song) VALUES (%s, %s);", 
                                [playlist_id, song_id])
@@ -160,7 +170,7 @@ def add_song(request, playlist_id):
         except (DatabaseError, InternalError) as e:
             # Check if the error is due to the song already existing in the playlist
             if 'marmut.check_duplicate_song' in str(e):
-                error_message = "Lagu sudah ada dalam playlist"
+                error_message = f"Lagu '{song_title}' sudah ada dalam playlist '{playlist_name}'"
             else:
                 error_message = "Terjadi kesalahan saat menambahkan lagu ke playlist"
 
