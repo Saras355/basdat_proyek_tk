@@ -5,6 +5,7 @@ from django.urls import reverse
 import uuid
 
 def query_result(query, params=None):
+    user_data = request.session.get('user_data', {})
     with connection.cursor() as cursor:
         cursor.execute(query, params)
         if cursor.description is None:
@@ -18,6 +19,7 @@ def query_result(query, params=None):
         return data
     
 def show_chart_detail(request, playlist_id):
+    user_data = request.session.get('user_data', {})
     with connection.cursor() as cursor:
         cursor.execute("""
             SET SEARCH_PATH TO MARMUT;
@@ -53,9 +55,10 @@ def show_chart_detail(request, playlist_id):
             } for song in songs
         ]
     }
-    return render(request, 'play_podcast:chart_detail.html', context)
+    return render(request, 'chart_detail.html', context)
 
 def show_chart_list(request):
+    user_data = request.session.get('user_data', {})
     with connection.cursor() as cursor:
         cursor.execute("""
             SET SEARCH_PATH TO MARMUT;
@@ -75,9 +78,9 @@ def show_chart_list(request):
         'charts': chart_data
     }
 
-    return render(request, 'play_podcast:chart_list.html', context)
+    return render(request, 'chart_list.html', context)
 
-def show_detail_podcast(request, podcast_id):
+def show_detail_podcast(request, podcast_id):    
     user_data = request.session.get('user_data', {})
     print(user_data)
     user_email = user_data.get('email', {})
@@ -156,11 +159,11 @@ def show_detail_podcast(request, podcast_id):
         'message': 'Episodes not available.' if not episode_data else ''
     }
 
-    return render(request, "play_podcast:podcast.html", context)
+    return render(request, 'podcast.html', context)
 
 
 def manage_podcasts(request):
-
+    user_data = request.session.get('user_data', {})
     if request.method == 'POST':
         roles = request.COOKIES['role']
         list_role = roles.split(" ")
@@ -218,9 +221,10 @@ def manage_podcasts(request):
             'podcasts': podcast_data
         }
 
-        return render(request, 'play_podcast:create_podcast.html', context)
+        return render(request, 'create_podcast.html', context)
 
 def manage_episodes(request, podcast_id):
+    user_data = request.session.get('user_data', {})
     if request.method == 'POST':
         roles = request.COOKIES['role']
         list_role = roles.split(" ")
@@ -313,11 +317,12 @@ def manage_episodes(request, podcast_id):
             print(episode)
 
 
-        return render(request, 'play_podcast:create_episode.html', context)
+        return render(request, 'create_episode.html', context)
 
 
 
 def delete_podcast(request, podcast_id):
+    user_data = request.session.get('user_data', {})
     roles = request.COOKIES['role']
     email = request.COOKIES['email']
     print(email)
@@ -342,6 +347,7 @@ def delete_podcast(request, podcast_id):
         return HttpResponseForbidden("You are not authorized to delete this podcast.")
 
 def delete_episode(request, podcast_id, episode_id):
+    user_data = request.session.get('user_data', {})
     roles = request.COOKIES['role']
     email = request.COOKIES['email']
     print(email)
@@ -360,9 +366,3 @@ def delete_episode(request, podcast_id, episode_id):
         return HttpResponseRedirect(reverse('play_podcast:manage_episodes', args=[podcast_id]))
     else:
         return HttpResponseForbidden("You are not authorized to delete this episode.")
-    
-def create_podcast(request):
-    return render(request, 'create_podcast.html')
-
-def create_episode(request):
-    return render(request, 'create_episode.html')
