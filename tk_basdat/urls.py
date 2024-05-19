@@ -21,6 +21,13 @@ from django.urls import *
 from akun import views as akun_views
 from album_song_royalti.views import *
 from search.views import *
+from podcaster.views import *
+from download.views import *
+from langganan.views import *
+from user_playlist.views import *
+from play_podcast.views import *
+
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
