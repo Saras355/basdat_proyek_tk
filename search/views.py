@@ -41,7 +41,7 @@ def show_hasil_cari(request, judul):
 
     playlist_query = """
     SET search_path to MARMUT;
-    SELECT UP.judul AS Title, A.nama AS Creator, UP.id_user_playlist AS ContentID
+    SELECT UP.judul AS Title, A.nama AS Creator, UP.id_playlist AS ContentID
     FROM USER_PLAYLIST UP
     JOIN AKUN A ON UP.email_pembuat = A.email
     WHERE UP.judul LIKE %s;
@@ -69,6 +69,7 @@ def show_hasil_cari(request, judul):
         'podcasts': podcasts,
         'playlists': playlists,
         'search_substring': judul,
+        'playlist_query': playlist_query
     }
 
     if flag is True:

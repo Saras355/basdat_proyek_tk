@@ -108,7 +108,7 @@ body {
             {{ song.1 }}
           </td>
           <td>
-            <a href=""> Lihat </a>
+            <a href="#"> Lihat </a>
           </td>
         </tr>
         {% endfor %}
@@ -130,21 +130,24 @@ body {
         </tr>
         {% endfor %}
 
-        {% for playlist in playlists %}
+        {% for judul, oleh, id in playlists %}
         <tr style="text-align: center;">
           <td>
             USER PLAYLIST
           </td>
           <td>
-            {{ playlist.0 }}
+            {{ judul }}
           </td>
           <td>
-            {{ playlist.1 }}
+            {{ oleh }}
           </td>
+          
           <td>
-            <a href=""> Lihat </a>
+            <a href="{% url 'user_playlist:detail_user_playlist' playlist_id=id %}"> Lihat </a>
           </td>
+          
         </tr>
+
         {% endfor %}
     </tbody>
 
