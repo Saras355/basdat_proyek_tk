@@ -293,7 +293,10 @@ def login_with_postgres(request):
                         print(key + ": " + str(value))
                     print("================ DEBUG AREA ================\n")
                     
-                    return redirect('akun:dashboard')
+                    # return redirect('akun:dashboard')
+                    response = redirect('akun:dashboard')
+                    response.set_cookie('email', email)
+                    return response
                 else:
                     messages.error(request, 'Maaf, password yang Anda masukkan salah.')
             else:
