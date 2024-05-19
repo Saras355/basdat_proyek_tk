@@ -33,4 +33,3 @@ urllib3==2.2.1
 waitress==3.0.0
 whitenoise==6.6.0
 zope.interface==6.4
-
