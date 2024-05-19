@@ -34,6 +34,8 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "main",
+    "akun",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,7 +46,6 @@ INSTALLED_APPS = [
     "album_song_royalti",
     "artist_songwriter",
     "label",
-    "main",
     "pengguna_biasa",
     "podcaster",
     "search",
@@ -97,6 +98,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
+        'USER': 'postgres.wjvkpituiyaewdobydxl',
+        'PASSWORD': 'Marmut123_?',
         'USER': 'postgres.wjvkpituiyaewdobydxl',
         'PASSWORD': 'Marmut123_?',
         'HOST': 'aws-0-ap-southeast-1.pooler.supabase.com',

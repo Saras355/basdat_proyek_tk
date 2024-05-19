@@ -23,6 +23,12 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import connection
 # Create your views here.
+def list_tables(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'marmut';")
+        tables = cursor.fetchall()
+        table_list = [table[0] for table in tables]  # Extract table names from tuples
+    return render(request, 'list_tables.html', {'tables': table_list})
 
 def dashboard(request):
     # Ambil data pengguna dari session
@@ -38,8 +44,8 @@ def dashboard(request):
         'is_premium' : False,
         'roles': [],
         
-
     })
+    
     #cek apakah dia premium atau tidak di table premium
     query_premium = f"SELECT 1 FROM marmut.premium WHERE email = '{user_data.get('email')}'"
     with connection.cursor() as cursor:
@@ -187,7 +193,7 @@ def dashboard(request):
 
     return render(request, 'dashboard.html', context)
 
-#coba yang baru login nya
+
 @csrf_exempt
 def login_with_postgres(request):
     if request.method == 'POST':
@@ -243,63 +249,266 @@ def login_with_postgres(request):
                         'is_logged_in': True,
                         'roles': roles
                     }
-
-                    user_data = request.session['user_data']
-                    email = user_data['email']
-                    try:
-                        cursor.execute("DELETE FROM marmut.premium WHERE email = %s", (email,))
-                    except psycopg2.Error as e:
-                        if 'Premium period still valid' in str(e):
-                            user_data['is_prem'] = True
-                        else:
-                            messages.error(request, e)
-                    if 'is_prem' not in user_data:
-                        user_data['is_prem'] = False
-                    
-                    # cursor.execute("SELECT * FROM marmut.premium WHERE email = %s", (email,))
-                    # prem_flag = cursor.fetchone()
-                    # print(email)
-                    # print(prem_flag)
-                    # # Jika None -> non prem
-
-                    # # Jika pengguna premium
-                    # if (prem_flag):
-                    #     email = prem_flag[0]
-                    #     query = """
-                    #             SELECT *
-                    #             FROM marmut.transaction
-                    #             WHERE email = %s
-                    #             ORDER BY timestamp_dimulai DESC
-                    #             LIMIT 1;
-                    #             """
-                    #     cursor.execute(query, (email,))
-                    #     latest_transaction = cursor.fetchone()
-
-                        # if latest_transaction:
-                        #     timestamp_berakhir = latest_transaction[4]
-                        #     if timestamp_berakhir < datetime.datetime.now():
-                        #         cursor.execute("DELETE FROM marmut.downloaded_song WHERE email_downloader = %s", (email,))
-                        #         cursor.execute("DELETE FROM marmut.premium WHERE email = %s", (email,))
-                        #         cursor.execute("INSERT INTO marmut.nonpremium (email) VALUES (%s)", (email,))
-                        #     else:
-                        #         user_data['is_prem'] = True
-                                
-                    
-                    print("\n================ DEBUG AREA ================")
-                    print(request.session['user_data'])
-                    print("\n")
-                    user_data = request.session['user_data']
-                    for key, value in user_data.items():
-                        print(key + ": " + str(value))
-                    print("================ DEBUG AREA ================\n")
-                    
-                    return redirect('akun:dashboard')
+                    #request.session['is_logged_in'] = True
+                    # print("hihi")
+                    # print(request.session['user_data'])
+                    # return redirect('akun:dashboard')
+                    response = redirect('akun:dashboard')
+                    response.set_cookie('email', email)
+                    return response
                 else:
                     messages.error(request, 'Maaf, password yang Anda masukkan salah.')
             else:
                 messages.error(request, 'Pengguna tidak ditemukan.')
 
     return render(request, "login.html")
+
+
+
+# @csrf_exempt
+# def login_with_postgres(request):
+#     is_premium = False
+#     is_artist = False
+#     is_songwriter = False 
+#     is_podcaster = False
+#     is_label = False
+#     is_logged_in = False
+
+#     if request.method == 'POST':
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
+        
+#         # Query untuk mencari pengguna berdasarkan email di tabel akun
+#         query_akun = f"""
+#             SELECT * FROM marmut.akun WHERE email = '{email}'
+#         """
+
+#         with connection.cursor() as cursor:
+#             cursor.execute(query_akun)
+#             columns = [col[0] for col in cursor.description]
+#             matching_users_akun = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+#         if matching_users_akun:
+#             user_akun = matching_users_akun[0]
+
+
+
+#              # Check for artist
+#             query_artist = f"SELECT 1 FROM marmut.artist WHERE email_akun = '{email}'"
+#             with connection.cursor() as cursor:
+#                     cursor.execute(query_artist)
+#                     is_artist = cursor.fetchone() is not None
+
+#                 # Check for songwriter
+#             query_songwriter = f"SELECT 1 FROM marmut.songwriter WHERE email_akun = '{email}'"
+#             with connection.cursor() as cursor:
+#                     cursor.execute(query_songwriter)
+#                     is_songwriter = cursor.fetchone() is not None
+
+#                 # Check for podcaster
+#             query_podcaster = f"SELECT 1 FROM marmut.podcaster WHERE email = '{email}'"
+#             with connection.cursor() as cursor:
+#                     cursor.execute(query_podcaster)
+#                     is_podcaster = cursor.fetchone() is not None
+
+#                 # Check for label
+#             query_label = f"SELECT 1 FROM marmut.label WHERE email = '{email}'"
+#             with connection.cursor() as cursor:
+#                     cursor.execute(query_label)
+#                     is_label = cursor.fetchone() is not None
+#             if user_akun['password'] == password:
+#                 # Set user data in session
+#                 is_logged_in = True
+#                 request.session['user_data'] = {
+#                     'email': user_akun['email'],
+#                     'nama': user_akun.get('nama', ''),  
+#                     'password': password,
+#                     'is_premium': is_premium,
+#                     'is_artist': is_artist,
+#                     'is_songwriter': is_songwriter,
+#                     'is_podcaster': is_podcaster,
+#                     'is_label': is_label,
+#                     'is_logged_in': is_logged_in
+#                 }
+#                 print("aaaaaaa")
+#                 print(is_songwriter)
+#                 print(is_logged_in)
+                
+#                 return render(request, 'dashboard.html')
+#             else:
+#                 messages.error(request, 'Maaf, password yang Anda masukkan salah.')
+#         else:
+#             messages.error(request, 'Pengguna tidak ditemukan.')
+
+#     return render(request, "login.html")
+
+
+#BATASSSSSSSSSSSSSSSSS
+#syarat untuk login unik akunnya 
+# @csrf_exempt
+# def login_with_postgres(request):
+#     is_premium = False
+#     is_artist = False
+#     is_songwriter = False 
+#     is_podcaster = False
+#     is_label = False
+
+#     matching_users_akun = 0
+
+#     if request.method == 'POST':
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
+        
+#         # Query untuk mencari pengguna berdasarkan email di tabel akun
+#         query_akun = f"""
+#             SELECT *,
+#                 CASE WHEN EXISTS (
+#                     SELECT 1 FROM marmut.akun u
+#                     WHERE u.email = '{email}'
+#                 ) THEN 'true'
+#                 ELSE 'false' END AS is_user
+#             FROM marmut.akun WHERE email = '{email}'
+#         """
+
+#         #cursor.execute
+#         with connection.cursor() as cursor:
+#             cursor.execute(query_akun)
+#             matching_users_akun = cursor.fetchall()
+        
+#         if matching_users_akun :
+#               return render(request, "dashboard.html")
+
+#         #matching_users_akun kalau ada 
+#         # print("match: " +  matching_users_akun)
+#         #batas batas
+#         # if len(matching_users_akun) == 0 and len(matching_users_label) == 0:
+#         #     # Jika email tidak ditemukan di kedua tabel
+#         #     messages.error(request, 'Pengguna tidak ditemukan.')
+#         # else:
+#         #     # Jika email ditemukan di salah satu atau kedua tabel
+#         #     user_data = {}
+            
+#         #     if len(matching_users_akun) > 0:
+#         #         # Jika pengguna ada di tabel akun
+#         #         user_akun = matching_users_akun[0]
+#         #         if user_akun['password'] == password:
+#         #             # Jika password sesuai, ambil informasi pengguna dari tabel akun
+#         #             user_data['email'] = user_akun['email']
+#         #             user_data['nama'] = user_akun['nama']
+#         #             user_data['kota_asal'] = user_akun['kota_asal']
+#         #             user_data['gender'] = user_akun['gender']
+#         #             user_data['tempat_lahir'] = user_akun['tempat_lahir']
+#         #             user_data['tanggal_lahir'] = user_akun['tanggal_lahir']
+                    
+
+#         #             roles = []
+#         #             # Cek role pengguna
+#         #              # Cek apakah email pengguna ada di tabel Premium
+#         #             query_premium = f"""
+#         #                 SELECT * FROM marmut.premium
+#         #                 WHERE email = '{user_akun['email']}'
+#         #             """
+#         #             matching_premium = execute_sql_query(query=query_premium)
+#         #             if len(matching_premium) > 0:
+#         #                 roles.append('Premium')
+#         #                 is_premium = True
+                    
+#         #             # Cek apakah email pengguna ada di tabel Artist
+#         #             query_artist = f"""
+#         #                 SELECT * FROM marmut.artist
+#         #                 WHERE email = '{user_akun['email']}'
+#         #             """
+#         #             matching_artist = execute_sql_query(query=query_artist)
+#         #             if len(matching_artist) > 0:
+#         #                 roles.append('Artist')
+#         #                 is_artist = True
+                    
+#         #             # Cek apakah email pengguna ada di tabel Songwriter
+#         #             query_songwriter = f"""
+#         #                 SELECT * FROM marmut.songwriter
+#         #                 WHERE email = '{user_akun['email']}'
+#         #             """
+#         #             matching_songwriter = execute_sql_query(query=query_songwriter)
+#         #             if len(matching_songwriter) > 0:
+#         #                 roles.append('Songwriter')
+#         #                 is_songwriter = True
+                    
+#         #             # Cek apakah email pengguna ada di tabel Podcaster
+#         #             query_podcaster = f"""
+#         #                 SELECT * FROM marmut.podcaster
+#         #                 WHERE email = '{user_akun['email']}'
+#         #             """
+#         #             matching_podcaster = execute_sql_query(query=query_podcaster)
+#         #             if len(matching_podcaster) > 0:
+#         #                 roles.append('Podcaster')
+#         #                 is_podcaster = True
+                    
+                    
+#         #             user_data['role'] = ', '.join(roles)
+#         #             #berarti pengguna biasa ga ada is_pengguna biasa tapi cek aja is dari tiap role
+#         #             request.session['user_data'] = {
+#         #                 'email': email,
+#         #                 'nama': user_akun.get('nama', ''),  
+#         #                 'password': password,
+#         #                 'is_premium' : is_premium,
+#         #                 'is_artist' : is_artist,
+#         #                 'is_songwriter' : is_songwriter ,
+#         #                 'is_podcaster' : is_podcaster,
+#         #                 'is_label' : is_label
+#         #             }
+                    
+#         #             # Redirect ke halaman dashboard pengguna
+#         #             return HttpResponseRedirect('/dashboard/')
+#         #         else:
+#         #             messages.error(request, 'Maaf, password yang Anda masukkan salah.')
+            
+#         #     if len(matching_users_label) > 0:
+#         #         # Jika pengguna ada di tabel label
+#         #         user_label = matching_users_label[0]
+#         #         # Ambil informasi pengguna dari tabel label
+#         #         if user_label['password'] == password:
+#         #             user_data['email'] = user_label['email']
+#         #             user_data['nama'] = user_label['nama']
+#         #             user_data['kontak'] = user_label['kontak']
+
+
+#         #             # request.session['user_data'] = {
+#         #             #     'email': email,
+#         #             #     'nama': user_akun.get('nama', ''),  
+#         #             #     'password': password
+#         #             # }
+
+#         #             request.session['user_data'] = {
+#         #                 'email': email,
+#         #                 'nama': user_akun.get('nama', ''),  
+#         #                 'password': password,
+#         #                 'is_premium' : is_premium,
+#         #                 'is_artist' : is_artist,
+#         #                 'is_songwriter' : is_songwriter ,
+#         #                 'is_podcaster' : is_podcaster,
+#         #                 'is_label' : is_label
+#         #             }
+
+#         #             #next -> blm tambahin di views(?)
+#         #             return HttpResponseRedirect('label/label_dashboard/')
+#         #         else: 
+#         #             messages.error(request, 'Maaf, password yang Anda masukkan salah.')
+#         #         #next : ini bisa ditaruh di views.py untuk di app label aja -> buat nampilin semua album yang dimiliki oleh label teresebut 
+#         #         # # Query untuk mencari album milik label
+#         #         # query_album = f"""
+#         #         #     SELECT * FROM marmut.album
+#         #         #     WHERE id_label = '{user_label['id']}'
+#         #         # """
+#         #         # # Eksekusi query album
+#         #         # # matching_albums = execute_sql_query(query=query_album)
+#         #         # if len(matching_albums) == 0:
+#         #         #     messages.info(request, 'Belum Memproduksi Album')
+                
+#         #         # Redirect ke halaman dashboard label
+                   
+                
+#     return render(request, "login.html")
+#BATASSSSSSSSSSSSSS
 
 #show_home
 def home(request):
