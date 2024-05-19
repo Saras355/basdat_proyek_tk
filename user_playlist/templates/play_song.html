@@ -84,6 +84,36 @@
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .form-group {
+            width: 100%; /* Extend form-group to full width */
+        }
+
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-range {
+            width: 100%; /* Extend range input to full width */
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-labels span {
+            flex: 1;
+            text-align: center;
+        }
+
+        .text-center {
+            text-align: center;
+            margin-top: 20px; /* Adjust margin for button */
         }
 
         form label {
@@ -250,25 +280,47 @@
 
         <form method="POST" class="mb-3">
             {% csrf_token %}
-            <label for="progress" class="form-label"><strong>Progress:</strong></label>
-            <input type="range" id="progress" name="progress" min="0" max="100" class="form-range">
-            <button type="submit" class="btn btn-primary">Play</button>
+            <div class="form-group">
+                <label for="progress" class="form-label"><strong>Progress:</strong></label>
+                <input type="range" id="progress" name="progress" min="0" max="100" step="10" value="0" class="form-range">
+                <div class="progress-labels">
+                    <span>0%</span>
+                    <span>10%</span>
+                    <span>20%</span>
+                    <span>30%</span>
+                    <span>40%</span>
+                    <span>50%</span>
+                    <span>60%</span>
+                    <span>70%</span>
+                    <span>80%</span>
+                    <span>90%</span>
+                    <span>100%</span>
+                </div>
+            </div>
+            <div class="text-center mt-2">
+                <button type="submit" name="play" class="btn btn-primary">Play</button>
+            </div>
         </form>
 
         <div class="divider"></div>
         <div class="actions">
             {% if is_premium %}
+               
                 <form method="post" action="{% url 'user_playlist:download_song' song_id=song.id_konten %}">
                     {% csrf_token %}
                     <input type="hidden" name="playlist_id" value="{{ playlist.id_playlist }}">
                     <button type="submit">Download</button>
                 </form>
+               
                 {% if error_message %}
                     <div class="alert alert-danger">{{ error_message }}</div>
                 {% endif %}
             {% endif %}
+            
             <a href="{% url 'user_playlist:add_song_to_another_playlist' playlist_id=playlist.id_playlist song_id=song.id_konten %}"><button class="button">Add to Playlist</button></a>
+           
             <a href="{% url 'user_playlist:detail_user_playlist' playlist_id=playlist.id_playlist %}"><button class="button">Kembali</button></a>
+           
         </div>
     </div>
 

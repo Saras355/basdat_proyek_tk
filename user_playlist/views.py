@@ -233,7 +233,7 @@ def play_song(request, playlist_id, song_id):
                 cursor.execute("UPDATE marmut.song SET total_play = total_play + 1 WHERE id_konten = %s;", [song_id])
 
         # Render the song detail page with updated context
-        return redirect('user_playlist:play_song', playlist_id=playlist_id, song_id=song_id)
+        # return redirect('user_playlist:play_song', playlist_id=playlist_id, song_id=song_id)
 
     context = {
         'song': song_details[0],
@@ -318,6 +318,10 @@ def download_song(request, song_id):
     if request.method == 'POST':
         if is_premium:
             try:
+                song_title_query = query_result("SELECT judul FROM marmut.konten WHERE id = %s", [song_id])
+                if song_title_query:
+                    song_title = song_title_query[0]['judul']
+
                 # Insert entry into DOWNLOADED_SONG
                 with connection.cursor() as cursor:
                     cursor.execute("INSERT INTO marmut.downloaded_song (id_song, email_downloader) VALUES (%s, %s);", [song_id, email])
@@ -330,13 +334,13 @@ def download_song(request, song_id):
 
                 return redirect(reverse('user_playlist:play_song', args=[playlist_id, song_id]))
 
-            except IntegrityError as e:
-                if 'Lagu sudah pernah diunduh oleh pengguna ini!' in str(e):
+            except (DatabaseError, InternalError) as e:
+                if 'marmut.check_duplicate_download' in str(e):
                     # messages.error(request, "Lagu sudah pernah di unduh!")
-                    error_message = "Lagu sudah pernah di unduh!"
+                    error_message = f"Lagu '{song_title}' sudah pernah di unduh!"
                 else:
                     # messages.error(request, "Terjadi kesalahan saat mengunduh lagu.")
-                    error_message = "Terjadi kesalahan saat menambahkan lagu ke playlist"
+                    error_message = "Terjadi kesalahan saat mengunduh lagu"
         else:
             messages.error(request, "Anda harus memiliki akun premium untuk mengunduh lagu.")
 
