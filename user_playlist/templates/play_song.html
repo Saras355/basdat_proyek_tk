@@ -305,25 +305,5 @@
        
     </div>
 
-    <!-- Popup -->
-    <div class="popup" id="downloadPopup">
-        <p>Berhasil mengunduh Lagu dengan judul ‘{{song.judul}}’!</p>
-        <button class="button" onclick="goToDownloadList()">Ke Daftar Download</button>
-        <a href="#"><button class="button">Kembali</button></a>
-    </div>
-
-    <script>
-        function showDownloadPopup() {
-            var popup = document.getElementById("downloadPopup");
-            popup.classList.add("show");
-        }
-
-        function goToDownloadList() {
-            // Redirect ke halaman daftar download
-            window.location.href = "download_list.html";
-        }
-    </script>
-</body>
-{% endblock content %}
 <!-- {% url 'user_playlist:add_song_to_another_playlist' playlist_id=playlist.id_playlist song_id=song.id_konten %} -->
 <!-- {% url 'user_playlist:download_song' playlist_id=playlist.id_playlist song_id=song.id_konten %} -->
