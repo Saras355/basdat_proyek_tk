@@ -21,7 +21,7 @@ def show_hasil_cari(request, judul):
 
     song_query = """
     SET search_path to MARMUT;
-    SELECT K.judul AS Title, A.nama AS Creator, K.id AS ContentID
+    SELECT K.judul AS Title, A.nama AS Creator, K.id AS ContentID, K.*, S.*
     FROM SONG S
     JOIN KONTEN K ON S.id_konten = K.id
     JOIN ARTIST AR ON S.id_artist = AR.id
@@ -36,7 +36,7 @@ def show_hasil_cari(request, judul):
     JOIN KONTEN K ON P.id_konten = K.id
     JOIN PODCASTER PC ON P.email_podcaster = PC.email
     JOIN AKUN A ON PC.email = A.email
-    WHERE K.judul ILIKE %s;
+    WHERE K.judul LIKE %s;
     """
 
     playlist_query = """
