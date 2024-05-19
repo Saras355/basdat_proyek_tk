@@ -463,6 +463,7 @@ def list_album(request):
         """, [label_id])
         album_list = cursor.fetchall()
 
+
     context = {
         'album_list': [{
             'id': album[0],
@@ -839,7 +840,7 @@ def create_lagu(request, album_id):
         'artists': artists,
         'songwriters': songwriters,
         'genres': genres,
-    })     
+    }) 
 
 def hapus_album(request, album_id):
     user_data = request.session.get('user_data', {})
