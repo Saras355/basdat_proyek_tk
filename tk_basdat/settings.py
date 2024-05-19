@@ -10,7 +10,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', ''.join(secrets.choice(string.ascii_
 
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ["https://tkbasdat-kelompok1.up.railway.app/"]
+ALLOWED_HOSTS = [ 'tkbasdat-kelompok1.up.railway.app',]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
