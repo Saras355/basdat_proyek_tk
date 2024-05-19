@@ -100,7 +100,7 @@ def show_detail_podcast(request, podcast_id):
         WHERE 
             K.id = %s
         GROUP BY K.judul, K.tanggal_rilis, K.tahun, A.nama;
-    """, [podcast_id])
+    """, [str(podcast_id)])
 
     episodes = query_result(f"""
         SET SEARCH_PATH TO MARMUT;
@@ -361,6 +361,8 @@ def delete_episode(request, podcast_id, episode_id):
     else:
         return HttpResponseForbidden("You are not authorized to delete this episode.")
     
-def kelola_podcast(request):
-    print("halohalohalo")
-    return render(request, 'kelola_podcast.html')
+def create_podcast(request):
+    return render(request, 'create_podcast.html')
+
+def create_episode(request):
+    return render(request, 'create_episode.html')

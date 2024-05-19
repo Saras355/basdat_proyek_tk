@@ -66,7 +66,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <h2 class="card-title text-center">CREATE PODCAST</h2>
-                <form method="POST" action="{% url 'podcast:manage_podcasts' %}">
+                <form method="POST" action="{% url 'play_podcast:manage_podcasts' %}">
                     {% csrf_token %}
                     <div class="form-group row">
                         <label for="title" class="col-form-label col-sm-2">Judul:</label>
@@ -116,9 +116,9 @@
                             <td>{{ podcast.total_durasi }}</td>
                             <td>
                                 <div class="d-flex justify-content-around">
-                                    <a href="{% url 'podcast:show_detail_podcast' podcast.id %}" class="btn btn-info btn-sm"><i class="fas fa-list"></i></a>
-                                    <a href="{% url 'podcast:manage_episodes' podcast.id %}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i></a>
-                                    <a href="{% url 'podcast:delete_podcast' podcast.id %}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                    <a href="{% url 'play_podcast:show_detail_podcast' podcast.id %}" class="btn btn-info btn-sm"><i class="fas fa-list"></i></a>
+                                    <a href="{% url 'play_podcast:manage_episodes' podcast.id %}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i></a>
+                                    <a href="{% url 'play_podcast:delete_podcast' podcast.id %}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
                                 </div>
                             </td>
                         </tr>

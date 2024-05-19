@@ -89,7 +89,7 @@
                     <img src="/static/images/vinyl.jpg" class="card-img-top square-image" alt="{{ chart.name }}">
                     <div class="card-body text-center">
                         <h5 class="card-title font-weight-bold">{{ chart.name }}</h5>
-                        <a href="{% url 'podcast:show_chart_detail' playlist_id=chart.id %}" class="btn btn-primary mt-2">View Details</a>
+                        <a href="{% url 'play_podcast:show_chart_detail' playlist_id=chart.id %}" class="btn btn-primary mt-2">View Details</a>
                     </div>
                 </div>
             </div>
